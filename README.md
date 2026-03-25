@@ -1,109 +1,84 @@
-🎓 ClassManager Pro
+# 🎓 ClassManager Pro
 
-ClassManager Pro est une application de bureau performante développée avec Electron pour la gestion scolaire. Elle permet de centraliser les données des élèves avec une sauvegarde locale automatique et sécurisée.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org/)
+[![Electron](https://img.shields.io/badge/Framework-Electron-blue.svg)](https://www.electronjs.org/)
 
-🚀 Fonctionnalités clés
+**ClassManager Pro** est une solution légère et performante conçue pour la gestion scolaire simplifiée. Développée avec Electron, elle permet de centraliser les données des élèves avec une sauvegarde locale automatique, sans fioritures complexes.
 
-Interface moderne : Interface fluide propulsée par Tailwind CSS et Alpine.js.
+---
 
-Gestion des élèves : Ajout, modification, suppression et recherche facilitée.
+## 🚀 Fonctionnalités clés
 
-Zéro Configuration : Base de données locale JSON sans serveur requis.
+* **🎨 Interface Moderne** : Une expérience utilisateur fluide propulsée par **Tailwind CSS** et **Alpine.js**.
+* **⚙️ Zéro Configuration** : Base de données locale JSON intégrée. Pas de serveur à configurer, pas de SQL à installer.
+* **🏃 Haute Portabilité** : Utilisez la version installable ou emportez votre gestionnaire partout avec le format portable (.exe unique).
+* **📊 Export Excel** : Générez vos rapports et listes d'élèves en un clic pour une utilisation administrative.
 
-Haute Portabilité : Disponible en version installable ou portable (.exe unique).
+---
 
-Export/Import : Génération de rapports Excel et sauvegardes JSON en un clic.
+## 🛠️ Guide de Développement
 
-📂 Structure du Projet
+### Prérequis
 
-Voici l'organisation des fichiers sources que vous trouverez dans ce dépôt :
+* **Node.js (v18+)** : [Télécharger ici](https://nodejs.org/)
+* Vérifiez votre installation :
+    ```bash
+    node -v
+    npm -v
+    ```
 
-main.js : Processus principal Electron (gestion des fenêtres et du système de fichiers).
+### Installation & Lancement
 
-preload.js : Pont sécurisé isolant les fonctions Node.js de l'interface web.
+1.  **Cloner le projet** :
+    ```bash
+    git clone [https://github.com/cparfait/classmanager.git](https://github.com/cparfait/classmanager.git)
+    cd ClassManager
+    ```
 
-index.html : L'interface utilisateur complète (HTML/JS/CSS).
+2.  **Installer les dépendances** :
+    ```bash
+    npm install
+    ```
 
-package.json : Configuration du projet, dépendances et scripts de compilation.
+3.  **Démarrer en mode Développement** :
+    ```bash
+    npm start
+    ```
 
-classmanager-data.json : (Exclu via .gitignore) Fichier où sont stockées vos données.
+---
 
-🛠️ Guide de Développement (Pour les Devs)
+## 📦 Compilation & Distribution
 
-Prérequis
+Utilisez les scripts configurés dans le `package.json` pour générer vos exécutables dans le dossier `/dist` :
 
-Node.js (version 18 ou supérieure) : Télécharger sur nodejs.org.
+| Format | Commande | Résultat |
+| :--- | :--- | :--- |
+| **Installateur Windows** | `npm run build` | `.exe` avec assistant d'installation |
+| **Version Portable** | `npm run build-portable` | Un seul fichier `.exe` autonome |
 
-Vérifiez l'installation dans un terminal :
+> [!TIP]
+> **Icône personnalisée** : Placez un fichier `icon.ico` (256x256) à la racine du projet avant de lancer la compilation pour personnaliser votre application.
 
-node --version
-npm --version
+---
 
+## 💾 Gestion des Données
 
-Lancement en mode développement
+Le logiciel utilise un système de persistance locale via le fichier `classmanager-data.json`.
 
-Ouvrez un terminal dans le dossier du projet, puis :
+* **Emplacement** : Le fichier se crée automatiquement dans le répertoire de l'exécutable.
+* **Confidentialité** : Ce fichier est listé dans le `.gitignore`. Vos données personnelles restent sur votre machine et ne sont jamais envoyées sur GitHub.
+* **Sauvegarde** : Utilisez le bouton **"Tout Exporter"** dans l'application pour générer un backup manuel.
 
-# 1. Installer les dépendances (crée le dossier node_modules)
-npm install
+---
 
-# 2. Lancer l'application pour test
-npm start
+## ❓ FAQ
 
+**L'application fonctionne-t-elle hors-ligne ?**
+Au premier lancement, une connexion est requise pour charger les bibliothèques via CDN (Tailwind, Alpine). Pour un usage 100% offline, les scripts devront être intégrés localement au projet.
 
-📦 Compilation en .exe (Windows)
+**Comment transférer mes données ?**
+Il suffit de copier le fichier `classmanager-data.json` et de le placer dans le même dossier que votre exécutable portable (sur une clé USB, par exemple).
 
-Une fois votre développement terminé, vous pouvez générer les exécutables dans le dossier /dist :
-
-Format
-
-Commande
-
-Résultat
-
-Installateur Classique
-
-npm run build
-
-.exe avec assistant d'installation standard.
-
-Version Portable
-
-npm run build-portable
-
-ClassManager-Pro-Portable.exe (un seul fichier).
-
-Ajouter une icône personnalisée
-
-Créez une image .ico (256x256 pixels conseillé).
-
-Nommez-la icon.ico.
-
-Placez-la à la racine du projet avant de lancer la commande de build.
-
-💾 Gestion et Sécurité des Données
-
-Le logiciel utilise un système de persistance locale via le fichier classmanager-data.json.
-
-Emplacement : Le fichier est stocké automatiquement à côté de l'exécutable (ou dans le dossier d'installation).
-
-Sécurité GitHub : Ce fichier est listé dans le .gitignore. Vos données personnelles ne sont jamais publiées sur GitHub.
-
-Persistance : Les données restent sauvegardées après fermeture ou redémarrage.
-
-Réinitialisation : Le bouton "Reinitialiser" dans l'app supprime le fichier de données.
-
-❓ FAQ
-
-Q : L'application a-t-elle besoin d'Internet ?
-R : Oui au premier lancement pour charger Tailwind CSS, Alpine.js et la bibliothèque Excel depuis les serveurs (CDN). Pour une version 100% hors-ligne, il faudrait inclure ces scripts localement.
-
-Q : Puis-je copier l'application sur une clé USB ?
-R : Oui ! C'est l'avantage de la version portable. Copiez simplement le fichier .exe et votre fichier classmanager-data.json sur la clé pour retrouver vos données partout.
-
-Q : Comment sauvegarder mes données manuellement ?
-R : C'est automatique ! Cependant, le bouton "Tout Exporter" crée aussi un fichier .json de sauvegarde que vous pouvez stocker ailleurs.
-
-📝 Licence
-
-Projet libre d'utilisation. N'hésitez pas à proposer des améliorations via les Pull Requests !
+---
+Développé avec ❤️ par [Cris Tof]
