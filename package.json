@@ -27,7 +27,8 @@
       "preload.js",
       "index.html",
       "icon.ico",
-      "cris.jpg"
+      "cris.jpg",
+      "js/**/*" 
     ],
     "win": {
       "target": [

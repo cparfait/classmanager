@@ -4,16 +4,17 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org/)
 [![Electron](https://img.shields.io/badge/Framework-Electron-blue.svg)](https://www.electronjs.org/)
 
-**ClassManager Pro** est une solution légère et performante conçue pour la gestion scolaire simplifiée. Développée avec Electron, elle permet de centraliser les données des élèves avec une sauvegarde locale automatique, sans fioritures complexes.
+**ClassManager Pro** est une solution légère et performante conçue pour la gestion scolaire simplifiée. Développée avec Electron, elle permet de centraliser les données des élèves avec une sauvegarde locale automatique et une intelligence de placement optimisée.
 
 ---
 
 ## 🚀 Fonctionnalités clés
 
 * **🎨 Interface Moderne** : Une expérience utilisateur fluide propulsée par **Tailwind CSS** et **Alpine.js**.
-* **⚙️ Zéro Configuration** : Base de données locale JSON intégrée. Pas de serveur à configurer, pas de SQL à installer.
-* **🏃 Haute Portabilité** : Utilisez la version installable ou emportez votre gestionnaire partout avec le format portable (.exe unique).
-* **📊 Export Excel** : Générez vos rapports et listes d'élèves en un clic pour une utilisation administrative.
+* **🔌 100% Offline** : Aucune dépendance externe (CDN). L'application fonctionne sans internet dès le premier lancement.
+* **⚙️ Zéro Configuration** : Base de données locale JSON intégrée. Pas de serveur à configurer.
+* **🏃 Haute Portabilité** : Disponible en version installable ou portable (un seul fichier `.exe`).
+* **📊 Export Excel & PDF** : Générez vos listes et plans de classe professionnels en un clic.
 
 ---
 
@@ -22,11 +23,7 @@
 ### Prérequis
 
 * **Node.js (v18+)** : [Télécharger ici](https://nodejs.org/)
-* Vérifiez votre installation :
-    ```bash
-    node -v
-    npm -v
-    ```
+* Vérifiez votre installation : `node -v` et `npm -v`
 
 ### Installation & Lancement
 
@@ -46,11 +43,17 @@
     npm start
     ```
 
+### Structure du projet
+Pour garantir le fonctionnement hors-ligne, assurez-vous que les bibliothèques sont présentes :
+* `js/tailwind.min.js`
+* `js/alpine.min.js`
+* `js/xlsx.full.min.js`
+
 ---
 
 ## 📦 Compilation & Distribution
 
-Utilisez les scripts configurés dans le `package.json` pour générer vos exécutables dans le dossier `/dist` :
+Générez vos exécutables dans le dossier `/dist` via les scripts `package.json` :
 
 | Format | Commande | Résultat |
 | :--- | :--- | :--- |
@@ -58,7 +61,7 @@ Utilisez les scripts configurés dans le `package.json` pour générer vos exéc
 | **Version Portable** | `npm run build-portable` | Un seul fichier `.exe` autonome |
 
 > [!TIP]
-> **Icône personnalisée** : Placez un fichier `icon.ico` (256x256) à la racine du projet avant de lancer la compilation pour personnaliser votre application.
+> **Icône personnalisée** : Placez un fichier `icon.ico` (256x256) à la racine du projet avant de lancer la compilation.
 
 ---
 
@@ -67,18 +70,18 @@ Utilisez les scripts configurés dans le `package.json` pour générer vos exéc
 Le logiciel utilise un système de persistance locale via le fichier `classmanager-data.json`.
 
 * **Emplacement** : Le fichier se crée automatiquement dans le répertoire de l'exécutable.
-* **Confidentialité** : Ce fichier est listé dans le `.gitignore`. Vos données personnelles restent sur votre machine et ne sont jamais envoyées sur GitHub.
-* **Sauvegarde** : Utilisez le bouton **"Tout Exporter"** dans l'application pour générer un backup manuel.
+* **Confidentialité** : Ce fichier est listé dans le `.gitignore`. Vos données personnelles ne sont jamais envoyées sur un serveur.
+* **Sauvegarde** : Utilisez le bouton **"Tout Exporter"** pour un backup manuel en format JSON.
 
 ---
 
 ## ❓ FAQ
 
-**L'application fonctionne-t-elle hors-ligne ?**
-Au premier lancement, une connexion est requise pour charger les bibliothèques via CDN (Tailwind, Alpine). Pour un usage 100% offline, les scripts devront être intégrés localement au projet.
+**L'application fonctionne-t-elle vraiment hors-ligne ?**
+Oui. Contrairement aux versions précédentes, toutes les ressources sont embarquées localement dans le dossier `/js`. L'application ne fait aucun appel réseau.
 
 **Comment transférer mes données ?**
-Il suffit de copier le fichier `classmanager-data.json` et de le placer dans le même dossier que votre exécutable portable (sur une clé USB, par exemple).
+Copiez simplement le fichier `classmanager-data.json` et placez-le au même endroit que votre nouvel exécutable sur une autre machine.
 
 ---
-Développé avec ❤️ par [Cris Tof]
+Développé avec ❤️ par **Cris Tof**

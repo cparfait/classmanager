@@ -1,24 +1,23 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-// Le fichier de données est stocké DANS le répertoire de l'application
-// En mode dev : à côté de main.js
-// En mode packagé : dans le dossier d'installation (resources/)
+/**
+ * Détermine le chemin de stockage du fichier de données JSON.
+ * Gère dynamiquement le mode développement, le mode installé et le mode portable.
+ */
 function getDataPath() {
     if (app.isPackaged) {
-        // 1. Détection du mode PORTABLE
+        // 1. Mode PORTABLE : Sauvegarde à côté du .exe (ex: sur une clé USB)
         if (process.env.PORTABLE_EXECUTABLE_DIR) {
-            // Sauvegarde les données sur la clé USB ou le Bureau, juste à côté du .exe
             return path.join(process.env.PORTABLE_EXECUTABLE_DIR, 'classmanager-data.json');
         } 
-        // 2. Détection du mode INSTALLÉ (via l'installateur classique)
+        // 2. Mode INSTALLÉ : Utilise le dossier AppData standard de Windows
         else {
-            // Utilise le dossier standard de Windows (%APPDATA%) pour éviter les erreurs de permissions
             return path.join(app.getPath('userData'), 'classmanager-data.json');
         }
     } 
-    // 3. Mode DÉVELOPPEMENT (quand vous faites npm start)
+    // 3. Mode DÉVELOPPEMENT : À côté du fichier main.js
     else {
         return path.join(__dirname, 'classmanager-data.json');
     }
@@ -39,61 +38,69 @@ function createWindow() {
             contextIsolation: true,
             nodeIntegration: false
         },
-        autoHideMenuBar: true,     // Cache la barre de menu
+        autoHideMenuBar: true, // Cache la barre de menu Alt
         backgroundColor: '#f1f5f9'
     });
 
     mainWindow.loadFile('index.html');
 
-    // Intercepter les liens target="_blank" pour les ouvrir dans le navigateur externe (Chrome, Firefox, etc.)
+    /**
+     * Sécurité : Ouvre les liens externes (http, mailto) dans le navigateur par défaut
+     * de l'utilisateur au lieu de les charger dans la fenêtre Electron.
+     */
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('mailto:')) {
-            require('electron').shell.openExternal(url);
+            shell.openExternal(url);
         }
-        return { action: 'deny' }; // Important pour ne pas ouvrir de sous-fenêtre Electron
+        return { action: 'deny' };
     });
 
-    // Intercepter les clics normaux sur les liens mailto (sans target="_blank")
     mainWindow.webContents.on('will-navigate', (event, url) => {
         if (url.startsWith('mailto:')) {
-            event.preventDefault(); // Empêche la fenêtre Electron de changer de page
-            require('electron').shell.openExternal(url); // Ouvre le client mail de l'ordinateur
+            event.preventDefault();
+            shell.openExternal(url);
         }
     });
 
-    // Plein écran au démarrage (optionnel, décommente si souhaité)
+    // Démarre l'application en fenêtre agrandie
     mainWindow.maximize();
 }
 
-// === GESTION DES DONNÉES (IPC) ===
+// === GESTION DES DONNÉES (Communication avec index.html) ===
 
-// Charger les données depuis le fichier JSON
+// Charger les données
 ipcMain.handle('load-data', async () => {
     const filePath = getDataPath();
     try {
         if (fs.existsSync(filePath)) {
             const raw = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(raw);
+            try {
+                return JSON.parse(raw);
+            } catch (jsonErr) {
+                console.error('Erreur : Fichier JSON corrompu ou illisible.');
+                return null;
+            }
         }
     } catch (err) {
-        console.error('Erreur lecture données:', err);
+        console.error('Erreur lors de la lecture des données:', err);
     }
-    return null;  // Pas de données sauvegardées
+    return null;
 });
 
-// Sauvegarder les données dans le fichier JSON
+// Sauvegarder les données
 ipcMain.handle('save-data', async (event, data) => {
     const filePath = getDataPath();
     try {
+        // Sauvegarde propre avec indentation pour faciliter la lecture/backup
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
         return true;
     } catch (err) {
-        console.error('Erreur écriture données:', err);
+        console.error('Erreur lors de l\'écriture des données:', err);
         return false;
     }
 });
 
-// Supprimer le fichier de données (réinitialisation)
+// Réinitialiser (Supprimer le fichier)
 ipcMain.handle('delete-data', async () => {
     const filePath = getDataPath();
     try {
@@ -102,24 +109,29 @@ ipcMain.handle('delete-data', async () => {
         }
         return true;
     } catch (err) {
-        console.error('Erreur suppression données:', err);
+        console.error('Erreur lors de la suppression:', err);
         return false;
     }
 });
 
-// Obtenir le chemin du fichier de données (pour info/debug)
+// Obtenir le chemin réel (utile pour le débogage)
 ipcMain.handle('get-data-path', async () => {
     return getDataPath();
 });
 
-// === CYCLE DE VIE ===
+// === CYCLE DE VIE DE L'APPLICATION ===
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-    app.quit();
+    // Sur Windows et Linux, quitter l'application quand toutes les fenêtres sont fermées
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
 });
