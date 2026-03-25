@@ -1,0 +1,15 @@
+# Dépendances
+node_modules/
+
+# Dossier de compilation (les .exe)
+dist/
+build/
+out/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers de logs ou de données locales (pour ne pas publier les données de vos tests)
+classmanager-data.json
+*.log

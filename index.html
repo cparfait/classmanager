@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ClassManager Pro - Édition Finale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .aisle-bg { background-color: #f1f5f9; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 10px 10px; }
+        .blocked-bg { background-color: #e2e8f0; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #cbd5e1 10px, #cbd5e1 20px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .text-transparent-caret { color: transparent !important; caret-color: #0f172a; }
+        .text-transparent-caret::selection { background-color: rgba(139, 92, 246, 0.3); color: transparent !important; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .drag-over { border-color: #6366f1 !important; background-color: #eef2ff !important; box-shadow: 0 0 0 3px rgba(99,102,241,0.3) !important; }
+        .dragging { opacity: 0.4; transform: scale(0.97); }
+        .drag-source-list { cursor: grab; }
+        .drag-source-list:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 font-sans" x-data="classApp()" x-init="initApp()">
+
+    <div x-show="isCalculating" x-cloak class="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center text-white transition-opacity duration-300">
+        <div class="loader mb-6 shadow-lg"></div>
+        <h2 class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 drop-shadow-md">Calcul du placement optimal...</h2>
+        <p class="text-slate-300 text-sm font-bold uppercase tracking-widest mb-8">Évaluation de 150 000 combinaisons en cours</p>
+        <div class="w-80 h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700 shadow-inner">
+            <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-75 ease-linear flex justify-end items-center pr-2" :style="`width: ${calculationProgress}%`"></div>
+        </div>
+        <div class="mt-3 font-mono font-bold text-indigo-300 text-lg"><span x-text="calculationProgress"></span>%</div>
+    </div>
+
+    <div x-show="selectedStudent" x-cloak class="fixed inset-0 z-[100] bg-slate-900/70 backdrop-blur-sm flex justify-center items-center p-4" @keydown.escape.window="closeModal()">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden" @click.away="closeModal()">
+            <template x-if="selectedStudent">
+                <div class="flex flex-col h-full overflow-hidden">
+                    <div class="p-5 flex justify-between items-center shrink-0" :class="selectedStudent.gender === 'F' ? 'bg-gradient-to-r from-pink-500 to-rose-500' : (selectedStudent.gender === 'M' ? 'bg-gradient-to-r from-blue-500 to-indigo-500' : 'bg-gradient-to-r from-slate-600 to-slate-700')">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-black text-white text-lg" x-text="selectedStudent.gender || '?'"></div>
+                            <div>
+                                <h2 class="text-xl font-black text-white" x-text="selectedStudent.name"></h2>
+                                <p class="text-white/60 text-[10px] font-bold uppercase tracking-widest">Fiche élève</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button @click="previousStudent()" :disabled="!hasPreviousStudent" class="w-8 h-8 bg-white/20 hover:bg-white/30 disabled:opacity-30 rounded-full flex items-center justify-center text-white font-black transition">‹</button>
+                            <button @click="nextStudent()" :disabled="!hasNextStudent" class="w-8 h-8 bg-white/20 hover:bg-white/30 disabled:opacity-30 rounded-full flex items-center justify-center text-white font-black transition">›</button>
+                            <button @click="closeModal()" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition ml-2">✕</button>
+                        </div>
+                    </div>
+                    <div class="overflow-y-auto flex-1 custom-scrollbar">
+                        <div class="p-6 space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-pink-50 border border-pink-100 rounded-2xl p-3">
+                                    <p class="text-[10px] font-black text-pink-400 uppercase tracking-widest mb-2">🚻 Genre</p>
+                                    <div class="flex rounded-xl overflow-hidden border border-pink-200 text-xs font-black">
+                                        <button @click="selectedStudent.gender = 'F'" :class="selectedStudent.gender === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="flex-1 py-2 transition">👧 Fille</button>
+                                        <button @click="selectedStudent.gender = 'M'" :class="selectedStudent.gender === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="flex-1 py-2 border-l border-pink-200 transition">👦 Garçon</button>
+                                        <button @click="selectedStudent.gender = ''" :class="selectedStudent.gender === '' ? 'bg-slate-400 text-white' : 'bg-white text-slate-400 hover:bg-slate-50'" class="flex-1 py-2 border-l border-pink-200 transition">❓</button>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3">
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">📏 Stature</p>
+                                    <div class="flex rounded-xl overflow-hidden border border-slate-200 text-xs font-black">
+                                        <button @click="selectedStudent.height = 'petit'" :class="selectedStudent.height === 'petit' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 transition">🧍 Petit</button>
+                                        <button @click="selectedStudent.height = ''" :class="selectedStudent.height === '' ? 'bg-slate-500 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 border-l transition">〰️ Moy.</button>
+                                        <button @click="selectedStudent.height = 'grand'" :class="selectedStudent.height === 'grand' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 border-l transition">🧍 Grand</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+                                <p class="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-3">⚙️ Profil &amp; Contraintes</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button @click="selectedStudent.bavard = !selectedStudent.bavard" :class="selectedStudent.bavard ? 'bg-rose-50 border-rose-400 text-rose-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
+                                        <div class="flex items-center gap-2 mb-1"><span class="text-base">🗣️</span><span class="text-xs font-black">Bavard(e)</span><span x-show="selectedStudent.bavard" class="ml-auto text-rose-500 text-xs font-black">✓</span></div>
+                                        <p class="text-[9px] text-slate-400 font-medium">Séparer des autres bavards</p>
+                                    </button>
+                                    <button @click="selectedStudent.pap = !selectedStudent.pap" :class="selectedStudent.pap ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
+                                        <div class="flex items-center gap-2 mb-1"><span class="text-base">📋</span><span class="text-xs font-black">PAP / PPRE</span><span x-show="selectedStudent.pap" class="ml-auto text-emerald-500 text-xs font-black">✓</span></div>
+                                        <p class="text-[9px] text-slate-400 font-medium">Placer devant (R1-R2)</p>
+                                    </button>
+                                    <button @click="selectedStudent.vision = !selectedStudent.vision" :class="selectedStudent.vision ? 'bg-amber-50 border-amber-400 text-amber-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
+                                        <div class="flex items-center gap-2 mb-1"><span class="text-base">👓</span><span class="text-xs font-black">Problème de vue</span><span x-show="selectedStudent.vision" class="ml-auto text-amber-500 text-xs font-black">✓</span></div>
+                                        <p class="text-[9px] text-slate-400 font-medium">Priorité rang devant</p>
+                                    </button>
+                                    <button @click="selectedStudent.aisle = !selectedStudent.aisle" :class="selectedStudent.aisle ? 'bg-indigo-50 border-indigo-400 text-indigo-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
+                                        <div class="flex items-center gap-2 mb-1"><span class="text-base">🚶</span><span class="text-xs font-black">Besoin allée</span><span x-show="selectedStudent.aisle" class="ml-auto text-indigo-500 text-xs font-black">✓</span></div>
+                                        <p class="text-[9px] text-slate-400 font-medium">Placer côté couloir</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="border border-slate-200 rounded-2xl p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">🔗 Relations de voisinage</p>
+                                    <div class="flex rounded-lg overflow-hidden border border-slate-200 text-[9px] font-black">
+                                        <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
+                                        <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
+                                        <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">✅ Placer à côté de :</p>
+                                            <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
+                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (forceFilter === 'ALL' || s.gender === forceFilter)).sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                                                <button @click="selectedStudent.force = selectedStudent.force || []; selectedStudent.force.includes(s.id) ? (selectedStudent.force = selectedStudent.force.filter(id => id !== s.id)) : selectedStudent.force.push(s.id)"
+                                                    :class="selectedStudent.force && selectedStudent.force.includes(s.id) ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-400 hover:text-emerald-700'"
+                                                    class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
+                                                    <span x-text="s.gender === 'F' ? '👧' : (s.gender === 'M' ? '👦' : '👤')"></span>
+                                                    <span x-text="s.name"></span>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <p class="text-[9px] font-black text-rose-600 uppercase tracking-widest">🚫 Ne pas placer à côté de :</p>
+                                            <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
+                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (avoidFilter === 'ALL' || s.gender === avoidFilter)).sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                                                <button @click="selectedStudent.avoid = selectedStudent.avoid || []; selectedStudent.avoid.includes(s.id) ? (selectedStudent.avoid = selectedStudent.avoid.filter(id => id !== s.id)) : selectedStudent.avoid.push(s.id)"
+                                                    :class="selectedStudent.avoid && selectedStudent.avoid.includes(s.id) ? 'bg-rose-500 text-white border-rose-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-rose-400 hover:text-rose-700'"
+                                                    class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
+                                                    <span x-text="s.gender === 'F' ? '👧' : (s.gender === 'M' ? '👦' : '👤')"></span>
+                                                    <span x-text="s.name"></span>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">📝 Observations du professeur</p>
+                                <textarea x-model="selectedStudent.notes" placeholder="Ex: TDAH, besoin d'être près de la fenêtre..." class="w-full h-16 p-2 text-xs border border-slate-200 rounded-xl bg-white outline-none resize-none focus:ring-2 focus:ring-indigo-400 text-slate-700"></textarea>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">🕓 Historique des voisins</p>
+                                <template x-if="getNeighborHistory(selectedStudent.id).length === 0">
+                                    <p class="text-xs text-slate-400 italic">Aucun voisinage enregistré pour l'instant.</p>
+                                </template>
+                                <div class="space-y-2">
+                                    <template x-for="entry in getNeighborHistory(selectedStudent.id)" :key="entry.planName">
+                                        <div class="flex items-start gap-2">
+                                            <span class="text-[9px] font-black text-slate-500 bg-slate-200 rounded-full px-2 py-0.5 shrink-0 mt-0.5" x-text="entry.planName"></span>
+                                            <div class="flex flex-wrap gap-1">
+                                                <template x-for="n in entry.neighbors" :key="n.id">
+                                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border"
+                                                        :class="n.gender === 'F' ? 'bg-pink-50 border-pink-200 text-pink-700' : (n.gender === 'M' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-slate-100 border-slate-200 text-slate-600')"
+                                                        x-text="n.name"></span>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border-t bg-slate-50 shrink-0">
+                        <button @click="closeModal()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg transition-all">✓ Enregistrer & Fermer</button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <div x-show="showDiagnosticModal && diagnosticIssues.length > 0" x-cloak class="fixed inset-0 z-[150] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden" @click.away="showDiagnosticModal = false">
+            <div class="bg-amber-500 text-white p-5 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-black flex items-center gap-2">⚠️ Problèmes détectés</h2>
+                    <p class="text-amber-100 text-xs font-bold uppercase tracking-widest mt-1">Contraintes non respectées dans ce plan</p>
+                </div>
+                <button @click="showDiagnosticModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition font-bold">✕</button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-slate-600 mb-4 font-medium">L'algorithme n'a pas pu respecter <strong class="text-amber-600" x-text="diagnosticIssues.length"></strong> contrainte(s) :</p>
+                <ul class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner text-xs">
+                    <template x-for="(issue, index) in diagnosticIssues" :key="index">
+                        <li class="font-bold text-slate-700 flex items-start gap-2">
+                            <span class="text-amber-500 mt-1">●</span>
+                            <span x-text="issue"></span>
+                        </li>
+                    </template>
+                </ul>
+                <button @click="showDiagnosticModal = false" class="w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg transition-all">J'ai compris, voir le plan</button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="showUnplacedModal" x-cloak class="fixed inset-0 z-[150] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden" @click.away="showUnplacedModal = false">
+            <div class="bg-orange-500 text-white p-5 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-black flex items-center gap-2">👥 Élèves non placés</h2>
+                    <p class="text-orange-100 text-xs font-bold uppercase tracking-widest mt-1">Des élèves n'ont pas de place attribuée</p>
+                </div>
+                <button @click="showUnplacedModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition font-bold">✕</button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-slate-600 mb-4 font-medium"><strong class="text-orange-600" x-text="getUnplacedStudents().length"></strong> élève(s) non placé(s) :</p>
+                <div class="flex flex-wrap gap-2 max-h-48 overflow-y-auto custom-scrollbar bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
+                    <template x-for="s in getUnplacedStudents()" :key="s.id">
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border"
+                              :class="s.gender === 'F' ? 'bg-pink-50 border-pink-300 text-pink-700' : (s.gender === 'M' ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-slate-100 border-slate-300 text-slate-600')"
+                              x-text="s.name"></span>
+                    </template>
+                </div>
+                <button @click="showUnplacedModal = false" class="w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg transition-all">Compris</button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="showContactModal" x-cloak class="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative" @click.away="showContactModal = false">
+            <button @click="showContactModal = false" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition font-bold text-lg">✕</button>
+            
+            <div class="p-8 flex flex-col items-center text-center">
+                <img src="cris.jpg" alt="Christophe Parfait" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-50 shadow-md mb-4">
+                <h3 class="text-2xl font-black text-slate-800 mb-2">Contactez le développeur</h3>
+                <p class="text-sm text-slate-500 font-medium mb-6 leading-relaxed">
+                    Pour signaler un dysfonctionnement, partager une suggestion d'amélioration ou pour toute autre demande, n'hésitez pas à m'écrire. Je vous répondrai dans les plus brefs délais.
+                </p>
+                
+                <a href="mailto:christophe.parfait@gmail.com" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-6 py-3.5 rounded-xl font-bold shadow-lg transition-all transform hover:scale-[1.02] mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    christophe.parfait@gmail.com
+                </a>
+
+                <div class="w-full border-t border-slate-100 pt-4 mt-2">
+                    <a href="https://buymeacoffee.com/cristof" target="_blank" class="inline-flex items-center justify-center gap-2 text-sm font-bold text-slate-500 hover:text-amber-600 transition-colors bg-slate-50 hover:bg-amber-50 px-4 py-2.5 rounded-lg border border-transparent hover:border-amber-200 w-full">
+                        <span class="text-lg">☕</span> Soutenir le projet
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+	<header class="bg-white border-b border-slate-200 p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-6">
+            <h1 class="text-xl font-black text-indigo-600 uppercase tracking-tighter italic">ClassManager <span class="text-slate-400 font-light">PRO</span></h1>
+            <div class="flex gap-4 items-center bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-xl shadow-inner">
+                <span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Période :</span>
+                <select x-model.number="currentPlanIndex" @change="switchPlan(currentPlanIndex)" class="bg-white text-indigo-700 font-black text-sm border border-indigo-200 rounded-lg px-3 py-1 cursor-pointer hover:border-indigo-400 outline-none">
+                    <template x-for="(plan, index) in plans" :key="index">
+                        <option :value="index" x-text="plan.name"></option>
+                    </template>
+                </select>
+                <button @click="clearGrid()" class="text-rose-500 hover:text-white hover:bg-rose-500 px-3 py-1 rounded-lg text-xs font-bold transition-all border border-rose-200">🧹 Vider</button>
+            </div>
+        </div>
+        
+        <div class="flex gap-3 items-center">
+            <span x-show="perfectScoreMsg" x-cloak class="text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 animate-bounce">✨ Plan Parfait Généré !</span>
+            <span x-show="saveStatus" x-text="saveStatus" class="text-xs text-emerald-600 font-bold"></span>
+            <div class="flex border border-slate-200 rounded-xl bg-slate-50 text-[10px] font-bold uppercase shadow-sm">
+                <div class="p-1.5 border-r border-slate-200 text-center">Rangs <input type="number" x-model.number="rows" @change="saveLocal()" class="w-8 text-center bg-transparent outline-none"></div>
+                <div class="p-1.5 text-center">Cols <input type="number" x-model.number="cols" @change="saveLocal()" class="w-8 text-center bg-transparent outline-none"></div>
+            </div>
+            <button @click="generateAutoPlan()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl font-black shadow-xl transition-all text-sm flex items-center gap-2 transform hover:scale-105"><span>🤖</span> AUTO</button>
+            <button @click="testCurrentPlan()" class="bg-white border-2 border-amber-400 text-amber-600 hover:bg-amber-50 px-4 py-2.5 rounded-xl font-black shadow-sm transition-all text-sm flex items-center gap-2">
+                <span>🔍</span> TESTER
+            </button>
+            <button @click="exportPDF()" class="bg-white border-2 border-rose-400 text-rose-600 hover:bg-rose-50 px-4 py-2.5 rounded-xl font-black shadow-sm transition-all text-sm flex items-center gap-2" title="Exporter en PDF (prénoms + noms uniquement)">
+                <span>📄</span> PDF
+            </button>
+                
+            <div class="ml-3">
+                <button @click="showContactModal = true" title="Contacter le développeur" class="block transition-all duration-300 hover:scale-110 hover:rotate-3 focus:outline-none">
+                    <img src="cris.jpg" alt="Cristof" class="w-11 h-11 rounded-full border-2 border-indigo-200 hover:border-amber-400 shadow-md object-cover">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex h-[calc(100vh-74px)] overflow-hidden">
+        <aside class="w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar relative z-20 shadow-md">
+            <div class="bg-slate-100 p-3 border-b flex justify-between items-center">
+                <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Verrouillage Liste</span>
+                <button @click="editMode = !editMode" :class="editMode ? 'bg-red-100 text-red-600 border-red-300' : 'bg-white text-slate-500 border-slate-200'" class="px-3 py-1 text-[10px] font-bold rounded-lg border shadow-sm">
+                    <span x-text="editMode ? '🔓 Mode Édition Actif' : '🔒 Liste Protégée'"></span>
+                </button>
+            </div>
+            <div class="p-5 flex-1 overflow-y-auto flex flex-col">
+                <section x-show="editMode" x-collapse class="mb-6 relative">
+                    <div x-show="students.length === 0" class="mb-5 flex flex-col items-center justify-center gap-2">
+                        <span class="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg animate-pulse uppercase tracking-widest">Étape 1 : Importez vos élèves</span>
+                        <span class="text-3xl animate-bounce">👇</span>
+                    </div>
+                    <div class="mb-3"><input type="file" accept=".xls,.xlsx,.csv" @change="importExcel" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer"></div>
+                    <div class="pt-3 border-t border-slate-200">
+                        <textarea x-model="bulkList" placeholder="Copier-coller des noms ici..." class="w-full h-12 p-2 text-xs border rounded-lg bg-slate-50 outline-none mb-2 focus:ring-2 focus:ring-indigo-500"></textarea>
+                        <button @click="importStudentsText()" class="w-full py-1.5 bg-slate-800 text-white text-[10px] rounded-lg font-bold hover:bg-black">AJOUTER MANUELLEMENT</button>
+                    </div>
+                </section>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-4 space-y-3">
+                    <div class="relative"><span class="absolute left-2 top-1.5 text-slate-400">🔍</span><input type="text" x-model="searchQuery" placeholder="Rechercher..." class="w-full pl-8 pr-2 py-1.5 text-xs rounded-lg border outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                    <div class="flex rounded-lg overflow-hidden border text-[10px] font-bold">
+                        <button @click="mainGenderFilter = 'ALL'" :class="mainGenderFilter === 'ALL' ? 'bg-slate-800 text-white' : 'bg-white'" class="flex-1 py-1">TOUS</button>
+                        <button @click="mainGenderFilter = 'F'" :class="mainGenderFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">FILLES</button>
+                        <button @click="mainGenderFilter = 'M'" :class="mainGenderFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">GARÇONS</button>
+                    </div>
+                </div>
+
+                <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
+                    <button @click="showUnplacedModal = true" class="mb-3 w-full py-2 px-3 bg-orange-50 border-2 border-orange-300 rounded-xl text-xs font-bold text-orange-700 hover:bg-orange-100 transition-all flex items-center justify-between">
+                        <span>⚠️ <span x-text="getUnplacedStudents().length"></span> élève(s) non placé(s)</span>
+                        <span class="text-[9px] bg-orange-500 text-white px-2 py-0.5 rounded-full font-black">VOIR</span>
+                    </button>
+                </template>
+                <template x-if="students.length > 0 && getUnplacedStudents().length === 0 && assignments.length > 0">
+                    <div class="mb-3 w-full py-2 px-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl text-xs font-bold text-emerald-700 flex items-center gap-2">
+                        ✅ Tous les élèves sont placés
+                    </div>
+                </template>
+
+                <div class="space-y-2 flex-1 overflow-y-auto pr-1 custom-scrollbar">
+                    <template x-for="student in filteredMainList" :key="student.id">
+                        <div @click="openModal(student)"
+                             draggable="true"
+                             @dragstart="onDragStartList($event, student.id)"
+                             @dragend="onDragEnd($event)"
+                             class="bg-white border rounded-xl p-3 cursor-pointer hover:border-indigo-400 transition-all group flex justify-between items-center shadow-sm hover:shadow-md drag-source-list"
+                             :class="isStudentPlaced(student.id) ? 'border-l-4 border-l-emerald-400' : 'border-l-4 border-l-transparent'">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" :class="student.gender === 'F' ? 'bg-pink-100 text-pink-600' : (student.gender === 'M' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400')">
+                                    <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '?')"></span>
+                                </div>
+                                <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-slate-400'" x-text="student.name"></p>
+                                <span x-show="isStudentPlaced(student.id)" class="text-[8px] font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0">PLACÉ</span>
+                            </div>
+                            <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm">🗑️</button>
+                        </div>
+                    </template>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-200 space-y-3">
+                    <div class="flex gap-2">
+                        <button @click="exportData()" class="flex-1 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-[10px] font-black uppercase transition shadow-sm">💾 Tout Exporter</button>
+                        <label class="flex-1 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-[10px] font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData" class="hidden"></label>
+                    </div>
+                    <button @click="exportStudentsOnly()" class="w-full py-2 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-[10px] font-black uppercase transition shadow-sm">👥 Exporter Fiches Élèves</button>
+                    <button @click="hardReset()" class="w-full py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl text-[9px] font-black uppercase transition">⚠️ Réinitialiser</button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="flex-1 p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
+            <div class="relative p-12 bg-white shadow-xl rounded-[40px] border border-slate-200 mt-6 min-w-[600px]">
+
+                <button @click="viewFlipped = !viewFlipped"
+                    class="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase transition shadow-sm border"
+                    :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
+                    <span>🔄</span>
+                    <span x-text="viewFlipped ? 'Vue élève' : 'Vue prof'"></span>
+                </button>
+                
+                <div class="flex justify-center mb-8">
+                    <template x-if="!viewFlipped">
+                        <div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div>
+                    </template>
+                    <template x-if="viewFlipped">
+                        <div class="w-3/4 h-8 bg-slate-800 rounded-t-xl flex items-center justify-center text-[10px] text-white font-black tracking-widest uppercase shadow-md border-b-4 border-indigo-500">TABLEAU (DEVANT DE LA CLASSE)</div>
+                    </template>
+                </div>
+
+                <div class="flex mb-8 gap-3 justify-center">
+                    <template x-for="c in getColsAscending()">
+                        <button @click="toggleAisle(c)" :class="aisles.includes(c) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'" class="px-2 py-1 rounded text-[8px] font-black uppercase transition shadow-sm">Allée <span x-text="c"></span></button>
+                    </template>
+                </div>
+
+                <div class="grid gap-3"
+                     :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
+                    <template x-for="cell in gridCells" :key="cell.key">
+                            <div class="w-24 h-24 border-2 rounded-2xl flex flex-col items-center justify-center p-2 relative transition-all group"
+                                 :style="viewFlipped ? 'transform: rotate(180deg);' : ''"
+                                 :draggable="!!getOccupant(cell.r, cell.c) && !aisles.includes(cell.c)"
+                                 @dragstart="onDragStartCell($event, cell.r, cell.c)"
+                                 @dragend="onDragEnd($event)"
+                                 @dragover="onDragOver($event, cell.r, cell.c)"
+                                 @dragleave="onDragLeave($event)"
+                                 @drop="onDrop($event, cell.r, cell.c)"
+                                 :class="aisles.includes(cell.c) ? 'aisle-bg border-transparent shadow-inner' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300'))">
+                                <template x-if="aisles.includes(cell.c)"><span class="text-[8px] font-black text-slate-300 rotate-90 tracking-[0.3em]">COULOIR</span></template>
+                                <template x-if="!aisles.includes(cell.c)">
+                                    <div class="w-full h-full">
+                                        <template x-if="blockedSeats.includes(cell.r+'-'+cell.c)"><div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" @click="toggleBlockedSeat(cell.r, cell.c)"><span class="text-xl">🚫</span></div></template>
+                                        <template x-if="!blockedSeats.includes(cell.r+'-'+cell.c)">
+                                            <div class="w-full h-full flex flex-col justify-center relative">
+                                                <span class="absolute -top-1 left-0 text-[6px] font-bold"
+                                                      :class="isManual(cell.r, cell.c) ? 'text-amber-500' : 'text-slate-400'"
+                                                      x-text="`R${cell.r}C${cell.c}`"></span>
+                                                <button @click.stop="toggleBlockedSeat(cell.r, cell.c)" class="absolute -top-2 -right-2 w-6 h-6 bg-slate-100 border rounded-full flex items-center justify-center text-[10px] text-slate-400 hover:text-red-600 transition-colors z-20">🚫</button>
+                                                <template x-if="isManual(cell.r, cell.c)">
+                                                    <button @click.stop="toggleManual(cell.r, cell.c)"
+                                                        class="absolute -top-2 -left-2 w-6 h-6 rounded-full flex items-center justify-center text-[11px] transition-all z-20 border shadow-sm bg-amber-400 border-amber-400 text-white hover:bg-amber-500"
+                                                        title="Déverrouiller (retirer le placement manuel fixe)">
+                                                        🔒
+                                                    </button>
+                                                </template>
+                                                <select class="w-full bg-transparent text-center text-[9px] font-black border-none outline-none appearance-none cursor-pointer z-10 mt-2"
+                                                        @change="manualAssign(cell.r, cell.c, $event.target.value)">
+                                                    <option value="">LIBRE</option>
+                                                    <template x-for="s in students.sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                                                        <option :value="s.id"
+                                                                :selected="getOccupant(cell.r, cell.c) === s.id"
+                                                                x-text="(isStudentPlaced(s.id) && getOccupant(cell.r, cell.c) !== s.id ? '✓ ' : '   ') + s.name">
+                                                        </option>
+                                                    </template>
+                                                </select>
+                                                <template x-if="getOccupant(cell.r, cell.c)">
+                                                    <div class="flex gap-1 mt-1 justify-center">
+                                                        <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                                        <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                        <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                        <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                                        <span class="text-[8px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                    </template>
+                </div>
+                
+                <template x-if="!viewFlipped">
+                    <div class="w-3/4 mx-auto h-8 bg-slate-800 rounded-b-xl flex items-center justify-center text-[10px] text-white font-black tracking-widest uppercase shadow-md border-t-4 border-indigo-500 mt-8">TABLEAU (DEVANT DE LA CLASSE)</div>
+                </template>
+                <template x-if="viewFlipped">
+                    <div class="flex justify-center mt-8"><div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div></div>
+                </template>
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+    function classApp() {
+        return {
+            rows: 5, cols: 9, bulkList: '', students: [], aisles: [], blockedSeats: [], fixedSeats: [],
+            manualSeats: [],
+            plans: [], currentPlanIndex: 0, editMode: false, selectedStudent: null, searchQuery: '', mainGenderFilter: 'ALL', neighborFilter: 'ALL', forceFilter: 'ALL', avoidFilter: 'ALL',
+            isCalculating: false, calculationProgress: 0, saveStatus: '', showDiagnosticModal: false, showUnplacedModal: false, diagnosticIssues: [], perfectScoreMsg: false, viewFlipped: false,
+            dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
+            
+            showContactModal: false,
+
+            initApp() {
+                this._isElectron = !!window.electronAPI;
+                
+                if (this._isElectron) {
+                    window.electronAPI.loadData().then(data => {
+                        if (data) {
+                            this.rows = data.rows || 5; this.cols = data.cols || 9;
+                            this.students = data.students || []; this.aisles = data.aisles || [];
+                            this.blockedSeats = data.blockedSeats || [];
+                            this.fixedSeats = data.fixedSeats || [];
+                            this.manualSeats = data.manualSeats || [];
+                            this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
+                            this.currentPlanIndex = data.currentPlanIndex || 0;
+                        } else { this.initEmptyPlans(); }
+                        if (this.students.length === 0) this.editMode = true;
+                    });
+                } else {
+                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9')) {
+                        localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v9'));
+                    }
+                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8')) {
+                        localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v8'));
+                    }
+                    const saved = localStorage.getItem('classManagerData_v10');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.rows = data.rows || 5; this.cols = data.cols || 9;
+                        this.students = data.students || []; this.aisles = data.aisles || [];
+                        this.blockedSeats = data.blockedSeats || [];
+                        this.fixedSeats = data.fixedSeats || [];
+                        this.manualSeats = data.manualSeats || [];
+                        this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
+                        this.currentPlanIndex = data.currentPlanIndex || 0;
+                    } else { this.initEmptyPlans(); }
+                    if (this.students.length === 0) this.editMode = true;
+                }
+            },
+            initEmptyPlans() { this.plans = Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] })); },
+            get assignments() { return this.plans[this.currentPlanIndex].assignments; },
+            set assignments(newAssignments) { this.plans[this.currentPlanIndex].assignments = newAssignments; },
+            switchPlan(index) { this.currentPlanIndex = index; this.saveLocal(); },
+            getColsDescending() { return Array.from({length: Number(this.cols)}, (_, i) => i + 1).reverse(); },
+            getColsAscending() { return Array.from({length: Number(this.cols)}, (_, i) => i + 1); },
+            getRowsDescending() { 
+                const n = Number(this.rows);
+                const result = [];
+                for (let i = n; i >= 1; i--) result.push(i);
+                return result;
+            },
+            getRowsAscending() {
+                const n = Number(this.rows);
+                const result = [];
+                for (let i = 1; i <= n; i++) result.push(i);
+                return result;
+            },
+            get gridCells() {
+                const cells = [];
+                const n = Number(this.rows);
+                const m = Number(this.cols);
+                for (let r = n; r >= 1; r--) {
+                    for (let c = 1; c <= m; c++) {
+                        cells.push({ r, c, key: `${r}-${c}` });
+                    }
+                }
+                return cells;
+            },
+            toggleBlockedSeat(r, c) {
+                const key = `${r}-${c}`;
+                if (this.blockedSeats.includes(key)) { this.blockedSeats = this.blockedSeats.filter(b => b !== key); }
+                else { this.blockedSeats.push(key); this.assignments = this.assignments.filter(a => !(a.row === parseInt(r) && a.col === parseInt(c))); this.fixedSeats = this.fixedSeats.filter(k => k !== key); this.manualSeats = this.manualSeats.filter(k => k !== key); }
+                this.saveLocal();
+            },
+            getUnplacedStudents() {
+                const placedIds = new Set(this.assignments.map(a => a.studentId));
+                return this.students.filter(s => !placedIds.has(s.id));
+            },
+            isStudentPlaced(studentId) {
+                return this.assignments.some(a => a.studentId === studentId);
+            },
+            manualAssign(r, c, sid) {
+                const key = `${parseInt(r)}-${parseInt(c)}`;
+                this.manualSeats = this.manualSeats.filter(k => k !== key);
+                this.fixedSeats = this.fixedSeats.filter(k => k !== key);
+                if (sid) {
+                    const oldA = this.assignments.find(a => a.studentId === sid);
+                    if (oldA) {
+                        const oldKey = `${oldA.row}-${oldA.col}`;
+                        this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
+                        this.fixedSeats = this.fixedSeats.filter(k => k !== oldKey);
+                    }
+                }
+                this.assignments = this.assignments.filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c)));
+                if (sid) {
+                    this.assignments.push({ studentId: sid, row: parseInt(r), col: parseInt(c) });
+                    this.manualSeats.push(key);
+                    this.fixedSeats.push(key);
+                }
+                this.saveLocal();
+            },
+            isManual(r, c) {
+                return this.manualSeats.includes(`${r}-${c}`) && !!this.getOccupant(r, c);
+            },
+            toggleManual(r, c) {
+                const key = `${r}-${c}`;
+                this.manualSeats = this.manualSeats.filter(k => k !== key);
+                this.fixedSeats = this.fixedSeats.filter(k => k !== key);
+                this.saveLocal();
+            },
+            getPlacementIssues(placement) {
+                let issues = [];
+                let grid = {};
+                let studentMap = {};
+                this.students.forEach(s => studentMap[s.id] = s);
+                placement.forEach(p => grid[`${p.row}-${p.col}`] = studentMap[p.studentId]);
+                
+                let historySet = new Set();
+                for (let i = 0; i < this.currentPlanIndex; i++) {
+                    this.plans[i].assignments.forEach(a => historySet.add(`${a.studentId}-${a.row}-${a.col}`));
+                }
+
+                const placedIds = new Set(placement.map(p => p.studentId));
+                const unplaced = this.students.filter(s => !placedIds.has(s.id));
+                if (unplaced.length > 0) {
+                    issues.push(`${unplaced.length} élève(s) non placé(s) : ${unplaced.map(s => s.name).join(', ')}`);
+                }
+
+                placement.forEach(p => {
+                    let s = studentMap[p.studentId];
+                    if (!s) return;
+                    if ((s.pap || s.vision) && p.row > 2) issues.push(`${s.name} (PAP/Vue) éloigné du tableau.`);
+                    if (s.aisle && !this.aisles.includes(p.col-1) && !this.aisles.includes(p.col+1)) issues.push(`${s.name} (Besoin Allée) mal placé.`);
+                    if (historySet.has(`${s.id}-${p.row}-${p.col}`)) issues.push(`${s.name} remis à une ancienne place.`);
+                    
+                    let leftStudent = grid[`${p.row}-${p.col - 1}`];
+                    let rightStudent = grid[`${p.row}-${p.col + 1}`];
+                    
+                    if (s.force && s.force.length > 0) {
+                        s.force.forEach(tid => {
+                            if ((!leftStudent || leftStudent.id !== tid) && (!rightStudent || rightStudent.id !== tid)) issues.push(`${s.name} séparé de son binôme.`);
+                        });
+                    }
+                    
+                    if (s.avoid && s.avoid.length > 0) {
+                        for (let dr = -1; dr <= 1; dr++) {
+                            for (let dc = -1; dc <= 1; dc++) {
+                                if (dr === 0 && dc === 0) continue;
+                                let neighbor = grid[`${p.row + dr}-${p.col + dc}`];
+                                if (neighbor && s.avoid.includes(neighbor.id)) issues.push(`${s.name} trop proche de ${neighbor.name} (à éviter).`);
+                            }
+                        }
+                        for (const dc of [-1, 1]) {
+                            const adjCol = p.col + dc;
+                            if (this.aisles.includes(adjCol)) {
+                                const beyondNb = grid[`${p.row}-${p.col + dc * 2}`];
+                                if (beyondNb && s.avoid.includes(beyondNb.id)) issues.push(`${s.name} séparé de ${beyondNb.name} (à éviter) par une allée seulement.`);
+                            }
+                        }
+                    }
+                    if (s.bavard) {
+                        placement.filter(q => q.studentId !== s.id).forEach(q => {
+                            const nb = studentMap[q.studentId];
+                            if (!nb || !nb.bavard) return;
+                            if (q.row === p.row) {
+                                const dist = Math.abs(q.col - p.col);
+                                if (dist === 1) issues.push(`${s.name} (Bavard) adjacent à ${nb.name} (Bavard).`);
+                                else if (dist === 2) {
+                                    const midCol = (p.col + q.col) / 2;
+                                    if (this.aisles.includes(midCol)) issues.push(`${s.name} (Bavard) séparé de ${nb.name} (Bavard) par une allée seulement.`);
+                                }
+                            }
+                            if (q.col === p.col && Math.abs(q.row - p.row) === 1) {
+                                issues.push(`${s.name} (Bavard) derrière/devant ${nb.name} (Bavard).`);
+                            }
+                            if (Math.abs(q.row - p.row) === 1 && Math.abs(q.col - p.col) === 1) {
+                                issues.push(`${s.name} (Bavard) en diagonale de ${nb.name} (Bavard).`);
+                            }
+                        });
+                    }
+                });
+                return [...new Set(issues)];
+            },
+            generateAutoPlan() {
+                let validSeats = [];
+                for (let r = 1; r <= this.rows; r++) {
+                    for (let c = 1; c <= this.cols; c++) {
+                        if (!this.aisles.includes(c) && !this.blockedSeats.includes(`${r}-${c}`)) validSeats.push({r, c});
+                    }
+                }
+                let fixedAssigned = this.assignments.filter(a => this.fixedSeats.includes(`${a.row}-${a.col}`));
+                
+                this.manualSeats.forEach(key => {
+                    if (fixedAssigned.some(a => `${a.row}-${a.col}` === key)) return;
+                    for (let i = 0; i < this.plans.length; i++) {
+                        const found = this.plans[i].assignments.find(a => `${a.row}-${a.col}` === key);
+                        if (found && this.students.some(s => s.id === found.studentId)) {
+                            if (!fixedAssigned.some(a => a.studentId === found.studentId)) {
+                                fixedAssigned.push({ studentId: found.studentId, row: found.row, col: found.col });
+                            }
+                            break;
+                        }
+                    }
+                });
+
+                let unassigned = this.students.filter(s => !fixedAssigned.some(a => a.studentId === s.id));
+                if (unassigned.length > validSeats.length - fixedAssigned.length) return alert("Pas assez de places !");
+
+                this.isCalculating = true;
+                this.calculationProgress = 0;
+                this.perfectScoreMsg = false;
+
+                setTimeout(() => {
+                    let historyMap = {};
+                    this.students.forEach(s => historyMap[s.id] = new Set());
+                    for (let i = 0; i < this.currentPlanIndex; i++) {
+                        this.plans[i].assignments.forEach(a => { if (historyMap[a.studentId]) historyMap[a.studentId].add(`${a.row}-${a.col}`); });
+                    }
+
+                    let currentPlacement = [...fixedAssigned];
+                    let shuffledStudents = [...unassigned].sort(() => Math.random() - 0.5);
+                    let availableSeats = validSeats.filter(vs => !fixedAssigned.some(a => a.row === vs.r && a.col === vs.c)).sort(() => Math.random() - 0.5);
+                    for (let i = 0; i < shuffledStudents.length; i++) currentPlacement.push({ studentId: shuffledStudents[i].id, row: availableSeats[i].r, col: availableSeats[i].c });
+
+                    const studentMap = {}; this.students.forEach(s => studentMap[s.id] = s);
+                    const calculateScore = (placement) => {
+                        let score = 0;
+                        let grid = {}; placement.forEach(p => grid[`${p.row}-${p.col}`] = studentMap[p.studentId]);
+                        placement.forEach(p => {
+                            let s = studentMap[p.studentId];
+                            if (!s) return;
+                            if ((s.pap || s.vision) && p.row > 2) score += 100000;
+                            if (s.aisle && !this.aisles.includes(p.col-1) && !this.aisles.includes(p.col+1)) score += 100000;
+                            if (historyMap[s.id] && historyMap[s.id].has(`${p.row}-${p.col}`)) score += 50000;
+                            let lS = grid[`${p.row}-${p.col-1}`], rS = grid[`${p.row}-${p.col+1}`];
+                            if (((p.col > 1 && !this.aisles.includes(p.col-1)) || (p.col < this.cols && !this.aisles.includes(p.col+1))) && !lS && !rS) score += 100000;
+                            if (s.force && s.force.length > 0) s.force.forEach(tid => { if ((!lS || lS.id !== tid) && (!rS || rS.id !== tid)) score += 100000; });
+                            if (s.avoid && s.avoid.length > 0) {
+                                for (let dr = -1; dr <= 1; dr++) {
+                                    for (let dc = -1; dc <= 1; dc++) {
+                                        if (dr === 0 && dc === 0) continue;
+                                        let nb = grid[`${p.row+dr}-${p.col+dc}`];
+                                        if (nb && s.avoid.includes(nb.id)) score += 100000;
+                                    }
+                                }
+                                for (const dc of [-1, 1]) {
+                                    const adjCol = p.col + dc;
+                                    if (this.aisles.includes(adjCol)) {
+                                        const beyondNb = grid[`${p.row}-${p.col + dc * 2}`];
+                                        if (beyondNb && s.avoid.includes(beyondNb.id)) score += 100000;
+                                    }
+                                }
+                            }
+                            if (s.bavard) {
+                                for (const q of placement) {
+                                    if (q.studentId === s.id) continue;
+                                    const nb = studentMap[q.studentId];
+                                    if (!nb || !nb.bavard) continue;
+                                    if (q.row === p.row) {
+                                        const dist = Math.abs(q.col - p.col);
+                                        if (dist === 1) score += 100000;
+                                        else if (dist === 2) {
+                                            const midCol = (p.col + q.col) / 2;
+                                            if (this.aisles.includes(midCol)) score += 100000;
+                                        }
+                                    }
+                                    if (q.col === p.col && Math.abs(q.row - p.row) === 1) score += 100000;
+                                    if (Math.abs(q.row - p.row) === 1 && Math.abs(q.col - p.col) === 1) score += 100000;
+                                }
+                            }
+                            if (s.height === 'petit') { for (let r = 1; r < p.row; r++) if (grid[`${r}-${p.col}`] && grid[`${r}-${p.col}`].height === 'grand') score += 5000; }
+                            if (p.row > 1 && !grid[`${p.row-1}-${p.col}`] && !this.aisles.includes(p.col) && !this.blockedSeats.includes(`${p.row-1}-${p.col}`)) score += 200000;
+                            score += p.row * 100;
+                            if (lS && lS.gender === s.gender) score += 50;
+                        });
+                        return score;
+                    };
+
+                    let temperature = 10000;
+                    const total = 150000, chunk = 2500;
+                    let bestP = JSON.parse(JSON.stringify(currentPlacement)), bestS = calculateScore(bestP), curS = bestS;
+                    let mut = []; currentPlacement.forEach((p,i) => { if (!fixedAssigned.some(f=>f.studentId===p.studentId)) mut.push({type:'student',idx:i,r:p.row,c:p.col}); });
+                    let occ = new Set(currentPlacement.map(p=>`${p.row}-${p.col}`)); validSeats.forEach(vs => { if(!occ.has(`${vs.r}-${vs.c}`)) mut.push({type:'empty',r:vs.r,c:vs.c}); });
+
+                    let iter = 0;
+                    const processChunk = () => {
+                        let end = Math.min(iter + chunk, total);
+                        for (let i = iter; i < end; i++) {
+                            let idx1 = Math.floor(Math.random()*mut.length), idx2 = Math.floor(Math.random()*mut.length);
+                            if (idx1===idx2) continue;
+                            let pos1 = mut[idx1], pos2 = mut[idx2], p1 = pos1.type==='student'?currentPlacement[pos1.idx]:null, p2 = pos2.type==='student'?currentPlacement[pos2.idx]:null;
+                            let r1=pos1.r, c1=pos1.c, r2=pos2.r, c2=pos2.c;
+                            if(p1){p1.row=r2; p1.col=c2;} if(p2){p2.row=r1; p2.col=c1;} pos1.r=r2; pos1.c=c2; pos2.r=r1; pos2.c=c1;
+                            let newS = calculateScore(currentPlacement);
+                            if (newS <= curS || Math.exp((curS - newS) / temperature) > Math.random()) { 
+                                curS=newS; 
+                                if(newS < bestS){
+                                    bestS=newS; 
+                                    bestP=JSON.parse(JSON.stringify(currentPlacement));
+                                } 
+                            }
+                            else { 
+                                if(p1){p1.row=r1; p1.col=c1;} 
+                                if(p2){p2.row=r2; p2.col=c2;} 
+                                pos1.r=r1; pos1.c=c1; pos2.r=r2; pos2.c=c2; 
+                            }
+                            temperature *= 0.9999;
+                        }
+                        
+                        iter = end; 
+                        this.calculationProgress = Math.round((iter/total)*100);
+                        
+                        if (iter < total) { 
+                            requestAnimationFrame(processChunk); 
+                        } else {
+                            this.assignments = bestP; 
+                            this.isCalculating = false; 
+                            this.saveLocal(); 
+                            if (bestS >= 100000) { 
+                                this.diagnosticIssues = this.getPlacementIssues(this.assignments); 
+                                this.showDiagnosticModal = true; 
+                            } else { 
+                                this.perfectScoreMsg = true; setTimeout(() => this.perfectScoreMsg = false, 4000); 
+                            }
+                        }
+                    };
+                    processChunk();
+                }, 100);
+            },
+            isFixed(r, c) { return this.fixedSeats.includes(`${r}-${c}`); },
+            toggleFixed(r, c) {
+                const key = `${r}-${c}`;
+                if (this.fixedSeats.includes(key)) { this.fixedSeats = this.fixedSeats.filter(k => k !== key); }
+                else { this.fixedSeats.push(key); }
+                this.saveLocal();
+            },
+            testCurrentPlan() {
+                if (this.assignments.length === 0) {
+                    alert("Le plan est vide, rien à tester.");
+                    return;
+                }
+                this.diagnosticIssues = this.getPlacementIssues(this.assignments);
+                if (this.diagnosticIssues.length === 0) {
+                    this.perfectScoreMsg = true;
+                    setTimeout(() => this.perfectScoreMsg = false, 4000);
+                } else {
+                    this.showDiagnosticModal = true;
+                }
+            },
+            onDragStartCell(e, r, c) {
+                const sid = this.getOccupant(r, c);
+                if (!sid) { e.preventDefault(); return; }
+                this.dragState = { studentId: sid, fromRow: r, fromCol: c, fromList: false };
+                e.dataTransfer.effectAllowed = 'move';
+                e.currentTarget.classList.add('dragging');
+            },
+            onDragStartList(e, studentId) {
+                this.dragState = { studentId, fromRow: null, fromCol: null, fromList: true };
+                e.dataTransfer.effectAllowed = 'move';
+            },
+            onDragEnd(e) {
+                e.currentTarget.classList.remove('dragging');
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            },
+            onDragOver(e, r, c) {
+                if (this.aisles.includes(c) || this.blockedSeats.includes(`${r}-${c}`)) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                e.currentTarget.classList.add('drag-over');
+            },
+            onDragLeave(e) {
+                e.currentTarget.classList.remove('drag-over');
+            },
+            onDrop(e, toRow, toCol) {
+                e.currentTarget.classList.remove('drag-over');
+                if (this.aisles.includes(toCol) || this.blockedSeats.includes(`${toRow}-${toCol}`)) return;
+                const { studentId, fromRow, fromCol, fromList } = this.dragState;
+                if (!studentId) return;
+                const targetOccupant = this.getOccupant(toRow, toCol);
+                const toKey = `${toRow}-${toCol}`;
+
+                if (!fromList && fromRow !== null) {
+                    const fromKey = `${fromRow}-${fromCol}`;
+                    this.assignments = this.assignments.filter(a => !(a.row === fromRow && a.col === fromCol));
+                    const wasManual = this.manualSeats.includes(fromKey);
+                    this.manualSeats = this.manualSeats.filter(k => k !== fromKey);
+                    this.fixedSeats = this.fixedSeats.filter(k => k !== fromKey);
+                    
+                    if (targetOccupant) {
+                        const targetWasManual = this.manualSeats.includes(toKey);
+                        this.assignments = this.assignments.filter(a => !(a.row === toRow && a.col === toCol));
+                        this.manualSeats = this.manualSeats.filter(k => k !== toKey);
+                        this.fixedSeats = this.fixedSeats.filter(k => k !== toKey);
+                        this.assignments.push({ studentId: targetOccupant, row: fromRow, col: fromCol });
+                        if (targetWasManual) { this.manualSeats.push(fromKey); this.fixedSeats.push(fromKey); }
+                    }
+                    this.assignments.push({ studentId, row: toRow, col: toCol });
+                    if (wasManual) { this.manualSeats.push(toKey); this.fixedSeats.push(toKey); }
+                } else if (fromList) {
+                    const oldA = this.assignments.find(a => a.studentId === studentId);
+                    if (oldA) {
+                        const oldKey = `${oldA.row}-${oldA.col}`;
+                        this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
+                        this.fixedSeats = this.fixedSeats.filter(k => k !== oldKey);
+                    }
+                    this.manualSeats = this.manualSeats.filter(k => k !== toKey);
+                    this.fixedSeats = this.fixedSeats.filter(k => k !== toKey);
+                    this.assignments = this.assignments.filter(a => a.studentId !== studentId && !(a.row === toRow && a.col === toCol));
+                    this.assignments.push({ studentId, row: toRow, col: toCol });
+                    this.manualSeats.push(toKey);
+                    this.fixedSeats.push(toKey);
+                }
+                this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
+                this.saveLocal();
+            },
+            clearGrid() { 
+                this.assignments = this.assignments.filter(a => this.fixedSeats.includes(`${a.row}-${a.col}`)); 
+                this.saveLocal(); 
+            },
+            saveLocal() { 
+                const payload = { 
+                    rows: this.rows, cols: this.cols, students: this.students, 
+                    plans: this.plans, currentPlanIndex: this.currentPlanIndex, 
+                    aisles: this.aisles, blockedSeats: this.blockedSeats, 
+                    fixedSeats: this.fixedSeats, manualSeats: this.manualSeats 
+                };
+
+                const cleanPayload = JSON.parse(JSON.stringify(payload));
+
+                if (this._isElectron) {
+                    window.electronAPI.saveData(cleanPayload);
+                } else {
+                    localStorage.setItem('classManagerData_v10', JSON.stringify(cleanPayload));
+                }
+                this.saveStatus = '✓'; setTimeout(() => this.saveStatus = '', 1500); 
+            },
+            hardReset() { 
+                if (confirm("Tout effacer ? Toutes les données seront supprimées.")) { 
+                    if (this._isElectron) {
+                        window.electronAPI.deleteData().then(() => { window.location.reload(); });
+                    } else {
+                        localStorage.clear(); sessionStorage.clear(); 
+                        window.location.href = window.location.href.split('?')[0] + '?reset=' + Date.now(); 
+                    }
+                } 
+            },
+            _getExportPayload() {
+                return JSON.stringify({ 
+                    rows: this.rows, cols: this.cols, students: this.students, 
+                    plans: this.plans, currentPlanIndex: this.currentPlanIndex, 
+                    aisles: this.aisles, blockedSeats: this.blockedSeats, 
+                    fixedSeats: this.fixedSeats, manualSeats: this.manualSeats 
+                });
+            },
+            exportData() { const blob = new Blob([this._getExportPayload()], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Classe_${new Date().toLocaleDateString()}.json`; a.click(); },
+            exportStudentsOnly() { const blob = new Blob([JSON.stringify({ type: 'students_only', students: this.students })], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Eleves_${new Date().toLocaleDateString()}.json`; a.click(); },
+            importData(e) {
+                const f = e.target.files[0]; if (!f) return;
+                const r = new FileReader(); r.onload = (ev) => {
+                    const d = JSON.parse(ev.target.result);
+                    if (d.type === 'students_only') { this.students = d.students; this.initEmptyPlans(); }
+                    else { Object.assign(this, d); if (!this.manualSeats) this.manualSeats = []; }
+                    this.saveLocal(); this.editMode = false; e.target.value = '';
+                }; r.readAsText(f);
+            },
+            
+            importExcel(e) {
+                const file = e.target.files[0]; if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const data = new Uint8Array(ev.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    
+                    rows.forEach(row => {
+                        const nameParts = row.filter(cell => cell !== null && cell !== undefined && String(cell).trim() !== '');
+                        if (nameParts.length === 0) return;
+                        
+                        const name = nameParts.map(part => String(part).trim()).join(' ');
+                        
+                        if (name && !this.students.find(s => s.name === name)) {
+                            this.students.push({ id: Date.now() + Math.random(), name, gender: '', bavard: false, pap: false, vision: false, aisle: false, height: '', force: [], avoid: [], notes: '' });
+                        }
+                    });
+                    this.saveLocal(); e.target.value = '';
+                };
+                reader.readAsArrayBuffer(file);
+            },
+            
+            importStudentsText() {
+                const lines = this.bulkList.split('\n').map(l => l.trim()).filter(Boolean);
+                lines.forEach(name => {
+                    if (!this.students.find(s => s.name === name)) {
+                        this.students.push({ id: Date.now() + Math.random(), name, gender: '', bavard: false, pap: false, vision: false, aisle: false, height: '', force: [], avoid: [], notes: '' });
+                    }
+                });
+                this.bulkList = ''; this.saveLocal();
+            },
+            get filteredMainList() { return this.students.filter(s => s.name.toLowerCase().includes(this.searchQuery.toLowerCase()) && (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter)).sort((a, b) => a.name.localeCompare(b.name)); },
+            openModal(s) { this.selectedStudent = s; this.neighborFilter = 'ALL'; this.forceFilter = 'ALL'; this.avoidFilter = 'ALL'; },
+            getNeighborHistory(studentId) {
+                const result = [];
+                const studentMap = {};
+                this.students.forEach(s => studentMap[s.id] = s);
+                this.plans.forEach(plan => {
+                    const assignment = plan.assignments.find(a => a.studentId === studentId);
+                    if (!assignment) return;
+                    const neighbors = plan.assignments.filter(a =>
+                        a.row === assignment.row &&
+                        Math.abs(a.col - assignment.col) === 1 &&
+                        !this.aisles.includes(a.col)
+                    ).map(a => studentMap[a.studentId]).filter(Boolean);
+                    if (neighbors.length > 0) {
+                        result.push({ planName: plan.name, neighbors });
+                    }
+                });
+                return result;
+            },
+            closeModal() { this.selectedStudent = null; this.saveLocal(); },
+            get selectedStudentIndex() { return this.filteredMainList.findIndex(s => s.id === this.selectedStudent?.id); },
+            get hasPreviousStudent() { return this.selectedStudentIndex > 0; },
+            get hasNextStudent() { return this.selectedStudentIndex !== -1 && this.selectedStudentIndex < this.filteredMainList.length - 1; },
+            previousStudent() { this.openModal(this.filteredMainList[this.selectedStudentIndex - 1]); },
+            nextStudent() { this.openModal(this.filteredMainList[this.selectedStudentIndex + 1]); },
+            toggleAisle(c) { this.aisles.includes(c) ? this.aisles = this.aisles.filter(x => x !== c) : this.aisles.push(c); this.plans.forEach(p => p.assignments = p.assignments.filter(a => a.col !== c)); this.saveLocal(); },
+            assign(r, c, sid) { this.assignments = this.assignments.filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c))); if (sid) this.assignments.push({ studentId: sid, row: parseInt(r), col: parseInt(c) }); this.saveLocal(); },
+            getOccupant(r, c) { return this.assignments.find(a => a.row === parseInt(r) && a.col === parseInt(c))?.studentId || null; },
+            getStudent(id) { return this.students.find(s => s.id === id); },
+            removeStudent(id) {
+                this.plans.forEach(p => {
+                    const seat = p.assignments.find(a => a.studentId === id);
+                    if (seat) {
+                        const key = `${seat.row}-${seat.col}`;
+                        this.fixedSeats = this.fixedSeats.filter(k => k !== key);
+                        this.manualSeats = this.manualSeats.filter(k => k !== key);
+                    }
+                });
+                this.students = this.students.filter(s => s.id !== id);
+                this.plans.forEach(p => p.assignments = p.assignments.filter(a => a.studentId !== id));
+                this.saveLocal();
+            },
+            
+            exportPDF() {
+                const planName = this.plans[this.currentPlanIndex].name;
+                const studentMap = {};
+                this.students.forEach(s => studentMap[s.id] = s);
+                
+                const nRows = Number(this.rows);
+                const nCols = Number(this.cols);
+                
+                const escapeHTML = (str) => {
+                    if (!str) return '';
+                    return str.replace(/[&<>'"]/g, tag => ({
+                        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+                    }[tag]));
+                };
+                
+                let gridHTML = '';
+                gridHTML += '<div class="back-label">🏫 Fond de la classe</div>';
+                
+                gridHTML += `<div class="grid" style="grid-template-columns: repeat(${nCols}, 1fr);">`;
+                for (let r = nRows; r >= 1; r--) {
+                    for (let c = 1; c <= nCols; c++) {
+                        if (this.aisles.includes(c)) {
+                            gridHTML += '<div class="cell aisle"></div>';
+                            continue;
+                        }
+                        if (this.blockedSeats.includes(`${r}-${c}`)) {
+                            gridHTML += '<div class="cell blocked">✕</div>';
+                            continue;
+                        }
+                        const occupant = this.getOccupant(r, c);
+                        if (occupant) {
+                            const s = studentMap[occupant];
+                            if (!s) { gridHTML += '<div class="cell empty"></div>'; continue; }
+                            
+                            const parts = s.name.split(' ');
+                            const firstName = escapeHTML(parts[0]);
+                            const lastName = escapeHTML(parts.slice(1).join(' '));
+                            
+                            gridHTML += `<div class="cell occupied">`;
+                            gridHTML += `<span class="name">${firstName}${lastName ? '<br>' + lastName : ''}</span>`;
+                            gridHTML += '</div>';
+                        } else {
+                            gridHTML += '<div class="cell empty"></div>';
+                        }
+                    }
+                }
+                gridHTML += '</div>';
+                
+                gridHTML += '<div class="board">TABLEAU — DEVANT DE LA CLASSE</div>';
+                
+                const w = window.open('', '_blank');
+                if (!w) {
+                    alert("⚠️ L'ouverture du PDF a été bloquée par votre navigateur.\n\nVeuillez autoriser les fenêtres pop-up (fenêtres surgissantes) pour cette page afin de pouvoir générer et imprimer le plan de classe.");
+                    return;
+                }
+                
+                w.document.write(`<!DOCTYPE html><html><head><title>Plan de classe - ${escapeHTML(planName)}</title>
+                <style>
+                    @page { size: landscape; margin: 10mm; }
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+                        padding: 20px 30px;
+                        color: #1e293b;
+                        background: #f8fafc;
+                    }
+                    .header { text-align: center; margin-bottom: 24px; }
+                    .header h1 {
+                        font-size: 22px; font-weight: 900; color: #1e293b;
+                        margin-bottom: 2px; letter-spacing: -0.5px;
+                    }
+                    .header h1 span { color: #10b981; font-style: italic; }
+                    .header .date { font-size: 11px; color: #94a3b8; font-weight: 600; }
+                    .back-label {
+                        text-align: center; margin-bottom: 18px;
+                        color: #94a3b8; font-size: 10px;
+                        font-weight: 700; text-transform: uppercase;
+                        letter-spacing: 3px;
+                    }
+                    .board {
+                        text-align: center; margin: 20px auto 0; width: 70%;
+                        background: linear-gradient(135deg, #1e293b, #334155);
+                        color: white; padding: 10px 0;
+                        border-radius: 16px 16px 0 0;
+                        font-weight: 900; font-size: 10px;
+                        letter-spacing: 4px; text-transform: uppercase;
+                        border-bottom: 4px solid #10b981;
+                        box-shadow: 0 4px 12px rgba(30,41,59,0.3);
+                    }
+                    .grid {
+                        display: grid; gap: 8px;
+                        max-width: 95%; margin: 0 auto;
+                        padding: 24px;
+                        background: white;
+                        border-radius: 24px;
+                        border: 1px solid #e2e8f0;
+                        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+                    }
+                    .cell {
+                        border-radius: 14px;
+                        display: flex; flex-direction: column;
+                        align-items: center; justify-content: center;
+                        position: relative; min-height: 70px;
+                        padding: 6px 2px;
+                    }
+                    .cell.aisle {
+                        background: #f1f5f9;
+                        border-radius: 8px;
+                        opacity: 0.5;
+                    }
+                    .cell.blocked {
+                        background: repeating-linear-gradient(45deg, #f1f5f9, #f1f5f9 5px, #e2e8f0 5px, #e2e8f0 10px);
+                        border: 1px solid #e2e8f0;
+                        color: #94a3b8; font-size: 14px; font-weight: 700;
+                    }
+                    .cell.empty {
+                        border: 2px dashed #e2e8f0;
+                        background: #fafbfc;
+                    }
+                    .cell.occupied {
+                        border: 2px solid #34d399;
+                        background: linear-gradient(145deg, #ecfdf5, #d1fae5);
+                        box-shadow: 0 2px 8px rgba(52,211,153,0.15);
+                        padding: 4px;
+                    }
+                    .name {
+                        font-weight: 800; font-size: 16px;
+                        text-align: center; line-height: 1.2;
+                        color: #1e293b; word-break: break-word;
+                    }
+                </style></head><body>
+                    <div class="header">
+                        <h1><span>ClassManager</span> — ${escapeHTML(planName)}</h1>
+                        <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    ${gridHTML}
+                </body></html>`);
+                w.document.close();
+                setTimeout(() => { w.print(); }, 500);
+            }
+        };
+    }
+    </script>
+</body>
+</html>
