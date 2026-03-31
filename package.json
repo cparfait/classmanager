@@ -4,7 +4,7 @@
   "description": "ClassManager Pro - Gestion de placement d'élèves en classe",
   "main": "main.js",
   "author": "Cris Tof",
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir", 
