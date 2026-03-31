@@ -31,28 +31,56 @@ Si vous souhaitez modifier le code ou générer vous-même l'exécutable (`.exe`
 
 Commencez par récupérer le projet et télécharger les bibliothèques requises (comme le moteur Electron et les outils de compilation) :
 
-\`\`\`bash
+```bash
 # Cloner le projet
-git clone https://github.com/cparfait/classmanager.git
+git clone [https://github.com/cparfait/classmanager.git](https://github.com/cparfait/classmanager.git)
 cd classmanager
 
 # Télécharger et installer les dépendances (Electron, electron-builder...)
 npm install
-\`\`\`
+```
 
 ### 2. Démarrer en mode Développement
 
 Pour tester vos modifications en direct sans avoir à compiler l'application :
 
-\`\`\`bash
+```bash
 npm start
-\`\`\`
+```
 
 ### Structure du projet
 Pour garantir le fonctionnement hors-ligne, assurez-vous que les bibliothèques front-end sont bien présentes dans votre dossier :
 * `js/tailwind.min.js`
 * `js/alpine.min.js`
 * `js/xlsx.full.min.js`
+
+---
+
+## ⚠️ Dépannage (Réseau restrictif / Proxy des écoles)
+
+Si l'installation (`npm install`) ou la compilation (`npm run build-portable`) échoue avec une erreur de certificat SSL (`UNABLE_TO_VERIFY_LEAF_SIGNATURE`) ou une erreur de téléchargement `403` (blocage de `winCodeSign`), c'est probablement le pare-feu ou l'antivirus de votre établissement qui bloque les serveurs.
+
+Voici la marche à suivre complète pour forcer l'installation sur Windows :
+
+**1. Nettoyage :** Si une installation a déjà échoué, supprimez manuellement le dossier `node_modules` et le fichier `package-lock.json` à la racine du projet.
+
+**2. Configuration des serveurs miroirs :** Ouvrez votre terminal (Invite de commandes classique `cmd`) à la racine du projet, et tapez ces commandes une par une pour baisser la sécurité SSL locale et pointer vers des serveurs de secours :
+
+```cmd
+npm config set strict-ssl false
+set NODE_TLS_REJECT_UNAUTHORIZED=0
+set ELECTRON_MIRROR=[https://npmmirror.com/mirrors/electron/](https://npmmirror.com/mirrors/electron/)
+set ELECTRON_BUILDER_BINARIES_MIRROR=[https://npmmirror.com/mirrors/electron-builder-binaries/](https://npmmirror.com/mirrors/electron-builder-binaries/)
+```
+*(Note : Si vous utilisez PowerShell, remplacez `set VARIABLE=valeur` par `$env:VARIABLE="valeur"`)*
+
+**3. Relancez l'installation :**
+Maintenant que les routes sont dégagées, vous pouvez relancer le téléchargement complet puis compiler :
+
+```bash
+npm install
+npm run build-portable
+```
 
 ---
 
@@ -87,6 +115,15 @@ Oui. Contrairement aux versions précédentes, toutes les ressources sont embarq
 
 **Comment transférer mes données sur un autre ordinateur ?**
 Copiez simplement votre fichier local `classmanager-data.json` et placez-le au même endroit que votre nouvel exécutable sur l'autre machine.
+
+---
+
+## 🤝 Contribution & Licence
+
+Ce projet est sous licence **GPL-3.0**. Vous êtes libre de l'utiliser, de le modifier et de le distribuer. 
+Cependant, si vous publiez une version modifiée de ClassManager Pro, vous avez l'obligation d'en publier le code source sous cette même licence afin de garantir que l'outil reste ouvert et collaboratif pour tous les enseignants.
+
+Les *Pull Requests* sont les bienvenues !
 
 ---
 Développé avec ❤️ par **Cris Tof**
