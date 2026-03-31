@@ -46,13 +46,17 @@ function createWindow() {
 
     /**
      * Sécurité : Ouvre les liens externes (http, mailto) dans le navigateur par défaut
-     * de l'utilisateur au lieu de les charger dans la fenêtre Electron.
+     * de l'utilisateur. Autorise les autres (comme la génération PDF) à s'ouvrir.
      */
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        // 1. Si c'est un lien web classique, on l'ouvre sur Chrome/Edge/Firefox
         if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('mailto:')) {
             shell.openExternal(url);
+            return { action: 'deny' }; // On refuse l'ouverture dans l'app car le navigateur s'en charge
         }
-        return { action: 'deny' };
+        
+        // 2. Pour tout le reste (notamment ton PDF généré), ON AUTORISE L'OUVERTURE
+        return { action: 'allow' };
     });
 
     mainWindow.webContents.on('will-navigate', (event, url) => {
