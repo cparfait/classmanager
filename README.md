@@ -29,7 +29,7 @@
 
 1.  **Cloner le projet** :
     ```bash
-    git clone [https://github.com/cparfait/classmanager.git](https://github.com/cparfait/classmanager.git)
+    git clone https://github.com/cparfait/classmanager.git
     cd ClassManager
     ```
 
