@@ -33,7 +33,7 @@ Commencez par récupérer le projet et télécharger les bibliothèques requises
 
 ```bash
 # Cloner le projet
-git clone [https://github.com/cparfait/classmanager.git](https://github.com/cparfait/classmanager.git)
+git clone https://github.com/cparfait/classmanager.git
 cd classmanager
 
 # Télécharger et installer les dépendances (Electron, electron-builder...)
