@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     saveData:    (data)   => ipcRenderer.invoke('save-data', data),
     deleteData:  ()       => ipcRenderer.invoke('delete-data'),
     getDataPath: ()       => ipcRenderer.invoke('get-data-path'),
-    openEmail:   ()       => ipcRenderer.invoke('open-email') // <--- NOUVELLE LIGNE
+    openEmail:   ()       => ipcRenderer.invoke('open-email'),
+    printToPdf:  (html)   => ipcRenderer.invoke('print-to-pdf', html)
 });

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -94,12 +94,28 @@ ipcMain.handle('load-data', async () => {
 // Sauvegarder les données
 ipcMain.handle('save-data', async (event, data) => {
     const filePath = getDataPath();
+    const tempPath = filePath + '.tmp';
+    
+    // Validation minimale pour éviter d'écrire n'importe quoi
+    if (!data || typeof data !== 'object') {
+        console.error('Données invalides reçues');
+        return false;
+    }
+    if (!Array.isArray(data.students) || !Array.isArray(data.plans)) {
+        console.error('Structure de données invalide (students ou plans manquant)');
+        return false;
+    }
+    
     try {
-        // Sauvegarde propre avec indentation pour faciliter la lecture/backup
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+        // Écriture dans un fichier temporaire
+        fs.writeFileSync(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+        // Renommage atomique (remplace l'ancien fichier)
+        fs.renameSync(tempPath, filePath);
         return true;
     } catch (err) {
         console.error('Erreur lors de l\'écriture des données:', err);
+        // Nettoyage du temporaire si présent
+        if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
         return false;
     }
 });
@@ -121,6 +137,43 @@ ipcMain.handle('delete-data', async () => {
 // Obtenir le chemin réel (utile pour le débogage)
 ipcMain.handle('get-data-path', async () => {
     return getDataPath();
+});
+
+// Générer un vrai PDF via printToPDF (sans dialog d'impression)
+ipcMain.handle('print-to-pdf', async (event, htmlContent) => {
+    const tmpFile = path.join(app.getPath('temp'), 'classmanager-print.html');
+    try {
+        fs.writeFileSync(tmpFile, htmlContent, 'utf-8');
+        const printWin = new BrowserWindow({
+            show: false,
+            webPreferences: { contextIsolation: true, nodeIntegration: false }
+        });
+        await printWin.loadFile(tmpFile);
+        const pdfBuffer = await printWin.webContents.printToPDF({
+            landscape: true,
+            pageSize: 'A4',
+            printBackground: true,
+            margins: { top: 0.5, bottom: 0.5, left: 0.5, right: 0.5 }
+        });
+        printWin.close();
+        fs.unlinkSync(tmpFile);
+
+        const { filePath } = await dialog.showSaveDialog(mainWindow, {
+            title: 'Enregistrer le plan de classe',
+            defaultPath: path.join(app.getPath('documents'), 'plan-de-classe.pdf'),
+            filters: [{ name: 'PDF', extensions: ['pdf'] }]
+        });
+        if (filePath) {
+            fs.writeFileSync(filePath, pdfBuffer);
+            shell.openPath(filePath);
+            return { success: true };
+        }
+        return { success: false, cancelled: true };
+    } catch (err) {
+        console.error('Erreur génération PDF:', err);
+        if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+        return { success: false, error: err.message };
+    }
 });
 
 // === CYCLE DE VIE DE L'APPLICATION ===
