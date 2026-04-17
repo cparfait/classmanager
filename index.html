@@ -533,10 +533,17 @@
                                 <span class="flex-1 text-xs font-bold text-slate-700 truncate" x-text="teacher.name"></span>
                                 <span class="text-[9px] text-slate-400 font-medium"
                                       x-text="classes.filter(c => c.teacherId === teacher.id).length + ' cl.'"></span>
-                                <button @click="openEditTeacher(teacher); showConfigModal = false"
-                                        class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-indigo-500 transition text-xs">✏️</button>
-                                <button @click="deleteTeacher(teacher.id)"
-                                        class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition text-xs font-black">✕</button>
+                                <template x-if="teacher.id === currentTeacherId">
+                                    <button @click="openEditTeacher(teacher); showConfigModal = false"
+                                            class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-indigo-500 transition text-xs">✏️</button>
+                                </template>
+                                <template x-if="teacher.id === currentTeacherId">
+                                    <button @click="deleteTeacher(teacher.id)"
+                                            class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition text-xs font-black">✕</button>
+                                </template>
+                                <template x-if="teacher.id !== currentTeacherId">
+                                    <span class="w-4 h-4 shrink-0"></span>
+                                </template>
                             </div>
                         </template>
                         <p x-show="teachers.length === 0" class="text-[10px] text-slate-400 italic text-center py-1">Aucun profil créé</p>
@@ -1807,6 +1814,7 @@
                 this.editMode = true;
             },
             openEditTeacher(teacher) {
+                if (teacher.id !== this.currentTeacherId) return; // sécurité
                 this.editTeacherForm = { id: teacher.id, name: teacher.name, color: teacher.color, pinOld: '', pinNew: '', pinConfirm: '', pinOldError: '', pinNewError: '' };
                 this.showEditTeacherModal = true;
             },
@@ -1858,6 +1866,7 @@
                 this.saveLocal();
             },
             deleteTeacher(teacherId) {
+                if (teacherId !== this.currentTeacherId) return; // sécurité
                 const t = this.teachers.find(t => t.id === teacherId);
                 if (!confirm(`Supprimer le profil "${t?.name}" ? Toutes ses classes seront également supprimées.`)) return;
                 this.teachers = this.teachers.filter(t => t.id !== teacherId);
