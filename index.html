@@ -298,10 +298,18 @@
                 <p x-show="confirmModal.suggestion" class="text-sm text-indigo-600 font-semibold bg-indigo-50 rounded-xl px-3 py-2" x-text="confirmModal.suggestion"></p>
             </div>
             <div class="flex flex-col gap-2 px-6 pb-6">
+                <!-- Plan vide existant disponible -->
                 <template x-if="confirmModal.nextPlanIndex !== -1">
                     <button @click="currentPlanIndex = confirmModal.nextPlanIndex; switchPlan(confirmModal.nextPlanIndex); confirmModal.show = false; $nextTick(() => _runGenerateAutoPlan())"
                             class="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white rounded-xl font-black text-sm transition shadow-md">
                         ✨ Utiliser <span x-text="confirmModal.nextPlanName"></span> et générer
+                    </button>
+                </template>
+                <!-- Aucun plan vide — proposer d'en créer un nouveau -->
+                <template x-if="confirmModal.createNewPlan">
+                    <button @click="addPlan(); confirmModal.show = false; $nextTick(() => _runGenerateAutoPlan())"
+                            class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-black text-sm transition shadow-md">
+                        ✨ Créer <span x-text="confirmModal.nextPlanName"></span> et générer
                     </button>
                 </template>
                 <div class="flex gap-2">
@@ -811,7 +819,7 @@
             dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
 
             showContactModal: false, showConfigModal: false,
-            confirmModal: { show: false, title: '', message: '', suggestion: '', nextPlanIndex: -1, nextPlanName: '', onConfirm: null, confirmLabel: 'Confirmer' },
+            confirmModal: { show: false, title: '', message: '', suggestion: '', nextPlanIndex: -1, nextPlanName: '', onConfirm: null, confirmLabel: 'Confirmer', createNewPlan: false },
             darkMode: false,
             showOnboarding: false, onboardingStep: 0,
 
@@ -1054,13 +1062,17 @@
                 if (currentPlan.assignments && currentPlan.assignments.length > 0) {
                     const nextPlanIndex = this.plans.findIndex((p, i) => i !== this.currentPlanIndex && (!p.assignments || p.assignments.length === 0));
                     const nextPlan = nextPlanIndex !== -1 ? this.plans[nextPlanIndex] : null;
+                    const newPlanName = `Plan ${String(this.plans.length + 1).padStart(2, '0')}`;
                     this.confirmModal = {
                         show: true,
                         title: 'Plan déjà utilisé',
                         message: `Le plan "${currentPlan.name}" contient déjà ${currentPlan.assignments.length} élève(s) placé(s). Voulez-vous le remplacer ?`,
-                        suggestion: nextPlan ? `💡 Le plan "${nextPlan.name}" est vide et disponible.` : '',
+                        suggestion: nextPlan
+                            ? `💡 Le plan "${nextPlan.name}" est vide et disponible.`
+                            : `💡 Tous les plans sont utilisés — créer "${newPlanName}" automatiquement ?`,
                         nextPlanIndex,
-                        nextPlanName: nextPlan ? nextPlan.name : '',
+                        nextPlanName: nextPlan ? nextPlan.name : newPlanName,
+                        createNewPlan: !nextPlan,
                         confirmLabel: '↺ Remplacer',
                         onConfirm: () => this._runGenerateAutoPlan()
                     };
