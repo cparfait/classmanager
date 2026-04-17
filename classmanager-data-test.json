@@ -1,0 +1,2609 @@
+{
+  "version": 2,
+  "appMode": "multi",
+  "teachers": [
+    {
+      "id": "t_1700000000000",
+      "name": "Sophie Martin",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000001",
+      "name": "Marie Bernard",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000002",
+      "name": "Julie Dubois",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000003",
+      "name": "Claire Thomas",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000004",
+      "name": "Isabelle Robert",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000005",
+      "name": "Nathalie Richard",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000006",
+      "name": "Anne Petit",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000007",
+      "name": "Céline Durand",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000008",
+      "name": "Laurence Leroy",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000009",
+      "name": "Valérie Moreau",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000010",
+      "name": "Thomas Simon",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000011",
+      "name": "Pierre Laurent",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000012",
+      "name": "Nicolas Lefebvre",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000013",
+      "name": "Julien Michel",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000014",
+      "name": "Antoine Garcia",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000015",
+      "name": "François David",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000016",
+      "name": "David Bertrand",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000017",
+      "name": "Stéphane Roux",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000018",
+      "name": "Laurent Vincent",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000019",
+      "name": "Philippe Fournier",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000020",
+      "name": "Emma Morin",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000021",
+      "name": "Lucie Girard",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000022",
+      "name": "Camille Andre",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000023",
+      "name": "Élise Lefevre",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000024",
+      "name": "Manon Mercier",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000025",
+      "name": "Chloé Dupont",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000026",
+      "name": "Alice Lambert",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000027",
+      "name": "Léa Bonnet",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000028",
+      "name": "Anaïs François",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000029",
+      "name": "Pauline Martinez",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000030",
+      "name": "Marc Legrand",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000031",
+      "name": "Romain Garnier",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000032",
+      "name": "Maxime Faure",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000033",
+      "name": "Kevin Rousseau",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000034",
+      "name": "Alexis Blanc",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000035",
+      "name": "Thibault Guerin",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000036",
+      "name": "Guillaume Muller",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000037",
+      "name": "Mathieu Henry",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000038",
+      "name": "Baptiste Roussel",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000039",
+      "name": "Rémi Nicolas",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000040",
+      "name": "Sandrine Perrin",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000041",
+      "name": "Virginie Morel",
+      "pin": "0000",
+      "color": "#10b981"
+    },
+    {
+      "id": "t_1700000000042",
+      "name": "Émilie Mathieu",
+      "pin": "0000",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "t_1700000000043",
+      "name": "Audrey Clement",
+      "pin": "0000",
+      "color": "#ef4444"
+    },
+    {
+      "id": "t_1700000000044",
+      "name": "Séverine Gauthier",
+      "pin": "0000",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "t_1700000000045",
+      "name": "Caroline Dumont",
+      "pin": "0000",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "t_1700000000046",
+      "name": "Patricia Lopez",
+      "pin": "0000",
+      "color": "#ec4899"
+    },
+    {
+      "id": "t_1700000000047",
+      "name": "Sylvie Fontaine",
+      "pin": "0000",
+      "color": "#14b8a6"
+    },
+    {
+      "id": "t_1700000000048",
+      "name": "Nadège Chevalier",
+      "pin": "0000",
+      "color": "#6366f1"
+    },
+    {
+      "id": "t_1700000000049",
+      "name": "Brigitte Robin",
+      "pin": "0000",
+      "color": "#10b981"
+    }
+  ],
+  "classes": [
+    {
+      "id": "c_1700000000000",
+      "teacherId": "t_1700000000000",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000001,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000001",
+      "teacherId": "t_1700000000000",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000002,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000002",
+      "teacherId": "t_1700000000001",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000003,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000003",
+      "teacherId": "t_1700000000001",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000004,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000004",
+      "teacherId": "t_1700000000002",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000005,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000005",
+      "teacherId": "t_1700000000002",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000006,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000006",
+      "teacherId": "t_1700000000003",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000007,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000007",
+      "teacherId": "t_1700000000003",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000008,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000008",
+      "teacherId": "t_1700000000004",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000009,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000009",
+      "teacherId": "t_1700000000004",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000010,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000010",
+      "teacherId": "t_1700000000005",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000011,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000011",
+      "teacherId": "t_1700000000005",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000012,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000012",
+      "teacherId": "t_1700000000006",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000013,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000013",
+      "teacherId": "t_1700000000006",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000014,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000014",
+      "teacherId": "t_1700000000007",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000015,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000015",
+      "teacherId": "t_1700000000007",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000016,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000016",
+      "teacherId": "t_1700000000008",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000017,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000017",
+      "teacherId": "t_1700000000008",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000018,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000018",
+      "teacherId": "t_1700000000009",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000019,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000019",
+      "teacherId": "t_1700000000009",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000020,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000020",
+      "teacherId": "t_1700000000010",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000021,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000021",
+      "teacherId": "t_1700000000010",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000022,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000022",
+      "teacherId": "t_1700000000011",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000023,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000023",
+      "teacherId": "t_1700000000011",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000024,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000024",
+      "teacherId": "t_1700000000012",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000025,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000025",
+      "teacherId": "t_1700000000012",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000026,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000026",
+      "teacherId": "t_1700000000013",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000027,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000027",
+      "teacherId": "t_1700000000013",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000028,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000028",
+      "teacherId": "t_1700000000014",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000029,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000029",
+      "teacherId": "t_1700000000014",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000030,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000030",
+      "teacherId": "t_1700000000015",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000031,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000031",
+      "teacherId": "t_1700000000015",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000032,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000032",
+      "teacherId": "t_1700000000016",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000033,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000033",
+      "teacherId": "t_1700000000016",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000034,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000034",
+      "teacherId": "t_1700000000017",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000035,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000035",
+      "teacherId": "t_1700000000017",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000036,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000036",
+      "teacherId": "t_1700000000018",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000037,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000037",
+      "teacherId": "t_1700000000018",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000038,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000038",
+      "teacherId": "t_1700000000019",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000039,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000039",
+      "teacherId": "t_1700000000019",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000040,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000040",
+      "teacherId": "t_1700000000020",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000041,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000041",
+      "teacherId": "t_1700000000020",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000042,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000042",
+      "teacherId": "t_1700000000021",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000043,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000043",
+      "teacherId": "t_1700000000021",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000044,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000044",
+      "teacherId": "t_1700000000022",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000045,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000045",
+      "teacherId": "t_1700000000022",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000046,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000046",
+      "teacherId": "t_1700000000023",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000047,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000047",
+      "teacherId": "t_1700000000023",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000048,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000048",
+      "teacherId": "t_1700000000024",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000049,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000049",
+      "teacherId": "t_1700000000024",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000050,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000050",
+      "teacherId": "t_1700000000025",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000051,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000051",
+      "teacherId": "t_1700000000025",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000052,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000052",
+      "teacherId": "t_1700000000026",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000053,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000053",
+      "teacherId": "t_1700000000026",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000054,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000054",
+      "teacherId": "t_1700000000027",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000055,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000055",
+      "teacherId": "t_1700000000027",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000056,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000056",
+      "teacherId": "t_1700000000028",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000057,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000057",
+      "teacherId": "t_1700000000028",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000058,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000058",
+      "teacherId": "t_1700000000029",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000059,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000059",
+      "teacherId": "t_1700000000029",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000060,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000060",
+      "teacherId": "t_1700000000030",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000061,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000061",
+      "teacherId": "t_1700000000030",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000062,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000062",
+      "teacherId": "t_1700000000031",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000063,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000063",
+      "teacherId": "t_1700000000031",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000064,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000064",
+      "teacherId": "t_1700000000032",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000065,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000065",
+      "teacherId": "t_1700000000032",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000066,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000066",
+      "teacherId": "t_1700000000033",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000067,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000067",
+      "teacherId": "t_1700000000033",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000068,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000068",
+      "teacherId": "t_1700000000034",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000069,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000069",
+      "teacherId": "t_1700000000034",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000070,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000070",
+      "teacherId": "t_1700000000035",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000071,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000071",
+      "teacherId": "t_1700000000035",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000072,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000072",
+      "teacherId": "t_1700000000036",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000073,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000073",
+      "teacherId": "t_1700000000036",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000074,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000074",
+      "teacherId": "t_1700000000037",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000075,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000075",
+      "teacherId": "t_1700000000037",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000076,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000076",
+      "teacherId": "t_1700000000038",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000077,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000077",
+      "teacherId": "t_1700000000038",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000078,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000078",
+      "teacherId": "t_1700000000039",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000079,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000079",
+      "teacherId": "t_1700000000039",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000080,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000080",
+      "teacherId": "t_1700000000040",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000081,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000081",
+      "teacherId": "t_1700000000040",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000082,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000082",
+      "teacherId": "t_1700000000041",
+      "name": "Classe CE1",
+      "level": "CE1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000083,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000083",
+      "teacherId": "t_1700000000041",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000084,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000084",
+      "teacherId": "t_1700000000042",
+      "name": "Classe CE2",
+      "level": "CE2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000085,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000085",
+      "teacherId": "t_1700000000042",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000086,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000086",
+      "teacherId": "t_1700000000043",
+      "name": "Classe CM1",
+      "level": "CM1",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000087,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000087",
+      "teacherId": "t_1700000000043",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000088,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000088",
+      "teacherId": "t_1700000000044",
+      "name": "Classe CM2",
+      "level": "CM2",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000089,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000089",
+      "teacherId": "t_1700000000044",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000090,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000090",
+      "teacherId": "t_1700000000045",
+      "name": "Classe 6ème",
+      "level": "6ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000091,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000091",
+      "teacherId": "t_1700000000045",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000092,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000092",
+      "teacherId": "t_1700000000046",
+      "name": "Classe 5ème",
+      "level": "5ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000093,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000093",
+      "teacherId": "t_1700000000046",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000094,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000094",
+      "teacherId": "t_1700000000047",
+      "name": "Classe 4ème",
+      "level": "4ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000095,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000095",
+      "teacherId": "t_1700000000047",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000096,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000096",
+      "teacherId": "t_1700000000048",
+      "name": "Classe 3ème",
+      "level": "3ème",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000097,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000097",
+      "teacherId": "t_1700000000048",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000098,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000098",
+      "teacherId": "t_1700000000049",
+      "name": "Classe 2nde",
+      "level": "2nde",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000099,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    },
+    {
+      "id": "c_1700000000099",
+      "teacherId": "t_1700000000049",
+      "name": "Classe CP",
+      "level": "CP",
+      "year": "2025-2026",
+      "rows": 5,
+      "cols": 9,
+      "students": [],
+      "aisles": [],
+      "blockedSeats": [],
+      "fixedSeats": [],
+      "manualSeats": [],
+      "plans": [
+        {
+          "id": 1700000000100,
+          "name": "Plan 01",
+          "assignments": []
+        }
+      ],
+      "currentPlanIndex": 0,
+      "editMode": false
+    }
+  ],
+  "currentClassId": "c_1700000000000"
+}

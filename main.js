@@ -250,13 +250,7 @@ function setupAutoUpdater() {
 
     autoUpdater.on('error', (err) => {
         log.write(`ERREUR : ${err.message}`);
-        dialog.showMessageBox(mainWindow, {
-            type: 'error',
-            title: 'Erreur de mise à jour',
-            message: 'Impossible de vérifier les mises à jour.',
-            detail: err.message + `\n\nLog : ${log.logPath}`,
-            buttons: ['OK']
-        });
+        // Erreur silencieuse — ne pas déranger l'utilisateur pour un problème réseau ou de config
     });
 }
 

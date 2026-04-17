@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const XLSX=require\\('C:/laragon/www/classmanager/node_modules/xlsx'\\); const wb=XLSX.readFile\\('C:/Users/chris/Desktop/Classe _ SIXIEME 2 \\(1\\).xlsx'\\); const ws=wb.Sheets[wb.SheetNames[0]]; console.log\\(JSON.stringify\\(XLSX.utils.sheet_to_json\\(ws,{header:1,defval:''}\\)\\).slice\\(0,3000\\)\\)\")",
+      "Bash(python3 -c \"import openpyxl; wb = openpyxl.load_workbook\\('C:/Users/chris/Desktop/Classe _ SIXIEME 2 \\(1\\).xlsx'\\); ws = wb.active; rows = list\\(ws.iter_rows\\(min_row=1, max_row=5, values_only=True\\)\\); print\\('Headers:', rows[0]\\); print\\('\\\\\\\\nSample rows:'\\); [print\\(row\\) for row in rows[1:]]; print\\('\\\\\\\\nTotal rows with data:', ws.max_row\\)\")",
+      "Read(//c/Users/chris/Desktop/**)",
+      "Bash(python3)",
+      "Bash(unzip -p \"Classe _ SIXIEME 2 \\(1\\).xlsx\" xl/worksheets/sheet1.xml)",
+      "Bash(unzip -p \"Classe _ SIXIEME 2 \\(1\\).xlsx\" xl/sharedStrings.xml)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('index.html','utf8'\\); const errors=[]; if\\(!html.includes\\('addPlan\\(\\)'\\)\\) errors.push\\('addPlan manquant'\\); if\\(!html.includes\\('deletePlan\\(index\\)'\\)\\) errors.push\\('deletePlan manquant'\\); if\\(!html.includes\\('_doDeletePlan'\\)\\) errors.push\\('_doDeletePlan manquant'\\); if\\(!html.includes\\('editingPlanIdx'\\)\\) errors.push\\('editingPlanIdx manquant'\\); if\\(!html.includes\\('confirmLabel'\\)\\) errors.push\\('confirmLabel manquant'\\); if\\(!html.includes\\('#c7d2fe'\\)\\) errors.push\\('fix dark indigo-700 manquant'\\); if\\(!html.includes\\('#94a3b8'\\)\\) errors.push\\('fix dark slate-400 manquant'\\); console.log\\(errors.length===0 ? 'OK - tous les éléments présents' : errors.join\\(', '\\)\\);\")",
+      "Bash(node -e ' *)",
+      "Bash(npm install *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
