@@ -1248,23 +1248,6 @@
                 <span>📄</span> PDF
             </button>
                 
-            <!-- Badge prof connecté (mode multi) -->
-            <div x-show="appMode === 'multi' && currentTeacher"
-                 class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl">
-                <span class="w-3 h-3 rounded-full shrink-0 shadow-sm"
-                      :style="'background:' + (currentTeacher?.color || '#6366f1')"></span>
-                <span class="text-sm font-black text-slate-700 max-w-[120px] truncate"
-                      x-text="currentTeacher?.name"></span>
-            </div>
-
-            <!-- Verrouiller la session (mode multi) -->
-            <button x-show="appMode === 'multi' && currentTeacherId"
-                    @click="lockSession()"
-                    title="Verrouiller la session"
-                    class="w-11 h-11 bg-slate-100 hover:bg-red-50 border-2 border-slate-200 hover:border-red-300 text-slate-400 hover:text-red-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
-                🔒
-            </button>
-
             <button @click="toggleDarkMode()"
                     :title="darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'"
                     class="w-11 h-11 bg-slate-100 hover:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
@@ -1275,11 +1258,6 @@
                     class="w-11 h-11 bg-slate-100 hover:bg-indigo-100 border-2 border-slate-200 hover:border-indigo-400 text-slate-500 hover:text-indigo-600 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
                 ⚙️
             </button>
-            <div class="ml-1">
-                <button @click="showContactModal = true" title="Contacter le développeur" class="block transition-all duration-300 hover:scale-110 hover:rotate-3 focus:outline-none">
-                    <img src="cris.jpg" alt="Cristof" class="w-11 h-11 rounded-full border-2 border-indigo-200 hover:border-amber-400 shadow-md object-cover">
-                </button>
-            </div>
         </div>
     </header>
 
@@ -1343,6 +1321,41 @@
                             <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm">🗑️</button>
                         </div>
                     </template>
+                </div>
+            </div>
+
+            <!-- Pied de sidebar : contact dev (solo) ou prof connecté + déconnexion (multi) -->
+            <div class="mt-auto border-t border-slate-100 p-3">
+                <!-- Mode solo / non défini : contact dev -->
+                <div x-show="appMode !== 'multi'" class="flex items-center gap-3">
+                    <button @click="showContactModal = true" title="Contacter le développeur"
+                            class="block transition-all hover:scale-110 hover:rotate-3 focus:outline-none shrink-0">
+                        <img src="cris.jpg" alt="Cristof" class="w-10 h-10 rounded-full border-2 border-indigo-200 hover:border-amber-400 shadow-md object-cover">
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-black text-slate-700 truncate">Christophe Parfait</p>
+                        <button @click="showContactModal = true"
+                                class="text-[10px] text-slate-400 hover:text-indigo-500 font-medium transition">
+                            Contacter le développeur →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode multi : prof connecté + verrouiller -->
+                <div x-show="appMode === 'multi' && currentTeacher" class="flex items-center gap-3">
+                    <!-- Avatar coloré -->
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-base font-black text-white shadow-md shrink-0"
+                         :style="'background:' + (currentTeacher?.color || '#6366f1')"
+                         x-text="currentTeacher?.name.charAt(0).toUpperCase()"></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-black text-slate-700 truncate" x-text="currentTeacher?.name"></p>
+                        <p class="text-[10px] text-slate-400 font-medium"
+                           x-text="visibleClasses.length + ' classe(s)'"></p>
+                    </div>
+                    <button @click="lockSession()" title="Verrouiller la session"
+                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-red-50 text-slate-400 hover:text-red-500 border border-slate-200 hover:border-red-300 transition text-sm shrink-0">
+                        🔒
+                    </button>
                 </div>
             </div>
         </aside>
