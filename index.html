@@ -498,6 +498,59 @@
                     <label class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
                 </div>
                 <button @click="exportStudentsOnly(); showConfigModal = false" class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition shadow-sm">👥 Exporter fiches élèves</button>
+                <!-- Mode d'utilisation -->
+                <div class="border-t border-slate-100 pt-3">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d'utilisation</p>
+                    <div class="flex items-center justify-between bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-100">
+                        <span class="text-xs font-bold text-slate-600" x-text="appMode === 'multi' ? '👥 Salle des maîtres' : '👤 Solo'"></span>
+                        <button @click="showModeSelection = true; showConfigModal = false"
+                                class="text-[10px] font-black text-indigo-500 hover:text-indigo-700 transition">
+                            Changer →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gestion des profils (mode multi) -->
+                <div x-show="appMode === 'multi'" class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Profils enseignants</p>
+                        <button @click="showCreateTeacherModal = true; showConfigModal = false"
+                                class="text-[10px] font-black text-indigo-500 hover:text-indigo-700 transition">＋ Ajouter</button>
+                    </div>
+                    <div class="space-y-1.5">
+                        <template x-for="teacher in teachers" :key="teacher.id">
+                            <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100 group">
+                                <span class="w-3 h-3 rounded-full shrink-0 shadow-sm" :style="'background:' + teacher.color"></span>
+                                <span class="flex-1 text-xs font-bold text-slate-700 truncate" x-text="teacher.name"></span>
+                                <span class="text-[9px] text-slate-400 font-medium"
+                                      x-text="classes.filter(c => c.teacherId === teacher.id).length + ' cl.'"></span>
+                                <button @click="openEditTeacher(teacher); showConfigModal = false"
+                                        class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-indigo-500 transition text-xs">✏️</button>
+                                <button @click="deleteTeacher(teacher.id)"
+                                        class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition text-xs font-black">✕</button>
+                            </div>
+                        </template>
+                        <p x-show="teachers.length === 0" class="text-[10px] text-slate-400 italic text-center py-1">Aucun profil créé</p>
+                    </div>
+                </div>
+
+                <!-- Auto-lock (mode multi) -->
+                <div x-show="appMode === 'multi'" class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verrouillage auto</p>
+                        <div class="flex items-center gap-1.5">
+                            <select x-model.number="autoLockMinutes"
+                                    class="text-xs font-bold border border-slate-200 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-indigo-400 bg-white text-slate-600">
+                                <option value="5">5 min</option>
+                                <option value="10">10 min</option>
+                                <option value="15">15 min</option>
+                                <option value="30">30 min</option>
+                                <option value="0">Jamais</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="border-t border-slate-100 pt-3 space-y-2">
                     <button @click="showOnboarding = true; onboardingStep = 0; showConfigModal = false" class="w-full py-2 bg-slate-50 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl text-[10px] font-black uppercase transition">🎓 Revoir le tutoriel</button>
                     <button @click="hardReset(); showConfigModal = false" class="w-full py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl text-[10px] font-black uppercase transition">⚠️ Réinitialiser toutes les données</button>
@@ -681,6 +734,230 @@
     </div>
 
     <!-- ====================================================
+         ÉCRAN DE SÉLECTION DE PROFIL (mode multi, session verrouillée)
+         ==================================================== -->
+    <div x-show="appMode === 'multi' && (sessionLocked || !currentTeacherId)" x-cloak
+         class="fixed inset-0 z-[550] flex flex-col items-center justify-center p-8"
+         style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)">
+
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black text-white uppercase tracking-tighter italic mb-2">
+                ClassManager <span class="font-light" style="color:#818cf8">PRO</span>
+            </h1>
+            <p style="color:#94a3b8" class="font-medium">Qui êtes-vous ?</p>
+        </div>
+
+        <!-- Cartes des professeurs -->
+        <div class="flex flex-wrap gap-5 justify-center mb-8" style="max-width:700px">
+            <template x-for="teacher in teachers" :key="teacher.id">
+                <button @click="openPinModal(teacher)"
+                        class="flex flex-col items-center gap-3 p-6 rounded-3xl border-2 transition-all hover:scale-[1.04]"
+                        style="min-width:140px; background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1)"
+                        onmouseover="this.style.borderColor=this.dataset.color; this.style.background='rgba(255,255,255,0.12)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(255,255,255,0.06)'"
+                        :data-color="teacher.color">
+                    <!-- Avatar coloré -->
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg"
+                         :style="'background:' + teacher.color"
+                         x-text="teacher.name.charAt(0).toUpperCase()"></div>
+                    <span class="text-white font-black text-sm text-center" x-text="teacher.name"></span>
+                    <span class="text-[10px] font-bold" style="color:#64748b"
+                          x-text="classes.filter(c => c.teacherId === teacher.id).length + ' classe(s)'"></span>
+                </button>
+            </template>
+
+            <!-- Aucun profil -->
+            <template x-if="teachers.length === 0">
+                <p class="text-slate-500 text-sm font-medium py-8">Aucun profil créé. Commencez par en créer un.</p>
+            </template>
+        </div>
+
+        <!-- Ajouter un profil -->
+        <button @click="showCreateTeacherModal = true"
+                class="flex items-center gap-2 px-5 py-3 rounded-2xl border-2 font-black text-sm transition-all hover:scale-[1.02]"
+                style="border-color:rgba(99,102,241,0.5); color:#818cf8; background:rgba(99,102,241,0.08)"
+                onmouseover="this.style.background='rgba(99,102,241,0.18)'"
+                onmouseout="this.style.background='rgba(99,102,241,0.08)'">
+            <span>＋</span> Créer un profil
+        </button>
+
+        <p class="mt-8 text-xs cursor-pointer" style="color:#334155"
+           @click="showModeSelection = true">
+            ← Changer de mode
+        </p>
+    </div>
+
+    <!-- Modale saisie PIN -->
+    <div x-show="showPinModal" x-cloak
+         class="fixed inset-0 z-[570] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4"
+         @keydown.escape.window="showPinModal = false; pinInput = ''; pinError = ''">
+        <div class="bg-white rounded-3xl shadow-2xl w-full overflow-hidden" style="max-width:320px"
+             @click.away="showPinModal = false; pinInput = ''; pinError = ''">
+            <template x-if="pinTarget">
+                <div>
+                    <!-- En-tête coloré -->
+                    <div class="p-6 flex flex-col items-center gap-3"
+                         :style="'background:' + (pinTarget?.color || '#6366f1')">
+                        <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-3xl font-black text-white shadow-lg"
+                             x-text="pinTarget?.name.charAt(0).toUpperCase()"></div>
+                        <h2 class="text-white font-black text-lg" x-text="pinTarget?.name"></h2>
+                    </div>
+                    <!-- Corps -->
+                    <div class="p-6 flex flex-col items-center gap-4">
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Entrez votre PIN (4 chiffres)</p>
+
+                        <!-- 4 points visuels -->
+                        <div class="flex gap-3">
+                            <template x-for="i in [0,1,2,3]" :key="i">
+                                <div class="w-4 h-4 rounded-full border-2 transition-all"
+                                     :class="pinInput.length > i ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'"></div>
+                            </template>
+                        </div>
+
+                        <!-- Input caché (focus pour taper) -->
+                        <input type="password" inputmode="numeric" maxlength="4"
+                               x-model="pinInput"
+                               x-effect="if (showPinModal) $nextTick(() => $el.focus())"
+                               @keydown.enter="submitPin()"
+                               @input="pinError = ''; if (pinInput.length === 4) $nextTick(() => submitPin())"
+                               class="w-full text-center text-2xl font-black tracking-[0.5em] border-2 rounded-xl py-3 outline-none focus:ring-2 focus:ring-indigo-400 border-slate-200"
+                               placeholder="••••">
+
+                        <p x-show="pinError" class="text-red-500 text-sm font-bold" x-text="pinError"></p>
+
+                        <div class="flex gap-3 w-full">
+                            <button @click="showPinModal = false; pinInput = ''; pinError = ''"
+                                    class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">
+                                Annuler
+                            </button>
+                            <button @click="submitPin()" :disabled="pinInput.length !== 4"
+                                    class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
+                                Valider →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Modale création de profil enseignant -->
+    <div x-show="showCreateTeacherModal" x-cloak
+         class="fixed inset-0 z-[570] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4"
+         @keydown.escape.window="showCreateTeacherModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full overflow-hidden" style="max-width:360px"
+             @click.away="showCreateTeacherModal = false">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-5 flex justify-between items-center">
+                <h2 class="text-white font-black text-lg">👤 Nouveau profil</h2>
+                <button @click="showCreateTeacherModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Nom affiché *</label>
+                    <input x-model="newTeacherForm.name" type="text" placeholder="ex : M. Dupont" maxlength="30"
+                           x-effect="if (showCreateTeacherModal) $nextTick(() => $el.focus())"
+                           @keydown.enter="createTeacher()"
+                           class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <!-- Couleur -->
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Couleur</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <template x-for="col in TEACHER_COLORS" :key="col">
+                            <button @click="newTeacherForm.color = col"
+                                    class="w-8 h-8 rounded-full transition-all hover:scale-110"
+                                    :style="'background:' + col"
+                                    :class="newTeacherForm.color === col ? 'ring-2 ring-offset-2 ring-indigo-500 scale-110' : ''">
+                            </button>
+                        </template>
+                    </div>
+                </div>
+                <!-- PIN -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">PIN *</label>
+                        <input x-model="newTeacherForm.pin" type="password" inputmode="numeric" maxlength="4" placeholder="4 chiffres"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-indigo-400 text-center">
+                    </div>
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Confirmer</label>
+                        <input x-model="newTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="4" placeholder="••••"
+                               @keydown.enter="createTeacher()"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-indigo-400 text-center"
+                               :class="newTeacherForm.pinConfirm && newTeacherForm.pin !== newTeacherForm.pinConfirm ? 'border-red-400 bg-red-50' : ''">
+                    </div>
+                </div>
+                <p x-show="newTeacherForm.pinConfirm && newTeacherForm.pin !== newTeacherForm.pinConfirm"
+                   class="text-red-500 text-xs font-bold -mt-2">Les PINs ne correspondent pas</p>
+            </div>
+            <div class="px-6 pb-6 flex gap-3">
+                <button @click="showCreateTeacherModal = false" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">Annuler</button>
+                <button @click="createTeacher()"
+                        :disabled="!newTeacherForm.name.trim() || newTeacherForm.pin.length !== 4 || newTeacherForm.pin !== newTeacherForm.pinConfirm"
+                        class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
+                    Créer mon profil
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale modification de profil -->
+    <div x-show="showEditTeacherModal" x-cloak
+         class="fixed inset-0 z-[570] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4"
+         @keydown.escape.window="showEditTeacherModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full overflow-hidden" style="max-width:360px"
+             @click.away="showEditTeacherModal = false">
+            <div class="bg-gradient-to-r from-slate-700 to-slate-800 p-5 flex justify-between items-center">
+                <h2 class="text-white font-black text-lg">✏️ Modifier le profil</h2>
+                <button @click="showEditTeacherModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Nom affiché</label>
+                    <input x-model="editTeacherForm.name" type="text" maxlength="30"
+                           class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Couleur</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <template x-for="col in TEACHER_COLORS" :key="col">
+                            <button @click="editTeacherForm.color = col"
+                                    class="w-8 h-8 rounded-full transition-all hover:scale-110"
+                                    :style="'background:' + col"
+                                    :class="editTeacherForm.color === col ? 'ring-2 ring-offset-2 ring-indigo-500 scale-110' : ''">
+                            </button>
+                        </template>
+                    </div>
+                </div>
+                <div class="border-t border-slate-100 pt-3">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Changer le PIN (optionnel)</p>
+                    <div class="space-y-2">
+                        <input x-model="editTeacherForm.pinOld" type="password" inputmode="numeric" maxlength="4" placeholder="PIN actuel"
+                               class="w-full border rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400"
+                               :class="editTeacherForm.pinOldError ? 'border-red-400 bg-red-50' : 'border-slate-200'">
+                        <p x-show="editTeacherForm.pinOldError" class="text-red-500 text-xs font-bold" x-text="editTeacherForm.pinOldError"></p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input x-model="editTeacherForm.pinNew" type="password" inputmode="numeric" maxlength="4" placeholder="Nouveau PIN"
+                                   class="border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400">
+                            <input x-model="editTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="4" placeholder="Confirmer"
+                                   class="border rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400"
+                                   :class="editTeacherForm.pinNew && editTeacherForm.pinConfirm && editTeacherForm.pinNew !== editTeacherForm.pinConfirm ? 'border-red-400 bg-red-50' : 'border-slate-200'">
+                        </div>
+                        <p x-show="editTeacherForm.pinNewError" class="text-red-500 text-xs font-bold" x-text="editTeacherForm.pinNewError"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 pb-6 flex gap-3">
+                <button @click="showEditTeacherModal = false" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">Annuler</button>
+                <button @click="saveEditTeacher()"
+                        class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-black text-sm transition">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================================
          ÉCRAN DE CHOIX DU MODE (premier lancement)
          ==================================================== -->
     <div x-show="showModeSelection" x-cloak
@@ -780,8 +1057,8 @@
             <h1 class="text-xl font-black text-indigo-600 uppercase tracking-tighter italic">ClassManager <span class="text-slate-400 font-light">PRO</span></h1>
             <div class="flex gap-4 items-center bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-xl shadow-inner">
 
-                <!-- Sélecteur de classe (mode solo) -->
-                <div x-show="appMode === 'solo'" class="flex items-center gap-2">
+                <!-- Sélecteur de classe (solo + multi connecté) -->
+                <div x-show="appMode === 'solo' || (appMode === 'multi' && currentTeacherId)" class="flex items-center gap-2">
                     <div class="relative" x-data="{ classOpen: false }">
                         <button @click="classOpen = !classOpen" @click.outside="classOpen = false"
                                 class="flex items-center gap-2 bg-white text-slate-600 font-black text-sm border border-indigo-200 rounded-xl px-3 py-1.5 cursor-pointer hover:border-indigo-400 outline-none shadow-sm"
@@ -796,7 +1073,7 @@
                              class="absolute top-full left-0 mt-1.5 z-[500] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden"
                              style="min-width:240px">
                             <div class="p-2">
-                                <template x-for="cls in classes" :key="cls.id">
+                                <template x-for="cls in visibleClasses" :key="cls.id">
                                     <button @click="switchClass(cls.id); classOpen = false"
                                             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-left"
                                             :class="cls.id === currentClassId ? 'bg-indigo-50' : 'hover:bg-slate-50'">
@@ -917,6 +1194,23 @@
                 <span>📄</span> PDF
             </button>
                 
+            <!-- Badge prof connecté (mode multi) -->
+            <div x-show="appMode === 'multi' && currentTeacher"
+                 class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl">
+                <span class="w-3 h-3 rounded-full shrink-0 shadow-sm"
+                      :style="'background:' + (currentTeacher?.color || '#6366f1')"></span>
+                <span class="text-sm font-black text-slate-700 max-w-[120px] truncate"
+                      x-text="currentTeacher?.name"></span>
+            </div>
+
+            <!-- Verrouiller la session (mode multi) -->
+            <button x-show="appMode === 'multi' && currentTeacherId"
+                    @click="lockSession()"
+                    title="Verrouiller la session"
+                    class="w-11 h-11 bg-slate-100 hover:bg-red-50 border-2 border-slate-200 hover:border-red-300 text-slate-400 hover:text-red-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
+                🔒
+            </button>
+
             <button @click="toggleDarkMode()"
                     :title="darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'"
                     class="w-11 h-11 bg-slate-100 hover:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
@@ -1148,6 +1442,21 @@
             showAddClassModal: false,
             newClassForm: { name: '', level: '', year: '' },
 
+            // Mode Multi — session
+            sessionLocked: false,
+            currentTeacherId: null,
+            showPinModal: false,
+            pinTarget: null,
+            pinInput: '',
+            pinError: '',
+            showCreateTeacherModal: false,
+            newTeacherForm: { name: '', pin: '', pinConfirm: '', color: '#6366f1' },
+            showEditTeacherModal: false,
+            editTeacherForm: { id: '', name: '', color: '', pinOld: '', pinNew: '', pinConfirm: '', pinOldError: '', pinNewError: '' },
+            autoLockMinutes: 15,
+            _autoLockTimer: null,
+            TEACHER_COLORS: ['#6366f1','#10b981','#f59e0b','#ef4444','#3b82f6','#8b5cf6','#ec4899','#14b8a6'],
+
             initApp() {
                 this._isElectron = !!window.electronAPI;
 
@@ -1157,6 +1466,12 @@
 
                 this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
                 if (this.darkMode) document.documentElement.classList.add('dark');
+
+                // Auto-lock : réinitialise le timer à chaque interaction (mode multi)
+                const _resetLock = () => this._resetAutoLock();
+                document.addEventListener('mousemove', _resetLock, { passive: true });
+                document.addEventListener('keydown',   _resetLock, { passive: true });
+                document.addEventListener('click',     _resetLock, { passive: true });
 
                 const _afterLoad = () => {
                     if (this.students.length === 0) {
@@ -1297,10 +1612,131 @@
             chooseMultiMode() {
                 this.appMode = 'multi';
                 this.showModeSelection = false;
+                // En mode multi on lock immédiatement (écran de sélection de prof)
+                this.sessionLocked = true;
+                this.currentTeacherId = null;
                 this.saveLocal();
-                if (this.students.length === 0 && !localStorage.getItem('cmOnboardingDone')) {
-                    this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+            },
+
+            // === MODE MULTI — SESSION ===
+            get currentTeacher() {
+                return this.teachers.find(t => t.id === this.currentTeacherId) || null;
+            },
+            get visibleClasses() {
+                if (this.appMode === 'multi' && this.currentTeacherId) {
+                    return this.classes.filter(c => c.teacherId === this.currentTeacherId);
                 }
+                return this.classes;
+            },
+            lockSession() {
+                this.syncClassData();
+                this.saveLocal();
+                this.currentTeacherId = null;
+                this.sessionLocked = true;
+                this._clearAutoLock();
+            },
+            openPinModal(teacher) {
+                this.pinTarget = teacher;
+                this.pinInput  = '';
+                this.pinError  = '';
+                this.showPinModal = true;
+            },
+            submitPin() {
+                if (!this.pinTarget) return;
+                if (this.pinInput === this.pinTarget.pin) {
+                    this.currentTeacherId = this.pinTarget.id;
+                    this.sessionLocked    = false;
+                    this.showPinModal     = false;
+                    this.pinInput = ''; this.pinError = ''; this.pinTarget = null;
+                    // Bascule sur la première classe du prof si besoin
+                    const mine = this.classes.filter(c => c.teacherId === this.currentTeacherId);
+                    if (mine.length && !mine.find(c => c.id === this.currentClassId)) {
+                        this.currentClassId = mine[0].id;
+                        this.loadClassData(mine[0]);
+                    } else if (!mine.length) {
+                        // Premier accès : créer une classe par défaut
+                        this._createDefaultClassForTeacher(this.currentTeacherId);
+                    }
+                    this._startAutoLock();
+                    this.saveLocal();
+                } else {
+                    this.pinError = 'PIN incorrect ❌';
+                    this.pinInput = '';
+                }
+            },
+            createTeacher() {
+                const f = this.newTeacherForm;
+                if (!f.name.trim())  return;
+                if (!/^\d{4}$/.test(f.pin)) { return; }
+                if (f.pin !== f.pinConfirm)  { return; }
+                const teacher = { id: 't_' + Date.now(), name: f.name.trim(), pin: f.pin, color: f.color };
+                this.teachers.push(teacher);
+                this.showCreateTeacherModal = false;
+                this.newTeacherForm = { name: '', pin: '', pinConfirm: '', color: '#6366f1' };
+                // Connexion automatique
+                this.currentTeacherId = teacher.id;
+                this.sessionLocked    = false;
+                this._createDefaultClassForTeacher(teacher.id);
+                this._startAutoLock();
+                this.saveLocal();
+            },
+            _createDefaultClassForTeacher(teacherId) {
+                this.syncClassData();
+                const cls = {
+                    id: 'c_' + Date.now(), teacherId,
+                    name: 'Ma Classe', level: '', year: this._currentSchoolYear(),
+                    rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [],
+                    plans: Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2,'0')}`, assignments: [] })),
+                    currentPlanIndex: 0
+                };
+                this.classes.push(cls);
+                this.currentClassId = cls.id;
+                this.loadClassData(cls);
+                this.editMode = true;
+            },
+            openEditTeacher(teacher) {
+                this.editTeacherForm = { id: teacher.id, name: teacher.name, color: teacher.color, pinOld: '', pinNew: '', pinConfirm: '', pinOldError: '', pinNewError: '' };
+                this.showEditTeacherModal = true;
+            },
+            saveEditTeacher() {
+                const f = this.editTeacherForm;
+                const t = this.teachers.find(t => t.id === f.id);
+                if (!t) return;
+                f.pinOldError = ''; f.pinNewError = '';
+                // Changement de PIN optionnel
+                if (f.pinNew) {
+                    if (f.pinOld !== t.pin) { f.pinOldError = 'PIN actuel incorrect'; return; }
+                    if (!/^\d{4}$/.test(f.pinNew)) { f.pinNewError = 'PIN : 4 chiffres'; return; }
+                    if (f.pinNew !== f.pinConfirm)  { f.pinNewError = 'Les PINs ne correspondent pas'; return; }
+                    t.pin = f.pinNew;
+                }
+                t.name  = f.name.trim() || t.name;
+                t.color = f.color;
+                this.showEditTeacherModal = false;
+                this.saveLocal();
+            },
+            deleteTeacher(teacherId) {
+                const t = this.teachers.find(t => t.id === teacherId);
+                if (!confirm(`Supprimer le profil "${t?.name}" ? Toutes ses classes seront également supprimées.`)) return;
+                this.teachers = this.teachers.filter(t => t.id !== teacherId);
+                this.classes  = this.classes.filter(c => c.teacherId !== teacherId);
+                if (!this.classes.find(c => c.id === this.currentClassId)) {
+                    const first = this.classes[0];
+                    this.currentClassId = first?.id || null;
+                    if (first) this.loadClassData(first);
+                }
+                this.saveLocal();
+            },
+            _startAutoLock() {
+                this._clearAutoLock();
+                if (this.appMode !== 'multi' || !this.autoLockMinutes) return;
+                this._autoLockTimer = setTimeout(() => this.lockSession(), this.autoLockMinutes * 60 * 1000);
+            },
+            _clearAutoLock() {
+                if (this._autoLockTimer) { clearTimeout(this._autoLockTimer); this._autoLockTimer = null; }
+            },
+            _resetAutoLock() {
+                if (this.appMode === 'multi' && this.currentTeacherId && !this.sessionLocked) this._startAutoLock();
             },
             addPlan() {
                 const newIndex = this.plans.length;
