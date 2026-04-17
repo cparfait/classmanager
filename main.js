@@ -140,6 +140,9 @@ ipcMain.handle('get-data-path', async () => {
     return getDataPath();
 });
 
+// Version de l'application
+ipcMain.handle('get-version', () => app.getVersion());
+
 // Générer un vrai PDF via printToPDF (sans dialog d'impression)
 ipcMain.handle('print-to-pdf', async (event, htmlContent) => {
     const tmpFile = path.join(app.getPath('temp'), 'classmanager-print.html');

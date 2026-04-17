@@ -488,8 +488,15 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative" @click.away="showConfigModal = false">
             <button @click="showConfigModal = false" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition font-bold text-lg">✕</button>
             <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-5">
-                <h2 class="text-white font-black text-lg">⚙️ Configuration</h2>
-                <p class="text-slate-400 text-xs font-medium mt-1">Export / Import des données</p>
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-white font-black text-lg">⚙️ Configuration</h2>
+                        <p class="text-slate-400 text-xs font-medium mt-1">Export / Import des données</p>
+                    </div>
+                    <span x-show="appVersion"
+                          class="text-[9px] font-black text-slate-400 bg-slate-900/40 border border-slate-600 rounded-full px-2.5 py-1 mt-1 shrink-0"
+                          x-text="'v' + appVersion"></span>
+                </div>
             </div>
             <div class="p-6 space-y-3">
                 <p class="text-xs text-slate-500 font-medium">Sauvegardez ou restaurez l'intégralité de vos données : élèves, plans de classe et placements.</p>
@@ -990,12 +997,18 @@
             dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
 
             showContactModal: false, showConfigModal: false, showStatsModal: false,
+            appVersion: '',
             confirmModal: { show: false, title: '', message: '', suggestion: '', nextPlanIndex: -1, nextPlanName: '', onConfirm: null, confirmLabel: 'Confirmer', createNewPlan: false },
             darkMode: false,
             showOnboarding: false, onboardingStep: 0,
 
             initApp() {
                 this._isElectron = !!window.electronAPI;
+
+                // Version
+                if (window.electronAPI?.getVersion) {
+                    window.electronAPI.getVersion().then(v => this.appVersion = v);
+                }
 
                 // Dark mode (persisté séparément)
                 this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
