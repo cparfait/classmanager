@@ -1646,7 +1646,7 @@
                     _afterLoad();
                 }
             },
-            initEmptyPlans() { this.plans = Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] })); },
+            initEmptyPlans() { this.plans = [{ id: Date.now(), name: 'Plan 01', assignments: [] }]; },
 
             // === v2 helpers ===
             _currentSchoolYear() {
@@ -1704,7 +1704,7 @@
                     year: this.newClassForm.year.trim() || this._currentSchoolYear(),
                     rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [],
                     fixedSeats: [], manualSeats: [],
-                    plans: Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2,'0')}`, assignments: [] })),
+                    plans: [{ id: Date.now(), name: 'Plan 01', assignments: [] }],
                     currentPlanIndex: 0
                 };
                 this.classes.push(cls);
@@ -1805,7 +1805,7 @@
                     id: 'c_' + Date.now(), teacherId,
                     name: 'Ma Classe', level: '', year: this._currentSchoolYear(),
                     rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [],
-                    plans: Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2,'0')}`, assignments: [] })),
+                    plans: [{ id: Date.now(), name: 'Plan 01', assignments: [] }],
                     currentPlanIndex: 0
                 };
                 this.classes.push(cls);
