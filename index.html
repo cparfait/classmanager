@@ -501,12 +501,21 @@
                 <!-- Mode d'utilisation -->
                 <div class="border-t border-slate-100 pt-3">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d'utilisation</p>
-                    <div class="flex items-center justify-between bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-100">
-                        <span class="text-xs font-bold text-slate-600" x-text="appMode === 'multi' ? '👥 Salle des maîtres' : '👤 Solo'"></span>
-                        <button @click="showModeSelection = true; showConfigModal = false"
-                                class="text-[10px] font-black text-indigo-500 hover:text-indigo-700 transition">
-                            Changer →
-                        </button>
+                    <div class="bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-100 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-600" x-text="appMode === 'multi' ? '👥 Salle des maîtres' : '👤 Solo'"></span>
+                            <button @click="showModeSelection = true; showConfigModal = false"
+                                    :disabled="appMode === 'multi' && !canSwitchToSolo && false"
+                                    class="text-[10px] font-black transition"
+                                    :class="canSwitchToSolo || appMode !== 'multi' ? 'text-indigo-500 hover:text-indigo-700' : 'text-slate-300 cursor-not-allowed'">
+                                Changer →
+                            </button>
+                        </div>
+                        <!-- Avertissement si multi verrouillé -->
+                        <p x-show="appMode === 'multi' && !canSwitchToSolo"
+                           class="text-[9px] text-amber-500 font-bold leading-tight">
+                            ⚠️ Supprimez tous les profils pour revenir en mode Solo.
+                        </p>
                     </div>
                 </div>
 
@@ -1048,16 +1057,25 @@
         <div class="flex gap-8 w-full" style="max-width:640px">
             <!-- Solo -->
             <button @click="chooseSoloMode()"
-                    class="flex-1 rounded-3xl p-8 text-left transition-all group border-2 hover:scale-[1.02]"
+                    :disabled="!canSwitchToSolo"
+                    class="flex-1 rounded-3xl p-8 text-left border-2 transition-all"
+                    :class="canSwitchToSolo ? 'hover:scale-[1.02] cursor-pointer' : 'cursor-not-allowed opacity-40'"
                     style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1)"
-                    onmouseover="this.style.borderColor='#6366f1'; this.style.background='rgba(99,102,241,0.12)'"
-                    onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(255,255,255,0.05)'">
+                    :onmouseover="canSwitchToSolo ? 'this.style.borderColor=\'#6366f1\'; this.style.background=\'rgba(99,102,241,0.12)\'' : ''"
+                    :onmouseout="canSwitchToSolo ? 'this.style.borderColor=\'rgba(255,255,255,0.1)\'; this.style.background=\'rgba(255,255,255,0.05)\'' : ''">
                 <div class="text-5xl mb-5">👤</div>
                 <h2 class="text-xl font-black text-white mb-2">Solo</h2>
-                <p class="text-sm font-medium leading-relaxed mb-6" style="color:#94a3b8">
+                <p class="text-sm font-medium leading-relaxed mb-4" style="color:#94a3b8">
                     Un seul enseignant,<br>plusieurs classes.<br>Accès direct, sans code PIN.
                 </p>
-                <div class="flex items-center gap-2 font-black text-sm transition-all" style="color:#818cf8">
+                <!-- Message de blocage -->
+                <div x-show="!canSwitchToSolo"
+                     class="text-xs font-bold rounded-xl px-3 py-2 mb-3"
+                     style="background:rgba(239,68,68,0.15); color:#fca5a5">
+                    ⛔ Des profils enseignants existent.<br>
+                    Supprimez tous les profils dans ⚙️ avant de basculer en mode Solo.
+                </div>
+                <div x-show="canSwitchToSolo" class="flex items-center gap-2 font-black text-sm" style="color:#818cf8">
                     Choisir <span>→</span>
                 </div>
             </button>
@@ -1704,7 +1722,12 @@
                 this.editMode = true;
                 this.saveLocal();
             },
+            get canSwitchToSolo() {
+                // Bloqué si on est en multi avec des profils déjà créés
+                return !(this.appMode === 'multi' && this.teachers.length > 0);
+            },
             chooseSoloMode() {
+                if (!this.canSwitchToSolo) return; // garde silencieuse (l'UI gère le feedback)
                 this.appMode = 'solo';
                 this.showModeSelection = false;
                 this.saveLocal();
