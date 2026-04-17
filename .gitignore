@@ -3,8 +3,9 @@ node_modules/
 
 # Dossier de compilation (les .exe)
 dist/
-build/
 out/
+build/*
+!build/*.nsh
 
 # Fichiers système et IDE
 .DS_Store

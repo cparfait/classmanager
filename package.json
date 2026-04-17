@@ -42,7 +42,8 @@
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "installerHeaderIcon": "icon.ico",
-      "shortcutName": "ClassManager Pro"
+      "shortcutName": "ClassManager Pro",
+      "include": "build/installer.nsh"
     },
     "portable": {
       "artifactName": "ClassManager-Pro-Portable-${version}.exe"
