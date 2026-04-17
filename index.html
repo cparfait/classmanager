@@ -1698,7 +1698,7 @@
                 if (!this.newClassForm.name.trim()) return;
                 this.syncClassData();
                 const cls = {
-                    id: 'c_' + Date.now(), teacherId: null,
+                    id: 'c_' + Date.now(), teacherId: this.appMode === 'multi' ? this.currentTeacherId : null,
                     name: this.newClassForm.name.trim(),
                     level: this.newClassForm.level.trim(),
                     year: this.newClassForm.year.trim() || this._currentSchoolYear(),
