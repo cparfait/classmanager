@@ -958,6 +958,48 @@
     </div>
 
     <!-- ====================================================
+         MODALE MODIFICATION DE CLASSE
+         ==================================================== -->
+    <div x-show="showEditClassModal" x-cloak
+         class="fixed inset-0 z-[400] bg-slate-900/70 backdrop-blur-sm flex justify-center items-center p-4"
+         @keydown.escape.window="showEditClassModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden" @click.away="showEditClassModal = false">
+            <div class="bg-gradient-to-r from-slate-700 to-slate-800 p-5 flex justify-between items-center">
+                <h2 class="text-white font-black text-lg">✏️ Modifier la classe</h2>
+                <button @click="showEditClassModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Nom de la classe *</label>
+                    <input x-model="editClassForm.name" type="text" maxlength="40"
+                           x-effect="if (showEditClassModal) $nextTick(() => $el.focus())"
+                           @keydown.enter="saveEditClass()"
+                           class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Niveau</label>
+                        <input x-model="editClassForm.level" type="text" placeholder="ex : 6ème"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Année</label>
+                        <input x-model="editClassForm.year" type="text"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 pb-6 flex gap-3">
+                <button @click="showEditClassModal = false" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">Annuler</button>
+                <button @click="saveEditClass()" :disabled="!editClassForm.name.trim()"
+                        class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================================
          ÉCRAN DE CHOIX DU MODE (premier lancement)
          ==================================================== -->
     <div x-show="showModeSelection" x-cloak
@@ -1074,19 +1116,31 @@
                              style="min-width:240px">
                             <div class="p-2">
                                 <template x-for="cls in visibleClasses" :key="cls.id">
-                                    <button @click="switchClass(cls.id); classOpen = false"
-                                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-left"
-                                            :class="cls.id === currentClassId ? 'bg-indigo-50' : 'hover:bg-slate-50'">
-                                        <svg x-show="cls.id === currentClassId" class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                        <span x-show="cls.id !== currentClassId" class="w-4 h-4 shrink-0 block"></span>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="font-bold text-sm truncate"
-                                                 :class="cls.id === currentClassId ? 'text-indigo-700' : 'text-slate-700'"
-                                                 x-text="cls.name"></div>
-                                            <div class="text-[10px] text-slate-400 font-medium"
-                                                 x-text="(cls.level ? cls.level + ' · ' : '') + (cls.students?.length || 0) + ' élève(s)'"></div>
-                                        </div>
-                                    </button>
+                                    <div class="flex items-center gap-1 px-1 py-0.5 rounded-xl group transition-all"
+                                         :class="cls.id === currentClassId ? 'bg-indigo-50' : 'hover:bg-slate-50'">
+                                        <!-- Sélection -->
+                                        <button @click="switchClass(cls.id); classOpen = false"
+                                                class="flex items-center gap-3 flex-1 min-w-0 px-2 py-2 text-left">
+                                            <svg x-show="cls.id === currentClassId" class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                            <span x-show="cls.id !== currentClassId" class="w-4 h-4 shrink-0 block"></span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="font-bold text-sm truncate"
+                                                     :class="cls.id === currentClassId ? 'text-indigo-700' : 'text-slate-700'"
+                                                     x-text="cls.name"></div>
+                                                <div class="text-[10px] text-slate-400 font-medium"
+                                                     x-text="(cls.level ? cls.level + ' · ' : '') + (cls.students?.length || 0) + ' élève(s)'"></div>
+                                            </div>
+                                        </button>
+                                        <!-- Renommer -->
+                                        <button @click.stop="openEditClass(cls); classOpen = false"
+                                                title="Modifier la classe"
+                                                class="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center text-slate-300 hover:text-indigo-500 rounded-lg transition-all shrink-0 text-xs">✏️</button>
+                                        <!-- Supprimer -->
+                                        <button @click.stop="deleteClass(cls.id)"
+                                                x-show="visibleClasses.length > 1"
+                                                title="Supprimer la classe"
+                                                class="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center text-slate-300 hover:text-red-500 rounded-lg transition-all shrink-0 text-xs font-black">✕</button>
+                                    </div>
                                 </template>
                             </div>
                             <div class="border-t border-slate-100 p-2">
@@ -1441,6 +1495,8 @@
             teachers: [],
             showAddClassModal: false,
             newClassForm: { name: '', level: '', year: '' },
+            showEditClassModal: false,
+            editClassForm: { id: '', name: '', level: '', year: '' },
 
             // Mode Multi — session
             sessionLocked: false,
@@ -1713,6 +1769,36 @@
                 t.name  = f.name.trim() || t.name;
                 t.color = f.color;
                 this.showEditTeacherModal = false;
+                this.saveLocal();
+            },
+            // === GESTION DES CLASSES ===
+            openEditClass(cls) {
+                this.editClassForm = { id: cls.id, name: cls.name, level: cls.level || '', year: cls.year || '' };
+                this.showEditClassModal = true;
+            },
+            saveEditClass() {
+                const f = this.editClassForm;
+                if (!f.name.trim()) return;
+                const cls = this.classes.find(c => c.id === f.id);
+                if (!cls) return;
+                cls.name  = f.name.trim();
+                cls.level = f.level.trim();
+                cls.year  = f.year.trim() || this._currentSchoolYear();
+                this.showEditClassModal = false;
+                this.saveLocal();
+            },
+            deleteClass(classId) {
+                const cls = this.classes.find(c => c.id === classId);
+                if (!cls) return;
+                const msg = cls.students?.length
+                    ? `Supprimer "${cls.name}" ? Elle contient ${cls.students.length} élève(s). Cette action est irréversible.`
+                    : `Supprimer "${cls.name}" ?`;
+                if (!confirm(msg)) return;
+                this.classes = this.classes.filter(c => c.id !== classId);
+                if (this.currentClassId === classId) {
+                    const next = this.visibleClasses[0];
+                    if (next) { this.currentClassId = next.id; this.loadClassData(next); }
+                }
                 this.saveLocal();
             },
             deleteTeacher(teacherId) {
