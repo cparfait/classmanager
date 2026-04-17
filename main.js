@@ -102,7 +102,12 @@ ipcMain.handle('save-data', async (event, data) => {
         console.error('Données invalides reçues');
         return false;
     }
-    if (!Array.isArray(data.students) || !Array.isArray(data.plans)) {
+    if (data.version === 2) {
+        if (!Array.isArray(data.classes)) {
+            console.error('Structure v2 invalide (classes manquant)');
+            return false;
+        }
+    } else if (!Array.isArray(data.students) || !Array.isArray(data.plans)) {
         console.error('Structure de données invalide (students ou plans manquant)');
         return false;
     }
@@ -182,26 +187,53 @@ ipcMain.handle('print-to-pdf', async (event, htmlContent) => {
 
 // === MISES À JOUR AUTOMATIQUES ===
 
+// Logger minimaliste vers fichier (lisible depuis ⚙️ > Voir les logs)
+function createUpdateLogger() {
+    const logPath = path.join(app.getPath('userData'), 'update.log');
+    return {
+        logPath,
+        write(msg) {
+            const line = `[${new Date().toISOString()}] ${msg}\n`;
+            fs.appendFileSync(logPath, line, 'utf-8');
+            console.log(msg);
+        }
+    };
+}
+
 function setupAutoUpdater() {
-    // Pas de mise à jour en développement
     if (!app.isPackaged) return;
 
-    autoUpdater.autoDownload = true;        // Télécharge en arrière-plan
-    autoUpdater.autoInstallOnAppQuit = true; // Installe à la fermeture (NSIS)
+    const log = createUpdateLogger();
+    log.write(`Démarrage auto-updater — version actuelle : ${app.getVersion()}`);
 
-    // Vérifier au démarrage (délai de 3s pour laisser l'app s'initialiser)
-    setTimeout(() => autoUpdater.checkForUpdates(), 3000);
+    // Assign logger to electron-updater
+    autoUpdater.logger = {
+        info:  m => log.write(`[INFO] ${m}`),
+        warn:  m => log.write(`[WARN] ${m}`),
+        error: m => log.write(`[ERROR] ${m}`),
+        debug: () => {}
+    };
+
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
+
+    setTimeout(() => {
+        log.write('Vérification des mises à jour…');
+        autoUpdater.checkForUpdates().catch(err => {
+            log.write(`checkForUpdates échoué : ${err.message}`);
+        });
+    }, 3000);
+
+    autoUpdater.on('checking-for-update',   () => log.write('Connexion à GitHub…'));
+    autoUpdater.on('update-not-available',  () => log.write('Aucune mise à jour disponible.'));
+    autoUpdater.on('download-progress', p  => log.write(`Téléchargement : ${Math.round(p.percent)}%`));
 
     autoUpdater.on('update-available', (info) => {
-        // Notifier l'app renderer qu'un téléchargement commence
-        if (mainWindow) mainWindow.webContents.send('update-status', {
-            type: 'downloading',
-            version: info.version
-        });
+        log.write(`Mise à jour disponible : v${info.version} — téléchargement en cours…`);
     });
 
     autoUpdater.on('update-downloaded', (info) => {
-        // Proposer l'installation immédiate ou à la prochaine fermeture
+        log.write(`Mise à jour v${info.version} téléchargée — proposition redémarrage`);
         dialog.showMessageBox(mainWindow, {
             type: 'info',
             title: 'Mise à jour prête',
@@ -217,8 +249,14 @@ function setupAutoUpdater() {
     });
 
     autoUpdater.on('error', (err) => {
-        // Erreur silencieuse — ne pas bloquer l'utilisateur
-        console.error('Erreur autoUpdater:', err.message);
+        log.write(`ERREUR : ${err.message}`);
+        dialog.showMessageBox(mainWindow, {
+            type: 'error',
+            title: 'Erreur de mise à jour',
+            message: 'Impossible de vérifier les mises à jour.',
+            detail: err.message + `\n\nLog : ${log.logPath}`,
+            buttons: ['OK']
+        });
     });
 }
 

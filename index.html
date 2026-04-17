@@ -656,7 +656,7 @@
             <!-- Navigation -->
             <div class="px-8 pb-8 flex items-center justify-between gap-3">
                 <button @click="showOnboarding = false; localStorage.setItem('cmOnboardingDone', '1')"
-                        class="text-xs text-slate-400 hover:text-slate-600 font-medium transition underline">
+                        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 rounded-xl font-black text-sm transition">
                     Passer le guide
                 </button>
                 <div class="flex gap-2">
@@ -680,10 +680,151 @@
         </div>
     </div>
 
+    <!-- ====================================================
+         ÉCRAN DE CHOIX DU MODE (premier lancement)
+         ==================================================== -->
+    <div x-show="showModeSelection" x-cloak
+         class="fixed inset-0 z-[600] flex flex-col items-center justify-center p-8"
+         style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)">
+
+        <div class="text-center mb-14">
+            <h1 class="text-5xl font-black text-white uppercase tracking-tighter italic mb-3">
+                ClassManager <span class="font-light" style="color:#818cf8">PRO</span>
+            </h1>
+            <p style="color:#94a3b8" class="font-medium text-lg">Comment allez-vous utiliser l'application ?</p>
+        </div>
+
+        <div class="flex gap-8 w-full" style="max-width:640px">
+            <!-- Solo -->
+            <button @click="chooseSoloMode()"
+                    class="flex-1 rounded-3xl p-8 text-left transition-all group border-2 hover:scale-[1.02]"
+                    style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1)"
+                    onmouseover="this.style.borderColor='#6366f1'; this.style.background='rgba(99,102,241,0.12)'"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(255,255,255,0.05)'">
+                <div class="text-5xl mb-5">👤</div>
+                <h2 class="text-xl font-black text-white mb-2">Solo</h2>
+                <p class="text-sm font-medium leading-relaxed mb-6" style="color:#94a3b8">
+                    Un seul enseignant,<br>plusieurs classes.<br>Accès direct, sans code PIN.
+                </p>
+                <div class="flex items-center gap-2 font-black text-sm transition-all" style="color:#818cf8">
+                    Choisir <span>→</span>
+                </div>
+            </button>
+
+            <!-- Salle des maîtres -->
+            <button @click="chooseMultiMode()"
+                    class="flex-1 rounded-3xl p-8 text-left transition-all group border-2 hover:scale-[1.02]"
+                    style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1)"
+                    onmouseover="this.style.borderColor='#6366f1'; this.style.background='rgba(99,102,241,0.12)'"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(255,255,255,0.05)'">
+                <div class="text-5xl mb-5">👥</div>
+                <h2 class="text-xl font-black text-white mb-2">Salle des maîtres</h2>
+                <p class="text-sm font-medium leading-relaxed mb-6" style="color:#94a3b8">
+                    Plusieurs enseignants<br>sur ce PC, chacun accède<br>à ses classes avec un PIN.
+                </p>
+                <div class="flex items-center gap-2 font-black text-sm transition-all" style="color:#818cf8">
+                    Choisir <span>→</span>
+                </div>
+            </button>
+        </div>
+
+        <p class="mt-10 text-xs" style="color:#475569">
+            Ce choix peut être modifié plus tard dans les paramètres ⚙️
+        </p>
+    </div>
+
+    <!-- ====================================================
+         MODALE AJOUT DE CLASSE
+         ==================================================== -->
+    <div x-show="showAddClassModal" x-cloak
+         class="fixed inset-0 z-[400] bg-slate-900/70 backdrop-blur-sm flex justify-center items-center p-4"
+         @keydown.escape.window="showAddClassModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden" @click.away="showAddClassModal = false">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-5 flex justify-between items-center">
+                <h2 class="text-white font-black text-lg">🏫 Nouvelle classe</h2>
+                <button @click="showAddClassModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Nom de la classe *</label>
+                    <input x-model="newClassForm.name" type="text" placeholder="ex : 6ème A" maxlength="40"
+                           class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400"
+                           x-effect="if (showAddClassModal) $nextTick(() => $el.focus())"
+                           @keydown.enter="addNewClass()">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Niveau</label>
+                        <input x-model="newClassForm.level" type="text" placeholder="ex : 6ème"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                    <div>
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Année</label>
+                        <input x-model="newClassForm.year" type="text" :placeholder="_currentSchoolYear()"
+                               class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 pb-6 flex gap-3">
+                <button @click="showAddClassModal = false" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">Annuler</button>
+                <button @click="addNewClass()" :disabled="!newClassForm.name.trim()"
+                        class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
+                    Créer
+                </button>
+            </div>
+        </div>
+    </div>
+
 	<header class="bg-white border-b border-slate-200 p-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-6">
             <h1 class="text-xl font-black text-indigo-600 uppercase tracking-tighter italic">ClassManager <span class="text-slate-400 font-light">PRO</span></h1>
             <div class="flex gap-4 items-center bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-xl shadow-inner">
+
+                <!-- Sélecteur de classe (mode solo) -->
+                <div x-show="appMode === 'solo'" class="flex items-center gap-2">
+                    <div class="relative" x-data="{ classOpen: false }">
+                        <button @click="classOpen = !classOpen" @click.outside="classOpen = false"
+                                class="flex items-center gap-2 bg-white text-slate-600 font-black text-sm border border-indigo-200 rounded-xl px-3 py-1.5 cursor-pointer hover:border-indigo-400 outline-none shadow-sm"
+                                style="min-width:120px; max-width:180px">
+                            <span class="text-xs shrink-0">🏫</span>
+                            <span class="truncate flex-1 text-left text-indigo-700"
+                                  x-text="classes.find(c => c.id === currentClassId)?.name || 'Classe'"></span>
+                            <svg class="w-3 h-3 text-indigo-400 shrink-0 transition-transform" :class="classOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+
+                        <div x-show="classOpen" x-cloak @click.outside="classOpen = false"
+                             class="absolute top-full left-0 mt-1.5 z-[500] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden"
+                             style="min-width:240px">
+                            <div class="p-2">
+                                <template x-for="cls in classes" :key="cls.id">
+                                    <button @click="switchClass(cls.id); classOpen = false"
+                                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-left"
+                                            :class="cls.id === currentClassId ? 'bg-indigo-50' : 'hover:bg-slate-50'">
+                                        <svg x-show="cls.id === currentClassId" class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        <span x-show="cls.id !== currentClassId" class="w-4 h-4 shrink-0 block"></span>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-bold text-sm truncate"
+                                                 :class="cls.id === currentClassId ? 'text-indigo-700' : 'text-slate-700'"
+                                                 x-text="cls.name"></div>
+                                            <div class="text-[10px] text-slate-400 font-medium"
+                                                 x-text="(cls.level ? cls.level + ' · ' : '') + (cls.students?.length || 0) + ' élève(s)'"></div>
+                                        </div>
+                                    </button>
+                                </template>
+                            </div>
+                            <div class="border-t border-slate-100 p-2">
+                                <button @click="showAddClassModal = true; classOpen = false"
+                                        class="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-indigo-50 text-indigo-600 font-black text-sm transition">
+                                    <span class="w-5 h-5 flex items-center justify-center bg-indigo-100 rounded-full text-xs font-black">+</span>
+                                    Nouvelle classe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Séparateur -->
+                    <span class="w-px h-5 bg-indigo-200 shrink-0"></span>
+                </div>
+
                 <!-- Custom plan dropdown -->
                 <div class="relative" x-data="{ planOpen: false, editingPlanIdx: null, editingName: '' }">
                     <!-- Trigger -->
@@ -998,63 +1139,169 @@
             darkMode: false,
             showOnboarding: false, onboardingStep: 0,
 
+            // === v2 : Multi-classes & profils ===
+            appMode: '',           // 'solo' | 'multi' | '' (non choisi)
+            showModeSelection: false,
+            classes: [],
+            currentClassId: null,
+            teachers: [],
+            showAddClassModal: false,
+            newClassForm: { name: '', level: '', year: '' },
+
             initApp() {
                 this._isElectron = !!window.electronAPI;
 
-                // Version
                 if (window.electronAPI?.getVersion) {
                     window.electronAPI.getVersion().then(v => this.appVersion = v);
                 }
 
-                // Dark mode (persisté séparément)
                 this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
                 if (this.darkMode) document.documentElement.classList.add('dark');
 
                 const _afterLoad = () => {
                     if (this.students.length === 0) {
                         this.editMode = true;
-                        // Onboarding : première utilisation
-                        if (!localStorage.getItem('cmOnboardingDone')) {
+                        // Onboarding différé si mode pas encore choisi
+                        if (!this.showModeSelection && !localStorage.getItem('cmOnboardingDone')) {
                             this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
                         }
                     }
                 };
 
+                const _newEmptyClass = () => {
+                    const cls = { id: 'c_' + Date.now(), teacherId: null, name: 'Ma Classe', level: '', year: this._currentSchoolYear(), rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [], plans: [], currentPlanIndex: 0 };
+                    this.initEmptyPlans();
+                    cls.plans = this.plans;
+                    return cls;
+                };
+
+                const _loadV2 = (data) => {
+                    this.appMode    = data.appMode || '';
+                    this.teachers   = data.teachers || [];
+                    this.classes    = data.classes  || [];
+                    this.currentClassId = data.currentClassId || (this.classes[0]?.id ?? null);
+                    const cls = this.classes.find(c => c.id === this.currentClassId);
+                    if (cls) { this.loadClassData(cls); } else { this.initEmptyPlans(); }
+                    if (!this.appMode) this.showModeSelection = true;
+                };
+
                 if (this._isElectron) {
                     window.electronAPI.loadData().then(data => {
                         if (data) {
-                            this.rows = data.rows || 5; this.cols = data.cols || 9;
-                            this.students = data.students || []; this.aisles = data.aisles || [];
-                            this.blockedSeats = data.blockedSeats || [];
-                            this.fixedSeats = data.fixedSeats || [];
-                            this.manualSeats = data.manualSeats || [];
-                            this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
-                            this.currentPlanIndex = data.currentPlanIndex || 0;
-                        } else { this.initEmptyPlans(); }
+                            if (data.version === 2) { _loadV2(data); }
+                            else { this._migrateFromV1(data); }
+                        } else {
+                            const cls = _newEmptyClass();
+                            this.classes = [cls];
+                            this.currentClassId = cls.id;
+                            this.showModeSelection = true;
+                        }
                         _afterLoad();
                     });
                 } else {
-                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9')) {
+                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9'))
                         localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v9'));
-                    }
-                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8')) {
+                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8'))
                         localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v8'));
-                    }
                     const saved = localStorage.getItem('classManagerData_v10');
                     if (saved) {
                         const data = JSON.parse(saved);
-                        this.rows = data.rows || 5; this.cols = data.cols || 9;
-                        this.students = data.students || []; this.aisles = data.aisles || [];
-                        this.blockedSeats = data.blockedSeats || [];
-                        this.fixedSeats = data.fixedSeats || [];
-                        this.manualSeats = data.manualSeats || [];
-                        this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
-                        this.currentPlanIndex = data.currentPlanIndex || 0;
-                    } else { this.initEmptyPlans(); }
+                        if (data.version === 2) { _loadV2(data); }
+                        else { this._migrateFromV1(data); }
+                    } else {
+                        const cls = _newEmptyClass();
+                        this.classes = [cls];
+                        this.currentClassId = cls.id;
+                        this.showModeSelection = true;
+                    }
                     _afterLoad();
                 }
             },
             initEmptyPlans() { this.plans = Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] })); },
+
+            // === v2 helpers ===
+            _currentSchoolYear() {
+                const y = new Date().getFullYear();
+                return new Date().getMonth() >= 8 ? `${y}-${y+1}` : `${y-1}-${y}`;
+            },
+            _migrateFromV1(data) {
+                const cls = {
+                    id: 'c_legacy', teacherId: null, name: 'Ma Classe', level: '',
+                    year: this._currentSchoolYear(),
+                    rows: data.rows || 5, cols: data.cols || 9,
+                    students: data.students || [], aisles: data.aisles || [],
+                    blockedSeats: data.blockedSeats || [], fixedSeats: data.fixedSeats || [],
+                    manualSeats: data.manualSeats || [],
+                    plans: data.plans || [], currentPlanIndex: data.currentPlanIndex || 0
+                };
+                if (!cls.plans.length) { this.initEmptyPlans(); cls.plans = this.plans; }
+                this.classes = [cls];
+                this.currentClassId = 'c_legacy';
+                this.loadClassData(cls);
+                this.showModeSelection = true;
+            },
+            loadClassData(cls) {
+                this.rows = cls.rows || 5; this.cols = cls.cols || 9;
+                this.students = cls.students || []; this.aisles = cls.aisles || [];
+                this.blockedSeats = cls.blockedSeats || []; this.fixedSeats = cls.fixedSeats || [];
+                this.manualSeats = cls.manualSeats || [];
+                if (cls.plans?.length) { this.plans = cls.plans; } else { this.initEmptyPlans(); }
+                this.currentPlanIndex = cls.currentPlanIndex || 0;
+            },
+            syncClassData() {
+                const cls = this.classes.find(c => c.id === this.currentClassId);
+                if (!cls) return;
+                cls.rows = this.rows; cls.cols = this.cols;
+                cls.students = this.students; cls.aisles = this.aisles;
+                cls.blockedSeats = this.blockedSeats; cls.fixedSeats = this.fixedSeats;
+                cls.manualSeats = this.manualSeats;
+                cls.plans = this.plans; cls.currentPlanIndex = this.currentPlanIndex;
+            },
+            switchClass(classId) {
+                if (classId === this.currentClassId) return;
+                this.syncClassData();
+                this.currentClassId = classId;
+                const cls = this.classes.find(c => c.id === classId);
+                if (cls) this.loadClassData(cls);
+                this.saveLocal();
+            },
+            addNewClass() {
+                if (!this.newClassForm.name.trim()) return;
+                this.syncClassData();
+                const cls = {
+                    id: 'c_' + Date.now(), teacherId: null,
+                    name: this.newClassForm.name.trim(),
+                    level: this.newClassForm.level.trim(),
+                    year: this.newClassForm.year.trim() || this._currentSchoolYear(),
+                    rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [],
+                    fixedSeats: [], manualSeats: [],
+                    plans: Array.from({length: 3}, (_, i) => ({ id: Date.now() + i, name: `Plan ${(i+1).toString().padStart(2,'0')}`, assignments: [] })),
+                    currentPlanIndex: 0
+                };
+                this.classes.push(cls);
+                this.currentClassId = cls.id;
+                this.loadClassData(cls);
+                this.showAddClassModal = false;
+                this.newClassForm = { name: '', level: '', year: '' };
+                this.editMode = true;
+                this.saveLocal();
+            },
+            chooseSoloMode() {
+                this.appMode = 'solo';
+                this.showModeSelection = false;
+                this.saveLocal();
+                if (this.students.length === 0 && !localStorage.getItem('cmOnboardingDone')) {
+                    this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+                }
+            },
+            chooseMultiMode() {
+                this.appMode = 'multi';
+                this.showModeSelection = false;
+                this.saveLocal();
+                if (this.students.length === 0 && !localStorage.getItem('cmOnboardingDone')) {
+                    this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+                }
+            },
             addPlan() {
                 const newIndex = this.plans.length;
                 this.plans.push({ id: Date.now(), name: `Plan ${String(newIndex + 1).padStart(2, '0')}`, assignments: [] });
@@ -1498,22 +1745,22 @@
                 this.fixedSeats = [];
                 this.saveLocal();
             },
-            saveLocal() { 
-                const payload = { 
-                    rows: this.rows, cols: this.cols, students: this.students, 
-                    plans: this.plans, currentPlanIndex: this.currentPlanIndex, 
-                    aisles: this.aisles, blockedSeats: this.blockedSeats, 
-                    fixedSeats: this.fixedSeats, manualSeats: this.manualSeats 
+            saveLocal() {
+                this.syncClassData();
+                const payload = {
+                    version: 2,
+                    appMode: this.appMode,
+                    teachers: this.teachers || [],
+                    classes: this.classes,
+                    currentClassId: this.currentClassId
                 };
-
                 const cleanPayload = JSON.parse(JSON.stringify(payload));
-
                 if (this._isElectron) {
                     window.electronAPI.saveData(cleanPayload);
                 } else {
                     localStorage.setItem('classManagerData_v10', JSON.stringify(cleanPayload));
                 }
-                this.saveStatus = '✓'; setTimeout(() => this.saveStatus = '', 1500); 
+                this.saveStatus = '✓'; setTimeout(() => this.saveStatus = '', 1500);
             },
             hardReset() { 
                 if (confirm("Tout effacer ? Toutes les données seront supprimées.")) { 
