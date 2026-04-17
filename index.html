@@ -20,6 +20,74 @@
         .dragging { opacity: 0.4; transform: scale(0.97); }
         .drag-source-list { cursor: grab; }
         .drag-source-list:active { cursor: grabbing; }
+
+        /* === TOOLTIPS SUR LES ICÔNES === */
+        .tooltip-icon { position: relative; pointer-events: auto !important; cursor: default; }
+        .tooltip-icon::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #f8fafc;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            z-index: 9999;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+            letter-spacing: 0.03em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .tooltip-icon:hover::after { opacity: 1; }
+
+        /* === MODE SOMBRE === */
+        html.dark body { background-color: #0f172a !important; color: #e2e8f0 !important; }
+        html.dark .bg-white { background-color: #1e293b !important; }
+        html.dark .bg-slate-100 { background-color: #0f172a !important; }
+        html.dark .bg-slate-50 { background-color: #111827 !important; }
+        html.dark .border-slate-200, html.dark .border-slate-100 { border-color: #334155 !important; }
+        html.dark .border-slate-300 { border-color: #2d3d52 !important; }
+        html.dark .text-slate-900, html.dark .text-slate-800 { color: #f1f5f9 !important; }
+        html.dark .text-slate-700 { color: #cbd5e1 !important; }
+        html.dark .text-slate-600 { color: #94a3b8 !important; }
+        html.dark .text-slate-500 { color: #64748b !important; }
+        html.dark .text-slate-400 { color: #475569 !important; }
+        html.dark .text-slate-300 { color: #334155 !important; }
+        html.dark .text-indigo-600 { color: #818cf8 !important; }
+        html.dark .text-indigo-700 { color: #a5b4fc !important; }
+        html.dark .border-indigo-100, html.dark .border-indigo-200 { border-color: rgba(99,102,241,0.3) !important; }
+        html.dark .bg-indigo-50 { background-color: rgba(79,70,229,0.2) !important; }
+        html.dark .bg-amber-50 { background-color: rgba(217,119,6,0.12) !important; }
+        html.dark .bg-amber-100 { background-color: rgba(217,119,6,0.2) !important; }
+        html.dark .bg-rose-50 { background-color: rgba(225,29,72,0.12) !important; }
+        html.dark .bg-emerald-50 { background-color: rgba(5,150,105,0.12) !important; }
+        html.dark .bg-pink-50 { background-color: rgba(219,39,119,0.12) !important; }
+        html.dark .bg-blue-50 { background-color: rgba(37,99,235,0.12) !important; }
+        html.dark .bg-pink-100 { background-color: rgba(219,39,119,0.2) !important; }
+        html.dark .bg-blue-100 { background-color: rgba(37,99,235,0.2) !important; }
+        html.dark .bg-rose-100 { background-color: rgba(225,29,72,0.2) !important; }
+        html.dark .bg-emerald-100 { background-color: rgba(5,150,105,0.2) !important; }
+        html.dark .bg-indigo-100 { background-color: rgba(79,70,229,0.25) !important; }
+        html.dark .border-dashed { border-color: #334155 !important; }
+        html.dark .shadow-xl { box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important; }
+        html.dark .shadow-md, html.dark .shadow-sm { box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important; }
+        html.dark input, html.dark textarea { background-color: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+        html.dark .aisle-bg { background-color: #0f172a !important; background-image: radial-gradient(#334155 1px, transparent 1px) !important; }
+        html.dark .blocked-bg { background-color: #1e293b !important; background-image: repeating-linear-gradient(45deg,transparent,transparent 10px,#334155 10px,#334155 20px) !important; }
+        html.dark .drag-over { background-color: rgba(79,70,229,0.25) !important; }
+        html.dark .text-violet-600 { color: #a78bfa !important; }
+        html.dark .border-violet-400 { border-color: #7c3aed !important; }
+        html.dark .hover\:bg-slate-50:hover { background-color: #0f172a !important; }
+        html.dark .hover\:bg-slate-100:hover { background-color: #1e293b !important; }
+        html.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569 !important; }
+        html.dark .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b !important; }
+        html.dark .bg-slate-800 { background-color: #0a1628 !important; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans" x-data="classApp()" x-init="initApp()">
@@ -259,7 +327,8 @@
                     <label class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
                 </div>
                 <button @click="exportStudentsOnly(); showConfigModal = false" class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition shadow-sm">👥 Exporter fiches élèves</button>
-                <div class="border-t border-slate-100 pt-3">
+                <div class="border-t border-slate-100 pt-3 space-y-2">
+                    <button @click="showOnboarding = true; onboardingStep = 0; showConfigModal = false" class="w-full py-2 bg-slate-50 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl text-[10px] font-black uppercase transition">🎓 Revoir le tutoriel</button>
                     <button @click="hardReset(); showConfigModal = false" class="w-full py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl text-[10px] font-black uppercase transition">⚠️ Réinitialiser toutes les données</button>
                 </div>
             </div>
@@ -288,6 +357,151 @@
                     </a>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- === ONBOARDING MODAL === -->
+    <div x-show="showOnboarding" x-cloak
+         class="fixed inset-0 z-[400] bg-slate-900/90 backdrop-blur-md flex justify-center items-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <!-- Progress bar -->
+            <div class="h-1.5 bg-slate-100 w-full">
+                <div class="h-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-500 rounded-full"
+                     :style="`width: ${((onboardingStep + 1) / 4) * 100}%`"></div>
+            </div>
+
+            <!-- Step 1 : Bienvenue -->
+            <template x-if="onboardingStep === 0">
+                <div class="p-8 text-center flex flex-col items-center gap-4">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-4xl shadow-lg">🏫</div>
+                    <h2 class="text-2xl font-black text-slate-800">Bienvenue dans<br><span class="text-indigo-600 italic">ClassManager Pro</span></h2>
+                    <p class="text-sm text-slate-500 leading-relaxed max-w-sm">Créez des plans de classe optimisés en quelques secondes. Ce guide rapide vous montre comment démarrer.</p>
+                    <div class="flex gap-2 mt-2">
+                        <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step 2 : Importer -->
+            <template x-if="onboardingStep === 1">
+                <div class="p-8 flex flex-col items-center gap-4 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl">📥</div>
+                    <h2 class="text-xl font-black text-slate-800">Étape 1 — Importer vos élèves</h2>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
+                        <p class="text-xs font-black text-slate-500 uppercase tracking-widest">3 façons d'ajouter vos élèves :</p>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">📂</span>
+                            <div><p class="text-sm font-bold text-slate-700">Import Excel / CSV</p><p class="text-xs text-slate-400">Compatible EcoleDirecte, Pronote et tout tableau avec colonnes Nom / Sexe.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">✏️</span>
+                            <div><p class="text-sm font-bold text-slate-700">Saisie manuelle</p><p class="text-xs text-slate-400">Collez une liste de noms, un par ligne, dans la zone de texte.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">📋</span>
+                            <div><p class="text-sm font-bold text-slate-700">Import JSON</p><p class="text-xs text-slate-400">Rechargez une sauvegarde complète via le menu ⚙️.</p></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step 3 : Configurer la salle -->
+            <template x-if="onboardingStep === 2">
+                <div class="p-8 flex flex-col items-center gap-4 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center text-3xl">🪑</div>
+                    <h2 class="text-xl font-black text-slate-800">Étape 2 — Configurer la salle</h2>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">📐</span>
+                            <div><p class="text-sm font-bold text-slate-700">Rangs &amp; Colonnes</p><p class="text-xs text-slate-400">Ajustez en haut à droite du plan pour correspondre à votre salle.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🚶</span>
+                            <div><p class="text-sm font-bold text-slate-700">Allées</p><p class="text-xs text-slate-400">Cliquez sur un bouton "Allée N" au-dessus de la grille pour marquer un couloir.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🚫</span>
+                            <div><p class="text-sm font-bold text-slate-700">Places bloquées</p><p class="text-xs text-slate-400">Cliquez sur le 🚫 en haut à droite d'une case pour la désactiver.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🔒</span>
+                            <div><p class="text-sm font-bold text-slate-700">Profils élèves</p><p class="text-xs text-slate-400">Cliquez sur un élève pour définir : bavard, PAP, vue, besoin allée, séparations…</p></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step 4 : Générer & imprimer -->
+            <template x-if="onboardingStep === 3">
+                <div class="p-8 flex flex-col items-center gap-4 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-3xl">🤖</div>
+                    <h2 class="text-xl font-black text-slate-800">Étape 3 — Générer &amp; Imprimer</h2>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🤖</span>
+                            <div><p class="text-sm font-bold text-slate-700">Bouton AUTO</p><p class="text-xs text-slate-400">Lance 150 000 simulations pour trouver le plan optimal selon tous les profils.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🖱️</span>
+                            <div><p class="text-sm font-bold text-slate-700">Placement manuel</p><p class="text-xs text-slate-400">Glissez-déposez les élèves depuis la liste ou les cases. Verrouillez avec 🔒.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">📄</span>
+                            <div><p class="text-sm font-bold text-slate-700">Export PDF</p><p class="text-xs text-slate-400">Imprimez le plan ou la liste alphabétique de rentrée (A &gt; Z).</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">📅</span>
+                            <div><p class="text-sm font-bold text-slate-700">Plusieurs plans</p><p class="text-xs text-slate-400">Utilisez les 10 plans disponibles pour gérer la rotation des placements sur l'année.</p></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Navigation -->
+            <div class="px-8 pb-8 flex items-center justify-between gap-3">
+                <button @click="showOnboarding = false; localStorage.setItem('cmOnboardingDone', '1')"
+                        class="text-xs text-slate-400 hover:text-slate-600 font-medium transition underline">
+                    Passer le guide
+                </button>
+                <div class="flex gap-2">
+                    <button x-show="onboardingStep > 0"
+                            @click="onboardingStep--"
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">
+                        ← Retour
+                    </button>
+                    <button x-show="onboardingStep < 3"
+                            @click="onboardingStep++"
+                            class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-black text-sm transition shadow-md">
+                        Suivant →
+                    </button>
+                    <button x-show="onboardingStep === 3"
+                            @click="showOnboarding = false; localStorage.setItem('cmOnboardingDone', '1')"
+                            class="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-black text-sm transition shadow-md">
+                        ✓ Démarrer !
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -336,6 +550,11 @@
                 <span>📄</span> PDF
             </button>
                 
+            <button @click="toggleDarkMode()"
+                    :title="darkMode ? 'Passer en mode clair' : 'Passer en mode sombre'"
+                    class="w-11 h-11 bg-slate-100 hover:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
+                <span x-text="darkMode ? '☀️' : '🌙'"></span>
+            </button>
             <button @click="showConfigModal = true"
                     title="Export / Import de la configuration — Sauvegarder ou restaurer toutes vos données (élèves, plans, placements)"
                     class="w-11 h-11 bg-slate-100 hover:bg-indigo-100 border-2 border-slate-200 hover:border-indigo-400 text-slate-500 hover:text-indigo-600 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
@@ -473,11 +692,11 @@
                                                 </template>
                                                 <template x-if="getOccupant(cell.r, cell.c)">
                                                     <div class="absolute inset-0 flex flex-col items-center pointer-events-none z-20 px-1 pt-1 pb-1">
-                                                        <div class="flex gap-0.5 justify-center items-center">
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="text-[9px] leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" title="Bavard(e)">🗣️</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="text-[9px] leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" title="PAP / PPRE">📋</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="text-[9px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" title="Problème de vue">👓</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="text-[9px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" title="Besoin allée">🚶</span>
+                                                        <div class="flex gap-0.5 justify-center items-center" style="pointer-events:auto">
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="tooltip-icon text-[9px] leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Bavard(e)">🗣️</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="tooltip-icon text-[9px] leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="PAP / PPRE">📋</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon text-[9px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Problème de vue">👓</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon text-[9px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Besoin allée">🚶</span>
                                                         </div>
                                                         <div class="flex-1 flex flex-col items-center justify-center w-full">
                                                             <span class="font-black text-indigo-700 leading-tight w-full text-center"
@@ -538,13 +757,29 @@
             _pdfWindow: null, openDropdown: null, showOnlyUnplaced: false,
             isCalculating: false, calculationProgress: 0, saveStatus: '', showDiagnosticModal: false, showUnplacedModal: false, diagnosticIssues: [], perfectScoreMsg: false, viewFlipped: false,
             dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
-            
+
             showContactModal: false, showConfigModal: false,
             confirmModal: { show: false, title: '', message: '', suggestion: '', nextPlanIndex: -1, nextPlanName: '', onConfirm: null },
+            darkMode: false,
+            showOnboarding: false, onboardingStep: 0,
 
             initApp() {
                 this._isElectron = !!window.electronAPI;
-                
+
+                // Dark mode (persisté séparément)
+                this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
+                if (this.darkMode) document.documentElement.classList.add('dark');
+
+                const _afterLoad = () => {
+                    if (this.students.length === 0) {
+                        this.editMode = true;
+                        // Onboarding : première utilisation
+                        if (!localStorage.getItem('cmOnboardingDone')) {
+                            this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+                        }
+                    }
+                };
+
                 if (this._isElectron) {
                     window.electronAPI.loadData().then(data => {
                         if (data) {
@@ -556,7 +791,7 @@
                             this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
                             this.currentPlanIndex = data.currentPlanIndex || 0;
                         } else { this.initEmptyPlans(); }
-                        if (this.students.length === 0) this.editMode = true;
+                        _afterLoad();
                     });
                 } else {
                     if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9')) {
@@ -576,10 +811,15 @@
                         this.plans = data.plans || Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] }));
                         this.currentPlanIndex = data.currentPlanIndex || 0;
                     } else { this.initEmptyPlans(); }
-                    if (this.students.length === 0) this.editMode = true;
+                    _afterLoad();
                 }
             },
             initEmptyPlans() { this.plans = Array.from({length: 10}, (_, i) => ({ id: i+1, name: `Plan ${(i+1).toString().padStart(2, '0')}`, assignments: [] })); },
+            toggleDarkMode() {
+                this.darkMode = !this.darkMode;
+                document.documentElement.classList.toggle('dark', this.darkMode);
+                localStorage.setItem('cmDarkMode', this.darkMode);
+            },
             get assignments() { return this.plans[this.currentPlanIndex].assignments; },
             set assignments(newAssignments) { this.plans[this.currentPlanIndex].assignments = newAssignments; },
             switchPlan(index) { this.currentPlanIndex = index; this.saveLocal(); },
