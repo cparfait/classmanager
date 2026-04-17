@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { autoUpdater } = require('electron-updater');
 
 /**
  * Détermine le chemin de stockage du fichier de données JSON.
@@ -176,12 +177,57 @@ ipcMain.handle('print-to-pdf', async (event, htmlContent) => {
     }
 });
 
+// === MISES À JOUR AUTOMATIQUES ===
+
+function setupAutoUpdater() {
+    // Pas de mise à jour en développement
+    if (!app.isPackaged) return;
+
+    autoUpdater.autoDownload = true;        // Télécharge en arrière-plan
+    autoUpdater.autoInstallOnAppQuit = true; // Installe à la fermeture (NSIS)
+
+    // Vérifier au démarrage (délai de 3s pour laisser l'app s'initialiser)
+    setTimeout(() => autoUpdater.checkForUpdates(), 3000);
+
+    autoUpdater.on('update-available', (info) => {
+        // Notifier l'app renderer qu'un téléchargement commence
+        if (mainWindow) mainWindow.webContents.send('update-status', {
+            type: 'downloading',
+            version: info.version
+        });
+    });
+
+    autoUpdater.on('update-downloaded', (info) => {
+        // Proposer l'installation immédiate ou à la prochaine fermeture
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Mise à jour prête',
+            message: `ClassManager Pro ${info.version} est prêt à être installé.`,
+            detail: 'La mise à jour sera appliquée automatiquement à la prochaine fermeture.\nVoulez-vous redémarrer maintenant ?',
+            buttons: ['Redémarrer maintenant', 'Plus tard'],
+            defaultId: 0,
+            cancelId: 1,
+            icon: path.join(__dirname, 'icon.ico')
+        }).then(result => {
+            if (result.response === 0) autoUpdater.quitAndInstall();
+        });
+    });
+
+    autoUpdater.on('error', (err) => {
+        // Erreur silencieuse — ne pas bloquer l'utilisateur
+        console.error('Erreur autoUpdater:', err.message);
+    });
+}
+
+
 // === CYCLE DE VIE DE L'APPLICATION ===
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    createWindow();
+    setupAutoUpdater();
+});
 
 app.on('window-all-closed', () => {
-    // Sur Windows et Linux, quitter l'application quand toutes les fenêtres sont fermées
     if (process.platform !== 'darwin') {
         app.quit();
     }

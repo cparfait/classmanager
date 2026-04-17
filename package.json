@@ -1,13 +1,13 @@
 {
   "name": "classmanager-pro",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "ClassManager Pro - Gestion de placement d'élèves en classe",
   "main": "main.js",
   "author": "Cris Tof",
   "license": "GPL-3.0",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir", 
+    "pack": "electron-builder --dir",
     "build": "electron-builder --win",
     "build-portable": "electron-builder --win portable"
   },
@@ -28,7 +28,7 @@
       "index.html",
       "icon.ico",
       "cris.jpg",
-      "js/**/*" 
+      "js/**/*"
     ],
     "win": {
       "target": [
@@ -46,6 +46,14 @@
     },
     "portable": {
       "artifactName": "ClassManager-Pro-Portable.exe"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "cparfait",
+      "repo": "classmanager"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3"
   }
 }
