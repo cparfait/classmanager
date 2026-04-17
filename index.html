@@ -1303,6 +1303,20 @@
                     class="w-11 h-11 bg-slate-100 hover:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
                 <span x-text="darkMode ? '☀️' : '🌙'"></span>
             </button>
+            <!-- Prof connecté + déconnexion (mode multi) -->
+            <div x-show="appMode === 'multi' && currentTeacher"
+                 class="flex items-center gap-2 pl-1 pr-2 py-1 bg-slate-50 border-2 border-slate-200 rounded-xl">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white shadow-sm shrink-0"
+                     :style="'background:' + (currentTeacher?.color || '#6366f1')"
+                     x-text="currentTeacher?.name.charAt(0).toUpperCase()"></div>
+                <span class="text-sm font-black text-slate-700 max-w-[140px] truncate"
+                      x-text="currentTeacher?.name"></span>
+                <button @click="lockSession()" title="Verrouiller la session"
+                        class="w-7 h-7 flex items-center justify-center rounded-lg bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border border-slate-200 hover:border-red-300 transition text-sm ml-1">
+                    🔒
+                </button>
+            </div>
+
             <button @click="showConfigModal = true"
                     title="Export / Import de la configuration — Sauvegarder ou restaurer toutes vos données (élèves, plans, placements)"
                     class="w-11 h-11 bg-slate-100 hover:bg-indigo-100 border-2 border-slate-200 hover:border-indigo-400 text-slate-500 hover:text-indigo-600 rounded-full flex items-center justify-center text-lg transition-all duration-200 shadow-sm hover:scale-105">
@@ -1374,41 +1388,13 @@
                 </div>
             </div>
 
-            <!-- Pied de sidebar -->
-            <div class="mt-auto border-t border-slate-100 p-3 space-y-2">
-
-                <!-- Mode multi : prof connecté + verrouiller -->
-                <div x-show="appMode === 'multi' && currentTeacher"
-                     class="flex items-center gap-3 px-2 py-1.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-base font-black text-white shadow-md shrink-0"
-                         :style="'background:' + (currentTeacher?.color || '#6366f1')"
-                         x-text="currentTeacher?.name.charAt(0).toUpperCase()"></div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-xs font-black text-slate-700 truncate" x-text="currentTeacher?.name"></p>
-                        <p class="text-[10px] text-slate-400 font-medium"
-                           x-text="visibleClasses.length + ' classe(s)'"></p>
-                    </div>
-                    <button @click="lockSession()" title="Verrouiller la session"
-                            class="w-8 h-8 flex items-center justify-center rounded-xl bg-white hover:bg-red-50 text-slate-400 hover:text-red-500 border border-slate-200 hover:border-red-300 transition text-sm shrink-0">
-                        🔒
-                    </button>
-                </div>
-
-                <!-- Contact dev (toujours visible) -->
-                <div class="flex items-center gap-3">
-                    <button @click="showContactModal = true" title="Contacter le développeur"
-                            class="block transition-all hover:scale-110 hover:rotate-3 focus:outline-none shrink-0">
-                        <img src="cris.jpg" alt="Cristof" class="w-9 h-9 rounded-full border-2 border-indigo-200 hover:border-amber-400 shadow-md object-cover">
-                    </button>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-[10px] font-black text-slate-600 truncate">Christophe Parfait</p>
-                        <button @click="showContactModal = true"
-                                class="text-[9px] text-slate-400 hover:text-indigo-500 font-medium transition">
-                            Contacter le développeur →
-                        </button>
-                    </div>
-                </div>
-
+            <!-- Pied de sidebar : photo dev centrée, sans texte -->
+            <div class="mt-auto border-t border-slate-100 py-3 flex justify-center">
+                <button @click="showContactModal = true" title="Contacter le développeur"
+                        class="transition-all hover:scale-110 hover:rotate-3 focus:outline-none">
+                    <img src="cris.jpg" alt="Cristof"
+                         class="w-9 h-9 rounded-full border-2 border-indigo-200 hover:border-amber-400 shadow-md object-cover">
+                </button>
             </div>
         </aside>
 
