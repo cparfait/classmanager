@@ -45,7 +45,7 @@
       "shortcutName": "ClassManager Pro"
     },
     "portable": {
-      "artifactName": "ClassManager-Pro-Portable.exe"
+      "artifactName": "ClassManager-Pro-Portable-${version}.exe"
     },
     "publish": {
       "provider": "github",
