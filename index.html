@@ -1171,7 +1171,15 @@
                x-transition:leave="transition-all ease-in duration-150"
                x-transition:leave-start="opacity-100 translate-x-0"
                x-transition:leave-end="opacity-0 -translate-x-4"
-               class="w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0">
+               class="w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative">
+            <!-- Bouton fermer sidebar -->
+            <button @click="toggleSidebar()"
+                    title="Masquer la barre de gestion"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full z-30 items-center justify-center w-5 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-xl shadow-lg transition hidden lg:flex">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+            </button>
             <!-- Barre classe / plan / verrou -->
             <div class="bg-white border-b border-slate-200 px-2.5 py-2 flex items-center gap-2"
                  x-show="appMode === 'solo' || (appMode === 'multi' && currentTeacherId)">
