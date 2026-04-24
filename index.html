@@ -1096,7 +1096,7 @@
                     <rect x="2" y="14" width="16" height="2" rx="1"/>
                 </svg>
             </button>
-            <h1 class="text-xl font-black text-indigo-600 uppercase tracking-tighter italic shrink-0">ClassManager <span class="text-slate-400 font-light">PRO</span></h1>
+            <h1 class="text-base lg:text-xl font-black text-indigo-600 uppercase tracking-tighter italic shrink-0">ClassManager <span class="text-slate-400 font-light hidden sm:inline">PRO</span></h1>
         </div>
 
         <!-- CENTRE : Actions plan -->
@@ -1106,8 +1106,8 @@
 
             <!-- Actions plan -->
             <button @click="generateAutoPlan()" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition">🔍 Tester</button>
-            <button @click="exportPDF()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition" title="Exporter en PDF">📄 PDF</button>
+            <button @click="testCurrentPlan()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition hidden md:flex">🔍 Tester</button>
+            <button @click="exportPDF()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
 
         </div>
 
@@ -1159,6 +1159,11 @@
             </svg>
         </button>
 
+        <!-- Backdrop mobile -->
+        <div x-show="sidebarVisible" x-cloak
+             @click="toggleSidebar()"
+             class="fixed inset-0 bg-black/30 z-40 lg:hidden"></div>
+
         <aside x-show="sidebarVisible" x-cloak
                x-transition:enter="transition-all ease-out duration-200"
                x-transition:enter-start="opacity-0 -translate-x-4"
@@ -1166,7 +1171,7 @@
                x-transition:leave="transition-all ease-in duration-150"
                x-transition:leave-start="opacity-100 translate-x-0"
                x-transition:leave-end="opacity-0 -translate-x-4"
-               class="w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar relative z-20 shadow-md shrink-0">
+               class="w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0">
             <!-- Barre classe / plan / verrou -->
             <div class="bg-white border-b border-slate-200 px-2.5 py-2 flex items-center gap-2"
                  x-show="appMode === 'solo' || (appMode === 'multi' && currentTeacherId)">
@@ -1366,11 +1371,11 @@
             </div>
         </aside>
 
-        <section class="flex-1 p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
-            <div class="relative p-12 bg-white shadow-xl rounded-3xl border border-slate-200 mt-6 min-w-[600px]">
+        <section class="flex-1 p-2 md:p-4 lg:p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
+            <div class="relative p-4 md:p-8 lg:p-12 bg-white shadow-xl rounded-3xl border border-slate-200 mt-2 md:mt-4 lg:mt-6 w-full max-w-[1400px]">
 
                 <!-- Titre classe + plan -->
-                <div class="text-center mb-6 -mt-2">
+                <div class="text-center mb-4 pt-10 lg:pt-0 -mt-2">
                     <h2 class="text-base font-black text-slate-700 leading-tight"
                         x-text="(classes.find(c => c.id === currentClassId)?.name || 'Ma Classe')"></h2>
                     <p class="text-[11px] font-bold text-slate-400 mt-0.5"
@@ -1507,10 +1512,10 @@
                     </div>
                 </template>
 
-                <div class="grid gap-3"
+                <div class="grid gap-1 sm:gap-2 lg:gap-3"
                      :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
                     <template x-for="cell in gridCells" :key="cell.key">
-                            <div class="w-32 h-20 border-2 rounded-2xl flex flex-col items-center justify-center p-2 relative transition-all group"
+                            <div class="aspect-[8/5] min-h-[44px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 lg:p-2 relative transition-all group"
                                  :style="viewFlipped ? 'transform: rotate(180deg);' : ''"
                                  :draggable="!!getOccupant(cell.r, cell.c) && !aisles.includes(cell.c)"
                                  @dragstart="onDragStartCell($event, cell.r, cell.c)"
