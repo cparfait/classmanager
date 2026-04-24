@@ -1384,7 +1384,7 @@
             <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full">
 
                 <!-- Titre classe + plan -->
-                <div class="text-center mb-4 pt-10 lg:pt-0 -mt-2">
+                <div class="text-center mb-8 pt-10 lg:pt-2">
                     <h2 class="text-sm font-black text-slate-700 leading-tight flex items-center justify-center gap-2 flex-wrap">
                         <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
                         <span class="text-slate-300 font-light" x-show="(_isAlphaPlan() ? 'Plan 00' : plans[currentPlanIndex]?.name)">—</span>
@@ -1508,8 +1508,8 @@
                     </div>
                 </template>
 
-                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 mx-auto w-fit max-w-full"
-                     :style="`grid-template-columns: repeat(${cols}, minmax(60px,110px)); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
+                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 mx-auto w-full max-w-5xl"
+                     :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
                     <template x-for="cell in gridCells" :key="cell.key">
                             <div class="aspect-[8/5] min-h-[36px] max-h-[68px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 lg:p-2 relative transition-all group"
                                  :style="viewFlipped ? 'transform: rotate(180deg);' : ''"
