@@ -131,14 +131,14 @@ export function pdfModule() {
             if (this._isElectron && window.electronAPI?.printToPdf) {
                 window.electronAPI.printToPdf(htmlContent).then(result => {
                     if (result && !result.success && !result.cancelled)
-                        alert('⚠️ Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'));
+                        this.showToast('Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'), 'error');
                 });
                 return;
             }
 
             if (this._pdfWindow && !this._pdfWindow.closed) this._pdfWindow.close();
             const w = window.open('', '_blank');
-            if (!w) { alert("⚠️ L'ouverture du PDF a été bloquée par votre navigateur."); return; }
+            if (!w) { this.showToast("L'ouverture du PDF a été bloquée par votre navigateur.", 'error'); return; }
             this._pdfWindow = w;
             w.document.write(htmlContent);
             w.document.close();
@@ -147,7 +147,7 @@ export function pdfModule() {
 
         generateAlphaPreview() {
             if (this.students.length === 0) {
-                alert('⚠️ Aucun élève dans la liste !');
+                this.showToast('Aucun élève dans la liste !', 'warning');
                 return;
             }
 
@@ -247,14 +247,14 @@ export function pdfModule() {
             if (this._isElectron && window.electronAPI?.printToPdf) {
                 window.electronAPI.printToPdf(htmlContent).then(result => {
                     if (result && !result.success && !result.cancelled)
-                        alert('⚠️ Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'));
+                        this.showToast('Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'), 'error');
                 });
                 return;
             }
 
             if (this._alphaPdfWindow && !this._alphaPdfWindow.closed) this._alphaPdfWindow.close();
             const w = window.open('', '_blank');
-            if (!w) { alert("⚠️ L'ouverture du PDF a été bloquée par votre navigateur."); return; }
+            if (!w) { this.showToast("L'ouverture du PDF a été bloquée par votre navigateur.", 'error'); return; }
             this._alphaPdfWindow = w;
             w.document.write(htmlContent);
             w.document.close();

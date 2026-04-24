@@ -56,7 +56,7 @@ export function diagnosticsModule() {
 
         testCurrentPlan() {
             const asgn = this._getAssignments();
-            if (asgn.length === 0) { alert('Le plan est vide, rien à tester.'); return; }
+            if (asgn.length === 0) { this.showToast('Le plan est vide, rien à tester.', 'warning'); return; }
             this.diagnosticIssues = this.getPlacementIssues(asgn);
             if (this.diagnosticIssues.length === 0) {
                 this.perfectScoreMsg = true;

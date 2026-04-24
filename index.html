@@ -1106,7 +1106,7 @@
 
             <!-- Actions plan -->
             <button @click="generateAutoPlan()" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="h-8 items-center gap-1.5 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-black text-xs transition hidden md:flex">🔍 Tester</button>
+            <button @click="testCurrentPlan()" class="h-8 items-center gap-1.5 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-black text-xs transition hidden md:flex">🔍 TESTER</button>
             <button @click="exportPDF()" class="h-8 items-center gap-1.5 bg-indigo-50 border-2 border-indigo-300 text-indigo-700 hover:bg-indigo-100 px-3 rounded-xl font-black text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
 
         </div>
@@ -1171,7 +1171,7 @@
                x-transition:leave="transition-all ease-in duration-150"
                x-transition:leave-start="opacity-100 translate-x-0"
                x-transition:leave-end="opacity-0 -translate-x-4"
-               class="w-80 lg:w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative">
+               class="w-80 lg:w-96 border-r border-violet-100 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);">
             <!-- Bouton fermer sidebar -->
             <button @click="toggleSidebar()"
                     title="Masquer la barre de gestion"
@@ -1181,17 +1181,18 @@
                 </svg>
             </button>
             <!-- Barre classe / plan / verrou -->
-            <div class="bg-white border-b border-slate-200 px-2.5 py-2 flex items-center gap-2"
-                 x-show="appMode === 'solo' || (appMode === 'multi' && currentTeacherId)">
+            <div x-show="students.length > 0 && (appMode === 'solo' || (appMode === 'multi' && currentTeacherId))"
+                 class="border-b border-violet-200"
 
-                <!-- Sélecteur de classe -->
+                <!-- Ligne 1 : Classe + Verrou -->
+                <div class="flex items-center gap-2 px-3 pt-3 pb-1.5">
                 <div class="relative flex-1 min-w-0" x-data="{ classOpen: false }">
                     <button @click="classOpen = !classOpen" @click.outside="classOpen = false"
-                            class="w-full flex items-center gap-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-2.5 py-1.5 cursor-pointer outline-none transition">
-                        <span class="text-xs shrink-0">🏫</span>
-                        <span class="truncate flex-1 text-left text-xs font-black text-indigo-700"
+                            class="w-full flex items-center gap-2 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 rounded-2xl px-3 py-2 cursor-pointer outline-none transition">
+                        <span class="w-7 h-7 flex items-center justify-center bg-indigo-50 rounded-xl shrink-0 text-sm">🏫</span>
+                        <span class="truncate flex-1 text-left text-sm font-black text-slate-800"
                               x-text="classes.find(c => c.id === currentClassId)?.name || 'Classe'"></span>
-                        <svg class="w-3 h-3 text-indigo-400 shrink-0 transition-transform" :class="classOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                        <svg class="w-3 h-3 text-slate-400 shrink-0 transition-transform" :class="classOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="classOpen" x-cloak @click.outside="classOpen = false"
                          class="absolute top-full left-0 mt-1.5 z-[500] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden"
@@ -1229,17 +1230,21 @@
                     </div>
                 </div>
 
-                <!-- Sélecteur de plan -->
-                <div class="relative shrink-0" x-data="{ planOpen: false, editingPlanIdx: null, editingName: '' }">
+                </div><!-- /Ligne 1 -->
+
+                <!-- Ligne 2 : Plan -->
+                <div class="px-3 pb-3">
+                <div class="relative" x-data="{ planOpen: false, editingPlanIdx: null, editingName: '' }">
                     <button @click="planOpen = !planOpen" @click.outside="planOpen = false; editingPlanIdx = null"
-                            class="flex items-center gap-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-2.5 py-1.5 cursor-pointer outline-none transition"
-                            style="min-width:100px">
-                        <span class="text-[11px] font-black border rounded px-1 py-0.5 shrink-0 font-mono"
-                              :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-50 border-violet-200' : 'text-indigo-400 bg-indigo-50 border-indigo-100'"
+                            class="w-full flex items-center gap-2 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 rounded-2xl px-3 py-2 cursor-pointer outline-none transition">
+                        <span class="w-7 h-7 flex items-center justify-center rounded-xl shrink-0 text-sm"
+                              :class="_isAlphaPlan() ? 'bg-violet-50' : 'bg-indigo-50'">📋</span>
+                        <span class="text-[11px] font-black border rounded-lg px-1.5 py-0.5 shrink-0 font-mono"
+                              :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-50 border-violet-200' : 'text-indigo-500 bg-indigo-50 border-indigo-100'"
                               x-text="_isAlphaPlan() ? '00' : String(currentPlanIndex + 1).padStart(2, '0')"></span>
-                        <span class="truncate text-xs font-black text-indigo-700"
-                              x-text="_isAlphaPlan() ? 'Plan 00 · A→Z' : (plans[currentPlanIndex]?.name || '—')"></span>
-                        <svg class="w-3 h-3 text-indigo-400 shrink-0 transition-transform ml-auto" :class="planOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                        <span class="truncate flex-1 text-left text-sm font-black text-slate-800"
+                              x-text="_isAlphaPlan() ? 'Plan Alphabétique' : (plans[currentPlanIndex]?.name || '—')"></span>
+                        <svg class="w-3 h-3 text-slate-400 shrink-0 transition-transform" :class="planOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="planOpen" x-cloak @click.outside="planOpen = false; editingPlanIdx = null"
                          class="absolute top-full left-0 mt-1.5 z-[500] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-y-auto custom-scrollbar"
@@ -1255,7 +1260,7 @@
                             <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
                                   :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-100' : 'text-slate-400 bg-slate-100'">00</span>
                             <span class="flex-1 text-left text-sm font-bold"
-                                  :class="_isAlphaPlan() ? 'text-violet-700' : 'text-slate-500'">Plan 00 · A→Z</span>
+                                  :class="_isAlphaPlan() ? 'text-violet-700' : 'text-slate-500'">Plan Alphabétique</span>
                             <span class="text-[10px] text-slate-400 italic shrink-0">auto</span>
                         </div>
                         <div class="border-t border-slate-100 mb-0.5"></div>
@@ -1297,51 +1302,64 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Verrou liste -->
-                <button @click="editMode = !editMode"
-                        :class="editMode ? 'bg-red-50 text-red-400 border-red-200 hover:bg-red-100' : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'"
-                        class="shrink-0 w-8 h-8 flex items-center justify-center rounded-xl border transition text-sm"
-                        :title="editMode ? 'Verrouiller la liste' : 'Déverrouiller pour éditer'">
-                    <span x-text="editMode ? '🔓' : '🔒'"></span>
-                </button>
-            </div>
-            <div class="p-5 flex-1 overflow-y-auto flex flex-col">
+                </div><!-- /Ligne 2 -->
+            </div><!-- /border-b wrapper -->
+            <div class="px-5 pt-6 pb-5 flex-1 overflow-y-auto flex flex-col">
                 <section x-show="editMode" x-collapse class="mb-6 relative">
-                    <div x-show="students.length === 0" class="mb-4 flex flex-col items-center gap-1.5">
-                        <span class="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-widest">Étape 1 : Importez vos élèves</span>
-                        <span class="text-2xl animate-bounce" title="Importez un fichier Excel ou collez les noms ci-dessous">👇</span>
+                    <div x-show="students.length === 0" class="mb-4 flex flex-col items-center gap-2">
+                        <span class="import-pulse bg-violet-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-widest">📥 Étape 1 : Importez vos élèves</span>
+                        <span class="text-3xl animate-bounce">👇</span>
                     </div>
-                    <div class="mb-3"><input type="file" accept=".xls,.xlsx,.csv" @change="importExcel" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer"></div>
+                    <div class="mb-3" x-data="{ filename: '' }">
+                        <input id="fileImport" type="file" accept=".xls,.xlsx,.csv"
+                               @change="importExcel($event); filename = $event.target.files[0]?.name || ''"
+                               class="hidden">
+                        <button @click="$el.closest('[x-data]').querySelector('#fileImport').click()"
+                                class="w-full flex flex-col items-center gap-1 py-3 rounded-2xl border-2 border-dashed border-violet-400 bg-white/60 hover:bg-white transition cursor-pointer import-pulse">
+                            <span class="text-4xl">📂</span>
+                            <span class="text-[10px] font-bold text-violet-600" x-text="filename || 'Cliquez pour importer Excel / CSV'"></span>
+                        </button>
+                    </div>
                     <div class="pt-3 border-t border-slate-200">
                         <textarea x-model="bulkList" placeholder="Copier-coller des noms ici..." class="w-full h-12 p-2 text-xs border rounded-lg bg-slate-50 outline-none mb-2 focus:ring-2 focus:ring-indigo-500"></textarea>
-                        <button @click="importStudentsText()" class="w-full py-1.5 bg-slate-800 text-white text-[10px] rounded-lg font-bold hover:bg-black">AJOUTER MANUELLEMENT</button>
+                        <button @click="importStudentsText()" class="w-full py-1.5 bg-violet-600 text-white text-[10px] rounded-lg font-bold hover:bg-violet-700">AJOUTER MANUELLEMENT</button>
                     </div>
                 </section>
                 <div class="mb-4 space-y-2">
-                    <div class="relative">
-                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
-                        <input type="text" x-model="searchQuery" placeholder="Rechercher un élève…"
-                               class="w-full pl-8 pr-3 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex-1">
+                            <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                            <input type="text" x-model="searchQuery" placeholder="Rechercher un élève…"
+                                   class="w-full pl-8 pr-3 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
+                        </div>
+                        <button @click="editMode = !editMode"
+                                :class="editMode ? 'bg-red-50 text-red-400 border-red-200 hover:bg-red-100' : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'"
+                                class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border-2 transition text-base"
+                                :title="editMode ? 'Verrouiller la liste' : 'Déverrouiller pour éditer'">
+                            <span x-text="editMode ? '🔓' : '🔒'"></span>
+                        </button>
                     </div>
-                    <div class="flex gap-1.5 text-xs font-black">
-                        <button @click="mainGenderFilter = 'ALL'"
-                                class="flex-1 py-1.5 rounded-xl border-2 transition"
-                                :class="mainGenderFilter === 'ALL' ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-500'">Tous</button>
-                        <button @click="mainGenderFilter = 'F'"
-                                class="flex-1 py-1.5 rounded-xl border-2 transition"
-                                :class="mainGenderFilter === 'F' ? 'bg-pink-500 border-pink-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-pink-300 hover:text-pink-500'">Filles</button>
-                        <button @click="mainGenderFilter = 'M'"
-                                class="flex-1 py-1.5 rounded-xl border-2 transition"
-                                :class="mainGenderFilter === 'M' ? 'bg-blue-500 border-blue-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500'">Garçons</button>
+                    <div class="flex items-center gap-1.5">
+                        <!-- Filtres genre -->
+                        <div class="flex gap-1 text-[10px] font-black">
+                            <button @click="mainGenderFilter = 'ALL'"
+                                    class="px-2.5 py-1 rounded-xl border-2 transition"
+                                    :class="mainGenderFilter === 'ALL' ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-500'">Tous</button>
+                            <button @click="mainGenderFilter = 'F'"
+                                    class="px-2.5 py-1 rounded-xl border-2 transition"
+                                    :class="mainGenderFilter === 'F' ? 'bg-pink-500 border-pink-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-pink-300 hover:text-pink-500'">F</button>
+                            <button @click="mainGenderFilter = 'M'"
+                                    class="px-2.5 py-1 rounded-xl border-2 transition"
+                                    :class="mainGenderFilter === 'M' ? 'bg-blue-500 border-blue-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500'">M</button>
+                        </div>
+                        <!-- Sort toggle -->
+                        <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
+                                class="flex-1 flex items-center justify-center gap-1.5 px-2 py-1 rounded-xl border-2 text-[10px] font-black transition"
+                                :class="profileSortOrder === 'prenomNom' ? 'bg-violet-50 border-violet-400 text-violet-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-3 h-3 shrink-0 opacity-60"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+                            <span x-text="profileSortOrder === 'nomPrenom' ? 'NOM › Prénom' : 'Prénom › NOM'"></span>
+                        </button>
                     </div>
-                    <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
-                            class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl border-2 text-xs font-black transition shadow-sm"
-                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-50 border-violet-400 text-violet-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'">
-                        <span class="text-slate-400 font-medium">Tri :</span>
-                        <span x-text="profileSortOrder === 'nomPrenom' ? 'NOM · Prénom' : 'Prénom · NOM'"></span>
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-3 h-3 shrink-0 opacity-60"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
-                    </button>
                 </div>
 
                 <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
@@ -1388,17 +1406,21 @@
             </div>
         </aside>
 
-        <section class="flex-1 p-1 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
+        <section class="flex-1 px-3 py-1 sm:px-5 lg:px-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
             <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full">
 
                 <!-- Titre classe + plan -->
                 <div class="text-center mb-8 pt-10 lg:pt-2">
                     <h2 class="text-sm font-black text-slate-700 leading-tight flex items-center justify-center gap-2 flex-wrap">
                         <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
-                        <span class="text-slate-300 font-light" x-show="(_isAlphaPlan() ? 'Plan 00' : plans[currentPlanIndex]?.name)">—</span>
-                        <span class="text-indigo-500 font-black"
-                              x-text="_isAlphaPlan() ? 'Plan 00 · A→Z' : (plans[currentPlanIndex]?.name || '')"></span>
+                        <span class="text-slate-300 font-light">—</span>
+                        <span x-show="!_isAlphaPlan()" class="text-indigo-500 font-black"
+                              x-text="plans[currentPlanIndex]?.name || ''"></span>
+                        <span x-show="_isAlphaPlan()" class="text-violet-500 font-black">Plan Alphabétique</span>
                     </h2>
+                    <p x-show="_isAlphaPlan()" class="mt-1 text-[10px] text-violet-400 font-medium">
+                        Cliquez sur <strong>Auto</strong> après avoir paramétré votre salle et vos élèves, ou placez les librement en glisser / déposer.
+                    </p>
                 </div>
 
                 <div class="absolute top-4 left-4">
@@ -1424,12 +1446,9 @@
                               x-text="undoStack.length"></span>
                     </button>
                     <span class="w-px h-5 bg-slate-200"></span>
-                    <!-- Indice config (remplace A>Z) -->
-                    <template x-if="students.length > 0 && _isAlphaPlan() && !showClassConfig">
-                        <div class="flex items-center gap-1 h-8 px-2">
-                            <span class="text-xs text-slate-400 font-bold italic hidden sm:block">Configurer</span>
-                            <span class="text-base animate-bounce leading-none">👉</span>
-                        </div>
+                    <!-- Main animée vers config (uniquement après import, avant 1ère config) -->
+                    <template x-if="students.length > 0 && !showClassConfig && !configHintDismissed">
+                        <span class="text-xl arrow-bounce leading-none">👉</span>
                     </template>
                     <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
                             class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
@@ -1437,20 +1456,14 @@
                             <path d="M3 3l10 10M13 3L3 13"/>
                         </svg>
                     </button>
-                    <!-- Bouton Vue prof/élève -->
-                    <button @click="viewFlipped = !viewFlipped" title="Retourner la vue"
-                            class="h-8 px-2.5 rounded-xl text-xs font-black transition border"
-                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'">
-                        <span>🔄 Vue</span>
+                    <!-- Bouton config classe -->
+                    <button @click="showClassConfig = !showClassConfig; if(showClassConfig) configHintDismissed = true"
+                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition border"
+                        :class="showClassConfig ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : (students.length > 0 && !configHintDismissed ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')"
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
+                        <span>Config. classe</span>
                     </button>
                     <span class="w-px h-4 bg-slate-200"></span>
-                    <!-- Bouton config classe -->
-                    <button @click="showClassConfig = !showClassConfig"
-                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition shadow-sm border"
-                        :class="showClassConfig ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
-                        <span x-text="rows + '×' + cols"></span>
-                    </button>
                 </div>
 
                 <!-- Tiroir config classe -->
@@ -1496,25 +1509,17 @@
                     </div>
                 </template>
 
-                <!-- Bandeau plan alpha -->
-                <template x-if="_isAlphaPlan()">
-                    <div class="mb-6 flex items-center gap-3 px-4 py-2.5 bg-violet-50 border-2 border-violet-200 rounded-2xl max-w-lg mx-auto">
-                        <span class="text-lg">🔤</span>
-                        <div>
-                            <p class="text-xs font-black text-violet-700 uppercase tracking-wide">Vue alphabétique — Rentrée</p>
-                            <p class="text-[11px] text-violet-500">Plan automatique A→Z. Choisissez un plan numéroté pour personnaliser.</p>
-                        </div>
-                    </div>
-                </template>
 
                 <!-- Boutons allée par colonne — visibles uniquement en mode config -->
                 <template x-if="showClassConfig && !viewFlipped">
-                    <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full mb-1"
+                    <div class="w-full mb-1">
+                    <p class="text-center text-[10px] font-black text-violet-500 uppercase tracking-widest mb-1">↓ Ajouter des allées</p>
+                    <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full"
                          :style="`grid-template-columns: repeat(${cols}, 1fr);`">
                         <template x-for="c in getColsAscending()" :key="c">
                             <button @click="toggleAisle(c)"
                                     class="h-7 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1 border-2"
-                                    :class="aisles.includes(c) ? 'bg-indigo-600 text-white border-indigo-600 shadow' : 'bg-slate-50 text-slate-400 border-dashed border-slate-300 hover:border-indigo-400 hover:text-indigo-500'"
+                                    :class="aisles.includes(c) ? 'bg-violet-600 text-white border-violet-600 shadow' : 'bg-slate-50 text-slate-400 border-dashed border-slate-300 hover:border-violet-400 hover:text-violet-500'"
                                     :title="aisles.includes(c) ? 'Retirer l\'allée col.' + c : 'Ajouter une allée col.' + c">
                                 <span x-show="aisles.includes(c)" class="leading-none">Allée</span>
                                 <svg viewBox="0 0 10 10" class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1522,6 +1527,7 @@
                                 </svg>
                             </button>
                         </template>
+                    </div>
                     </div>
                 </template>
 
@@ -1536,18 +1542,24 @@
                                  @dragover="onDragOver($event, cell.r, cell.c)"
                                  @dragleave="onDragLeave($event)"
                                  @drop="onDrop($event, cell.r, cell.c)"
-                                 :class="aisles.includes(cell.c) ? 'aisle-bg border-transparent shadow-inner' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300'))">
-                                <template x-if="aisles.includes(cell.c)"><span class="text-[11px] font-black text-slate-300 rotate-90 tracking-[0.3em]">COULOIR</span></template>
+                                 :class="aisles.includes(cell.c) ? 'bg-transparent border-transparent' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300'))">
+                                <template x-if="aisles.includes(cell.c)">
+                                    <div class="w-full h-full flex items-center justify-center relative">
+                                        <div class="absolute left-0 top-0 h-full w-[2px] bg-slate-300 rounded-full"></div>
+                                        <div class="absolute right-0 top-0 h-full w-[2px] bg-slate-300 rounded-full"></div>
+                                    </div>
+                                </template>
                                 <template x-if="!aisles.includes(cell.c)">
                                     <div class="w-full h-full">
                                         <template x-if="blockedSeats.includes(cell.r+'-'+cell.c)"><div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" @click="toggleBlockedSeat(cell.r, cell.c)"><svg viewBox="0 0 24 24" class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg></div></template>
                                         <template x-if="!blockedSeats.includes(cell.r+'-'+cell.c)">
                                             <div class="w-full h-full flex flex-col justify-center relative" @click.stop="getOccupant(cell.r, cell.c) ? openModal(getStudent(getOccupant(cell.r, cell.c))) : (openDropdown = openDropdown === `${cell.r}-${cell.c}` ? null : `${cell.r}-${cell.c}`)">
 
-                                                <button @click.stop="toggleBlockedSeat(cell.r, cell.c)" class="absolute top-0.5 right-0.5 w-5 h-5 bg-white/80 border border-slate-200 rounded-full flex items-center justify-center text-[10px] text-slate-400 hover:text-red-500 hover:border-red-300 transition-colors z-20 opacity-0 group-hover:opacity-100">✕</button>
+                                                <button x-show="!showClassConfig && !_isAlphaPlan() && _getAssignments().length > 0" @click.stop="toggleBlockedSeat(cell.r, cell.c)" title="Bloquer / libérer cette place" class="absolute top-[5%] right-[5%] bg-white/80 border border-slate-200 rounded-full flex items-center justify-center transition-colors z-20 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-orange-500 hover:border-orange-300" style="width:clamp(14px,18cqw,22px);height:clamp(14px,18cqw,22px);padding:clamp(2px,2cqw,4px)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%"><path d="M13.5 8a5.5 5.5 0 1 1-1.1-3.3"/><polyline points="14,2 13.5,5.5 10,5"/></svg></button>
                                                 <template x-if="getOccupant(cell.r, cell.c)">
                                                     <button @click.stop="toggleManual(cell.r, cell.c)"
-                                                        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] transition-all z-20 border shadow-sm"
+                                                        class="absolute top-[5%] left-[5%] rounded-full flex items-center justify-center transition-all z-20 border shadow-sm"
+                                                        style="width:clamp(14px,18cqw,22px);height:clamp(14px,18cqw,22px);font-size:clamp(7px,10cqw,12px)"
                                                         :class="isManual(cell.r, cell.c) ? 'bg-amber-400 border-amber-400 text-white hover:bg-amber-500' : 'bg-white/80 border-slate-200 text-slate-300 hover:border-amber-400 hover:text-amber-500 opacity-0 group-hover:opacity-100'"
                                                         :title="isManual(cell.r, cell.c) ? 'Déverrouiller cette place' : 'Fixer cet élève ici'">
                                                         🔒
@@ -1614,9 +1626,140 @@
                     </div>
                 </template>
 
+                <!-- Légende -->
+                <template x-if="students.length > 0">
+                <div class="mt-6 mb-2 px-2">
+                    <div class="bg-white/70 border border-slate-200 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Légende</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-2">
+                            <!-- Cases -->
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-lg border-2 border-indigo-500 bg-indigo-50 shrink-0"></span>
+                                <span class="text-[10px] text-slate-600 font-medium">Élève placé</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-lg border-2 border-amber-400 bg-amber-50 shrink-0"></span>
+                                <span class="text-[10px] text-slate-600 font-medium">Place fixée manuellement</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-lg border-2 border-dashed border-slate-300 bg-white shrink-0"></span>
+                                <span class="text-[10px] text-slate-600 font-medium">Place libre</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-lg bg-slate-200 border-2 border-slate-300 opacity-70 shrink-0 flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>
+                                </span>
+                                <span class="text-[10px] text-slate-600 font-medium">Place bloquée</span>
+                            </div>
+                            <!-- Profils élèves -->
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">💬</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Bavard·e</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">📋</span>
+                                <span class="text-[10px] text-slate-600 font-medium">PAP / PPRE</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">👁️</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Problème de vue</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">🚶</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Besoin allée</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">📏</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Petit·e / Grand·e</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">🚫</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Ne pas asseoir ensemble</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm">🤝</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Asseoir ensemble</span>
+                            </div>
+                            <!-- Genre -->
+                            <div class="flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black flex items-center justify-center shrink-0">F</span>
+                                <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-[10px] font-black flex items-center justify-center shrink-0">M</span>
+                                <span class="w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">?</span>
+                                <span class="text-[10px] text-slate-600 font-medium">Genre</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </template>
+
+                <!-- Bouton Vue flottant bas-droite -->
+                <div class="flex justify-end mt-3">
+                    <button @click="viewFlipped = !viewFlipped" title="Retourner la vue"
+                            class="h-8 px-3 rounded-xl text-xs font-black transition border shadow-sm"
+                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'">
+                        🔄 Vue
+                    </button>
+                </div>
+
             </div>
         </section>
     </main>
+
+    <!-- Modal succès import -->
+    <template x-if="importSuccessModal.show">
+        <div class="fixed inset-0 z-[9998] flex items-center justify-center p-4" @click.self="importSuccessModal.show = false">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden">
+                <!-- Header coloré -->
+                <div class="bg-gradient-to-br from-violet-500 to-indigo-600 px-8 py-8 text-center">
+                    <div class="text-6xl mb-3">🎉</div>
+                    <h2 class="text-2xl font-black text-white">Bravo !</h2>
+                    <p class="text-violet-200 text-sm mt-1 font-medium">
+                        <span x-text="importSuccessModal.count"></span> élève<span x-text="importSuccessModal.count > 1 ? 's importés' : ' importé'"></span> avec succès
+                    </p>
+                </div>
+                <!-- Corps -->
+                <div class="px-8 py-6 text-center">
+                    <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                        Maintenant, <strong class="text-slate-800">configurez votre salle</strong> : définissez le nombre de rangs, les allées et les places bloquées.
+                    </p>
+                    <button @click="importSuccessModal.show = false; if(_isAlphaPlan()) switchPlan(0); showClassConfig = true; configHintDismissed = true"
+                            class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm flex items-center justify-center gap-2">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
+                        Configurer la salle
+                    </button>
+                    <button @click="importSuccessModal.show = false"
+                            class="mt-3 w-full py-2 text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+                        Faire ça plus tard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Toast notifications -->
+    <div x-data x-show="$store && false" aria-live="polite"></div>
+    <template x-teleport="body">
+        <div x-show="toast.show"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 translate-y-4"
+             class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl border-2 text-sm font-bold max-w-sm w-max"
+             :class="{
+                 'bg-red-50 border-red-300 text-red-700':    toast.type === 'error',
+                 'bg-amber-50 border-amber-300 text-amber-700': toast.type === 'warning',
+                 'bg-indigo-50 border-indigo-300 text-indigo-700': toast.type === 'info'
+             }"
+             style="display:none">
+            <span x-text="toast.type === 'error' ? '✕' : (toast.type === 'warning' ? '⚠️' : 'ℹ️')"
+                  class="shrink-0 text-base"></span>
+            <span x-text="toast.msg" class="flex-1"></span>
+            <button @click="toast.show = false" class="shrink-0 opacity-50 hover:opacity-100 transition text-lg leading-none">×</button>
+        </div>
+    </template>
 
 </body>
 </html>

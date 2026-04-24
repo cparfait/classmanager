@@ -46,7 +46,7 @@ export function algorithmModule() {
             });
 
             let unassigned = this.students.filter(s => !fixedAssigned.some(a => a.studentId === s.id));
-            if (unassigned.length > validSeats.length - fixedAssigned.length) return alert('Pas assez de places !');
+            if (unassigned.length > validSeats.length - fixedAssigned.length) { this.showToast('Pas assez de places disponibles !', 'error'); return; }
 
             this.isCalculating = true;
             this.calculationProgress = 0;

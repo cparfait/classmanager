@@ -1,5 +1,11 @@
 export function persistenceModule() {
     return {
+        showToast(msg, type = 'info') {
+            clearTimeout(this.toast._timer);
+            this.toast = { show: true, msg, type, _timer: null };
+            this.toast._timer = setTimeout(() => { this.toast.show = false; }, 4000);
+        },
+
         saveLocal() {
             this.syncClassData();
             const payload = {
@@ -96,7 +102,7 @@ export function persistenceModule() {
                 }
 
                 if (headerRow === -1) {
-                    alert('⚠️ Aucune colonne "Nom" ou "Prénom" reconnue dans ce fichier.\n\nColonnes attendues : Nom, Prénom, Élève, Sexe, Genre, Civilité…');
+                    this.showToast('Aucune colonne "Nom" ou "Prénom" reconnue. Colonnes attendues : Nom, Prénom, Élève, Sexe…', 'error');
                     e.target.value = ''; return;
                 }
 
@@ -124,8 +130,8 @@ export function persistenceModule() {
                     }
                 }
 
-                if (added === 0) alert('⚠️ Aucun nouvel élève importé (déjà présents ou fichier vide).');
-                else { this.editMode = false; this._selectAlphaPlan(); }
+                if (added === 0) this.showToast('Aucun nouvel élève importé (déjà présents ou fichier vide).', 'warning');
+                else { this.editMode = false; this._selectAlphaPlan(); this.importSuccessModal = { show: true, count: added }; }
                 this.saveLocal(); e.target.value = '';
             };
             reader.readAsArrayBuffer(file);
@@ -133,14 +139,21 @@ export function persistenceModule() {
 
         importStudentsText() {
             const lines = this.bulkList.split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length === 0) {
+                this.showToast('Collez un nom par ligne dans la zone de texte, ex :\nDupont Marie\nMartin Lucas', 'info');
+                return;
+            }
+            let added = 0;
             lines.forEach(name => {
                 if (!this.students.find(s => s.name === name)) {
                     this.students.push({ id: Date.now() + Math.random(), name, gender: '', bavard: false, pap: false, vision: false, aisle: false, height: '', force: [], avoid: [], notes: '' });
+                    added++;
                 }
             });
             this.bulkList = '';
             this._selectAlphaPlan();
             this.saveLocal();
+            if (added > 0) this.importSuccessModal = { show: true, count: added };
         },
 
         // Sidebar toggle (rebuild.py patch #14)

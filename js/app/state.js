@@ -10,13 +10,16 @@ export function state() {
         perfectScoreMsg: false, viewFlipped: false,
         dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
 
-        showContactModal: false, showConfigModal: false, showStatsModal: false, showClassConfig: false,
+        showContactModal: false, showConfigModal: false, showStatsModal: false, showClassConfig: false, configHintDismissed: false,
         appVersion: '',
         confirmModal: {
             show: false, title: '', message: '', suggestion: '',
             nextPlanIndex: -1, nextPlanName: '', onConfirm: null,
             confirmLabel: 'Confirmer', createNewPlan: false,
         },
+        toast: { show: false, msg: '', type: 'info', _timer: null },
+        alphaBannerSeen: false,
+        importSuccessModal: { show: false, count: 0 },
         darkMode: false,
         sidebarVisible: true,
         undoStack: [],
