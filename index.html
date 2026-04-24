@@ -1105,9 +1105,9 @@
             <span x-show="saveStatus" x-text="saveStatus" class="text-xs text-emerald-600 font-bold w-4"></span>
 
             <!-- Actions plan -->
-            <button @click="generateAutoPlan()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl font-black shadow-md transition-all text-sm flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 py-2 rounded-xl font-bold text-sm transition">🔍 Tester</button>
-            <button @click="exportPDF()" class="bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 py-2 rounded-xl font-bold text-sm transition" title="Exporter en PDF">📄 PDF</button>
+            <button @click="generateAutoPlan()" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
+            <button @click="testCurrentPlan()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition">🔍 Tester</button>
+            <button @click="exportPDF()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition" title="Exporter en PDF">📄 PDF</button>
 
         </div>
 
@@ -1116,13 +1116,13 @@
 
             <!-- Mode sombre -->
             <button @click="toggleDarkMode()" :title="darkMode ? 'Mode clair' : 'Mode sombre'"
-                    class="w-9 h-9 bg-slate-100 hover:bg-amber-100 border-2 border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-xl flex items-center justify-center transition">
+                    class="w-8 h-8 bg-slate-100 hover:bg-amber-100 border border-slate-200 hover:border-amber-400 text-slate-500 hover:text-amber-500 rounded-xl flex items-center justify-center transition">
                 <span x-text="darkMode ? '☀️' : '🌙'"></span>
             </button>
 
             <!-- Paramètres -->
             <button @click="showConfigModal = true" title="Paramètres"
-                    class="w-9 h-9 bg-slate-100 hover:bg-indigo-100 border-2 border-slate-200 hover:border-indigo-400 text-slate-500 hover:text-indigo-600 rounded-xl flex items-center justify-center transition">
+                    class="w-8 h-8 bg-slate-100 hover:bg-indigo-100 border border-slate-200 hover:border-indigo-400 text-slate-500 hover:text-indigo-600 rounded-xl flex items-center justify-center transition">
                 ⚙️
             </button>
 
@@ -1221,24 +1221,41 @@
                     <button @click="planOpen = !planOpen" @click.outside="planOpen = false; editingPlanIdx = null"
                             class="flex items-center gap-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-2.5 py-1.5 cursor-pointer outline-none transition"
                             style="min-width:100px">
-                        <span class="text-[11px] font-black text-indigo-400 bg-indigo-50 border border-indigo-100 rounded px-1 py-0.5 shrink-0 font-mono"
-                              x-text="String(currentPlanIndex + 1).padStart(2, '0')"></span>
-                        <span class="truncate text-xs font-black text-indigo-700" x-text="plans[currentPlanIndex]?.name"></span>
+                        <span class="text-[11px] font-black border rounded px-1 py-0.5 shrink-0 font-mono"
+                              :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-50 border-violet-200' : 'text-indigo-400 bg-indigo-50 border-indigo-100'"
+                              x-text="_isAlphaPlan() ? '00' : String(currentPlanIndex + 1).padStart(2, '0')"></span>
+                        <span class="truncate text-xs font-black text-indigo-700"
+                              x-text="_isAlphaPlan() ? 'Plan 00 · A→Z' : (plans[currentPlanIndex]?.name || '—')"></span>
                         <svg class="w-3 h-3 text-indigo-400 shrink-0 transition-transform ml-auto" :class="planOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="planOpen" x-cloak @click.outside="planOpen = false; editingPlanIdx = null"
                          class="absolute top-full left-0 mt-1.5 z-[500] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-y-auto custom-scrollbar"
                          style="padding:6px; min-width:220px; max-height:320px;">
+                        <!-- Plan 00 — alphabétique, toujours en tête -->
+                        <div @click="_selectAlphaPlan(); planOpen = false"
+                             class="flex items-center gap-1.5 px-2 py-1.5 rounded-xl transition-all cursor-pointer mb-0.5"
+                             :class="_isAlphaPlan() ? 'bg-violet-50' : 'hover:bg-slate-50'">
+                            <span class="w-4 h-4 flex items-center justify-center shrink-0">
+                                <svg x-show="_isAlphaPlan()" class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                <span x-show="!_isAlphaPlan()" class="text-base leading-none">🔤</span>
+                            </span>
+                            <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
+                                  :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-100' : 'text-slate-400 bg-slate-100'">00</span>
+                            <span class="flex-1 text-left text-sm font-bold"
+                                  :class="_isAlphaPlan() ? 'text-violet-700' : 'text-slate-500'">Plan 00 · A→Z</span>
+                            <span class="text-[10px] text-slate-400 italic shrink-0">auto</span>
+                        </div>
+                        <div class="border-t border-slate-100 mb-0.5"></div>
                         <template x-for="(plan, index) in plans" :key="plan.id">
                             <div class="flex items-center gap-1.5 px-2 py-1.5 rounded-xl transition-all group"
-                                 :class="currentPlanIndex === index ? 'bg-indigo-50' : 'hover:bg-slate-50'">
+                                 :class="currentPlanIndex === index && !_isAlphaPlan() ? 'bg-indigo-50' : 'hover:bg-slate-50'">
                                 <span class="w-4 h-4 flex items-center justify-center shrink-0">
-                                    <svg x-show="currentPlanIndex === index" class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                    <span x-show="currentPlanIndex !== index && plan.assignments && plan.assignments.length > 0" class="w-2 h-2 rounded-full bg-slate-400 block"></span>
-                                    <span x-show="currentPlanIndex !== index && !(plan.assignments && plan.assignments.length > 0)" class="w-2 h-2 rounded-full bg-slate-200 block"></span>
+                                    <svg x-show="currentPlanIndex === index && !_isAlphaPlan()" class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    <span x-show="(currentPlanIndex !== index || _isAlphaPlan()) && plan.assignments && plan.assignments.length > 0" class="w-2 h-2 rounded-full bg-slate-400 block"></span>
+                                    <span x-show="(currentPlanIndex !== index || _isAlphaPlan()) && !(plan.assignments && plan.assignments.length > 0)" class="w-2 h-2 rounded-full bg-slate-200 block"></span>
                                 </span>
                                 <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
-                                      :class="currentPlanIndex === index ? 'text-indigo-600 bg-indigo-100' : 'text-slate-400 bg-slate-100'"
+                                      :class="currentPlanIndex === index && !_isAlphaPlan() ? 'text-indigo-600 bg-indigo-100' : 'text-slate-400 bg-slate-100'"
                                       x-text="String(index + 1).padStart(2, '0')"></span>
                                 <input x-show="editingPlanIdx === index" x-model="editingName"
                                        x-effect="if (editingPlanIdx === index) $nextTick(() => { $el.focus(); $el.select(); })"
@@ -1250,7 +1267,7 @@
                                 <button x-show="editingPlanIdx !== index"
                                         @click="switchPlan(index); currentPlanIndex = index; planOpen = false; editingPlanIdx = null"
                                         class="flex-1 min-w-0 text-left text-sm font-bold truncate"
-                                        :class="currentPlanIndex === index ? 'text-indigo-700' : ((plan.assignments && plan.assignments.length > 0) ? 'text-slate-600' : 'text-slate-300')"
+                                        :class="currentPlanIndex === index && !_isAlphaPlan() ? 'text-indigo-700' : ((plan.assignments && plan.assignments.length > 0) ? 'text-slate-600' : 'text-slate-300')"
                                         x-text="plan.name"></button>
                                 <button @click.stop="editingPlanIdx = index; editingName = plan.name" title="Renommer"
                                         class="opacity-0 group-hover:opacity-100 w-5 h-5 flex items-center justify-center text-slate-300 hover:text-indigo-500 transition-all shrink-0 text-xs">✏️</button>
@@ -1278,9 +1295,9 @@
             </div>
             <div class="p-5 flex-1 overflow-y-auto flex flex-col">
                 <section x-show="editMode" x-collapse class="mb-6 relative">
-                    <div x-show="students.length === 0" class="mb-5 flex flex-col items-center justify-center gap-2">
+                    <div x-show="students.length === 0" class="mb-4 flex flex-col items-center gap-1.5">
                         <span class="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-widest">Étape 1 : Importez vos élèves</span>
-                        
+                        <span class="text-2xl animate-bounce" title="Importez un fichier Excel ou collez les noms ci-dessous">👇</span>
                     </div>
                     <div class="mb-3"><input type="file" accept=".xls,.xlsx,.csv" @change="importExcel" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer"></div>
                     <div class="pt-3 border-t border-slate-200">
@@ -1295,6 +1312,14 @@
                         <button @click="mainGenderFilter = 'F'" :class="mainGenderFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">FILLES</button>
                         <button @click="mainGenderFilter = 'M'" :class="mainGenderFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">GARÇONS</button>
                     </div>
+                    <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
+                            class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-[10px] font-bold transition"
+                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-50 border-violet-300 text-violet-700' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'"
+                            :title="profileSortOrder === 'nomPrenom' ? 'Passer au tri Prénom → Nom' : 'Passer au tri Nom → Prénom'">
+                        <span>Tri liste :</span>
+                        <span class="font-black tracking-wide" x-text="profileSortOrder === 'nomPrenom' ? 'NOM Prénom' : 'Prénom NOM'"></span>
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-3 h-3 shrink-0"><path d="M2 5h12M4 8h8M6 11h4"/></svg>
+                    </button>
                 </div>
 
                 <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
@@ -1303,7 +1328,7 @@
                         <span class="text-[11px] text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
                     </button>
                 </template>
-                <template x-if="students.length > 0 && getUnplacedStudents().length === 0 && assignments.length > 0">
+                <template x-if="students.length > 0 && getUnplacedStudents().length === 0 && _getAssignments().length > 0">
                     <div class="mb-3 w-full py-2 px-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl text-xs font-bold text-emerald-700 flex items-center gap-2">
                         ✅ Tous les élèves sont placés
                     </div>
@@ -1344,6 +1369,14 @@
         <section class="flex-1 p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
             <div class="relative p-12 bg-white shadow-xl rounded-3xl border border-slate-200 mt-6 min-w-[600px]">
 
+                <!-- Titre classe + plan -->
+                <div class="text-center mb-6 -mt-2">
+                    <h2 class="text-base font-black text-slate-700 leading-tight"
+                        x-text="(classes.find(c => c.id === currentClassId)?.name || 'Ma Classe')"></h2>
+                    <p class="text-[11px] font-bold text-slate-400 mt-0.5"
+                       x-text="_isAlphaPlan() ? 'Plan 00 · Vue alphabétique' : (plans[currentPlanIndex]?.name || '')"></p>
+                </div>
+
                 <div class="absolute top-4 left-4">
                     <button @click="showStatsModal = true" x-show="students.length > 0"
                             title="Statistiques de la classe"
@@ -1370,7 +1403,7 @@
                     <!-- A>Z et Vider -->
                     <button @click="_selectAlphaPlan()" title="Vue alphabétique (rentrée)"
                             :class="_isAlphaPlan() ? 'bg-violet-600 text-white border-violet-600' : 'bg-white border-2 border-violet-300 text-violet-600 hover:bg-violet-50'"
-                            class="px-2.5 py-1.5 rounded-xl font-black text-[10px] transition shadow-sm border-2">A›Z</button>
+                            class="h-8 px-3 rounded-xl font-black text-xs transition shadow-sm border-2">A›Z</button>
                     <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
                             class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
@@ -1380,7 +1413,7 @@
                     <span class="w-px h-4 bg-slate-200"></span>
                     <!-- Bouton config classe -->
                     <button @click="showClassConfig = !showClassConfig"
-                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase transition shadow-sm border"
+                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition shadow-sm border"
                         :class="showClassConfig ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
                         <span x-text="rows + '×' + cols"></span>
@@ -1450,6 +1483,18 @@
                         </div>
                     </template>
                 </div>
+
+                <!-- Indice config post-import -->
+                <template x-if="students.length > 0 && _isAlphaPlan() && !showClassConfig">
+                    <div class="mb-4 flex items-center justify-center gap-2">
+                        <span class="text-slate-400 text-xs font-bold italic">Configurez votre salle</span>
+                        <span class="text-lg animate-bounce">👉</span>
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+                        </span>
+                    </div>
+                </template>
 
                 <!-- Bandeau plan alpha -->
                 <template x-if="_isAlphaPlan()">
@@ -1540,7 +1585,7 @@
                     <div class="flex flex-col items-center mt-8 gap-1">
                         <!-- Prof -->
                         <div class="flex items-center justify-center gap-2 py-1">
-                            <span class="text-xl">👨‍🏫</span>
+                            <span class="text-5xl">👨‍🏫</span>
                         </div>
                         <div class="w-3/4 h-9 bg-indigo-700 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>

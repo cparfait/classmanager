@@ -5,12 +5,20 @@ export function studentsModule() {
                 s.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
                 (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter)
             );
+            const sortKey = s => {
+                if (this.profileSortOrder === 'prenomNom') {
+                    const { prenom, nom } = this.splitStudentName(s.name);
+                    return prenom + ' ' + nom;
+                }
+                return s.name;
+            };
+            const sortFn = (a, b) => sortKey(a).localeCompare(sortKey(b));
             if (this.showOnlyUnplaced) {
-                const unplaced = base.filter(s => !this.isStudentPlaced(s.id)).sort((a, b) => a.name.localeCompare(b.name));
-                const placed   = base.filter(s =>  this.isStudentPlaced(s.id)).sort((a, b) => a.name.localeCompare(b.name));
+                const unplaced = base.filter(s => !this.isStudentPlaced(s.id)).sort(sortFn);
+                const placed   = base.filter(s =>  this.isStudentPlaced(s.id)).sort(sortFn);
                 return [...unplaced, ...placed];
             }
-            return base.sort((a, b) => a.name.localeCompare(b.name));
+            return base.sort(sortFn);
         },
 
         get classStats() {
