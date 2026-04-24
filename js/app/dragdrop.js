@@ -39,9 +39,10 @@ export function dragdropModule() {
             const targetOccupant = this.getOccupant(toRow, toCol);
             const toKey = `${toRow}-${toCol}`;
 
+            this.pushUndo();
+
             if (!fromList && fromRow !== null) {
                 const fromKey = `${fromRow}-${fromCol}`;
-                // Clear manual state of both involved seats — drag never fixes
                 this.manualSeats = this.manualSeats.filter(k => k !== fromKey && k !== toKey);
                 this.fixedSeats  = this.fixedSeats.filter(k => k !== fromKey && k !== toKey);
                 let arr = this._getAssignments().filter(a => !(a.row === fromRow && a.col === fromCol));
@@ -58,7 +59,6 @@ export function dragdropModule() {
                     this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
                     this.fixedSeats  = this.fixedSeats.filter(k => k !== oldKey);
                 }
-                // Drop from list: assign without fixing
                 this.manualSeats = this.manualSeats.filter(k => k !== toKey);
                 this.fixedSeats  = this.fixedSeats.filter(k => k !== toKey);
                 let arr = this._getAssignments().filter(a => a.studentId !== studentId && !(a.row === toRow && a.col === toCol));
@@ -66,7 +66,8 @@ export function dragdropModule() {
                 this._setAssignments(arr);
             }
             this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
-            this.saveLocal();
+            // Defer save so Alpine re-renders before the synchronous JSON serialisation
+            setTimeout(() => this.saveLocal(), 0);
         },
     };
 }

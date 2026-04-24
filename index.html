@@ -1106,8 +1106,8 @@
 
             <!-- Actions plan -->
             <button @click="generateAutoPlan()" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition hidden md:flex">🔍 Tester</button>
-            <button @click="exportPDF()" class="h-8 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 rounded-xl font-bold text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
+            <button @click="testCurrentPlan()" class="h-8 bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-bold text-xs transition hidden md:flex">🔍 Tester</button>
+            <button @click="exportPDF()" class="h-8 bg-indigo-50 border border-indigo-300 text-indigo-700 hover:bg-indigo-100 px-3 rounded-xl font-bold text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
 
         </div>
 
@@ -1380,8 +1380,8 @@
             </div>
         </aside>
 
-        <section class="flex-1 p-2 md:p-4 lg:p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
-            <div class="relative p-4 md:p-8 lg:p-12 bg-white shadow-xl rounded-3xl border border-slate-200 mt-2 md:mt-4 lg:mt-6 w-full max-w-[1400px]">
+        <section class="flex-1 p-1 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
+            <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full">
 
                 <!-- Titre classe + plan -->
                 <div class="text-center mb-4 pt-10 lg:pt-0 -mt-2">
@@ -1429,6 +1429,12 @@
                             <path d="M3 3l10 10M13 3L3 13"/>
                         </svg>
                     </button>
+                    <!-- Bouton Vue prof/élève -->
+                    <button @click="viewFlipped = !viewFlipped" title="Retourner la vue"
+                            class="h-8 px-2.5 rounded-xl text-xs font-black transition border"
+                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'">
+                        <span x-text="viewFlipped ? '🔄 Élève' : '🔄 Prof'"></span>
+                    </button>
                     <span class="w-px h-4 bg-slate-200"></span>
                     <!-- Bouton config classe -->
                     <button @click="showClassConfig = !showClassConfig"
@@ -1474,13 +1480,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-                        <button @click="viewFlipped = !viewFlipped"
-                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition shadow-sm border"
-                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
-                            <span>🔄</span>
-                            <span x-text="viewFlipped ? 'Vue élève' : 'Vue prof'"></span>
-                        </button>
-                        <span class="text-[10px] text-slate-400">Places : <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span></span>
+                        <span class="text-[10px] text-slate-400">Places disponibles : <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span></span>
                     </div>
                 </div>
                 
@@ -1492,7 +1492,7 @@
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
                         </div>
                         <div class="flex items-center justify-center py-1">
-                            <span class="text-5xl">👨‍🏫</span>
+                            <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
                         </div>
                     </div>
                 </template>
@@ -1544,13 +1544,13 @@
                                                             <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon text-[11px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Problème de vue">👓</span>
                                                             <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon text-[11px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Besoin allée">🚶</span>
                                                         </div>
-                                                        <div class="flex-1 flex flex-col items-center justify-center w-full">
+                                                        <div class="flex-1 flex flex-col items-center justify-center w-full" x-data="{ _sn: splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name), _swap: !_isAlphaPlan() && profileSortOrder === 'nomPrenom' }">
                                                             <span class="font-black text-indigo-700 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + (splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom.length > 12 ? '10px' : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom.length > 8 ? '12px' : '13px')"
-                                                                  x-text="splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom"></span>
+                                                                  :style="'font-size:' + ((_swap ? _sn.nom : _sn.prenom).length > 12 ? '10px' : (_swap ? _sn.nom : _sn.prenom).length > 8 ? '12px' : '13px')"
+                                                                  x-text="_swap ? _sn.nom : _sn.prenom"></span>
                                                             <span class="font-semibold text-slate-400 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + (splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom.length > 12 ? '8px' : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom.length > 8 ? '9px' : '10px')"
-                                                                  x-text="splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom"></span>
+                                                                  :style="'font-size:' + ((_swap ? _sn.prenom : _sn.nom).length > 12 ? '8px' : (_swap ? _sn.prenom : _sn.nom).length > 8 ? '9px' : '10px')"
+                                                                  x-text="_swap ? _sn.prenom : _sn.nom"></span>
                                                         </div>
                                                         <span class="text-[11px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
                                                     </div>
@@ -1587,7 +1587,7 @@
                     <div class="flex flex-col items-center mt-8 gap-1">
                         <!-- Prof -->
                         <div class="flex items-center justify-center gap-2 py-1">
-                            <span class="text-5xl">👨‍🏫</span>
+                            <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
                         </div>
                         <div class="w-3/4 h-9 bg-indigo-700 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
