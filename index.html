@@ -4,93 +4,14 @@
     <meta charset="UTF-8">
     <title>ClassManager Pro</title>
 	<script src="js/tailwind.min.js"></script>
+    <script>tailwind.config = { darkMode: "class" }</script>
+    <link rel="stylesheet" href="css/app.css">
+    <script type="module" src="js/app/index.js"></script>
+    <script defer src="js/alpine-collapse.min.js"></script>
     <script defer src="js/alpine.min.js"></script>
     <script src="js/xlsx.full.min.js"></script>
-    <style>
-        [x-cloak] { display: none !important; }
-        .aisle-bg { background-color: #f1f5f9; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 10px 10px; }
-        .blocked-bg { background-color: #e2e8f0; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #cbd5e1 10px, #cbd5e1 20px); }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .text-transparent-caret { color: transparent !important; caret-color: #0f172a; }
-        .text-transparent-caret::selection { background-color: rgba(139, 92, 246, 0.3); color: transparent !important; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .drag-over { border-color: #6366f1 !important; background-color: #eef2ff !important; box-shadow: 0 0 0 3px rgba(99,102,241,0.3) !important; }
-        .dragging { opacity: 0.4; transform: scale(0.97); }
-        .drag-source-list { cursor: grab; }
-        .drag-source-list:active { cursor: grabbing; }
-
-        /* === TOOLTIPS SUR LES ICÔNES === */
-        .tooltip-icon { position: relative; pointer-events: auto !important; cursor: default; }
-        .tooltip-icon::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: calc(100% + 5px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            color: #f8fafc;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 3px 7px;
-            border-radius: 6px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.15s ease;
-            z-index: 9999;
-            font-family: ui-sans-serif, system-ui, sans-serif;
-            letter-spacing: 0.03em;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-        .tooltip-icon:hover::after { opacity: 1; }
-
-        /* === MODE SOMBRE === */
-        html.dark body { background-color: #0f172a !important; color: #e2e8f0 !important; }
-        html.dark .bg-white { background-color: #1e293b !important; }
-        html.dark .bg-slate-100 { background-color: #0f172a !important; }
-        html.dark .bg-slate-50 { background-color: #111827 !important; }
-        html.dark .border-slate-200, html.dark .border-slate-100 { border-color: #334155 !important; }
-        html.dark .border-slate-300 { border-color: #2d3d52 !important; }
-        html.dark .text-slate-900, html.dark .text-slate-800 { color: #f1f5f9 !important; }
-        html.dark .text-slate-700 { color: #cbd5e1 !important; }
-        html.dark .text-slate-600 { color: #94a3b8 !important; }
-        html.dark .text-slate-500 { color: #64748b !important; }
-        html.dark .text-slate-400 { color: #94a3b8 !important; }
-        html.dark .text-slate-300 { color: #64748b !important; }
-        html.dark .text-indigo-600 { color: #818cf8 !important; }
-        html.dark .text-indigo-700 { color: #c7d2fe !important; }
-        html.dark .border-indigo-100, html.dark .border-indigo-200 { border-color: rgba(99,102,241,0.3) !important; }
-        html.dark .bg-indigo-50 { background-color: rgba(79,70,229,0.2) !important; }
-        html.dark .bg-amber-50 { background-color: rgba(217,119,6,0.12) !important; }
-        html.dark .bg-amber-100 { background-color: rgba(217,119,6,0.2) !important; }
-        html.dark .bg-rose-50 { background-color: rgba(225,29,72,0.12) !important; }
-        html.dark .bg-emerald-50 { background-color: rgba(5,150,105,0.12) !important; }
-        html.dark .bg-pink-50 { background-color: rgba(219,39,119,0.12) !important; }
-        html.dark .bg-blue-50 { background-color: rgba(37,99,235,0.12) !important; }
-        html.dark .bg-pink-100 { background-color: rgba(219,39,119,0.2) !important; }
-        html.dark .bg-blue-100 { background-color: rgba(37,99,235,0.2) !important; }
-        html.dark .bg-rose-100 { background-color: rgba(225,29,72,0.2) !important; }
-        html.dark .bg-emerald-100 { background-color: rgba(5,150,105,0.2) !important; }
-        html.dark .bg-indigo-100 { background-color: rgba(79,70,229,0.25) !important; }
-        html.dark .border-dashed { border-color: #334155 !important; }
-        html.dark .shadow-xl { box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important; }
-        html.dark .shadow-md, html.dark .shadow-sm { box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important; }
-        html.dark input, html.dark textarea { background-color: #0f172a !important; color: #e2e8f0 !important; border-color: #334155 !important; }
-        html.dark .aisle-bg { background-color: #0f172a !important; background-image: radial-gradient(#334155 1px, transparent 1px) !important; }
-        html.dark .blocked-bg { background-color: #1e293b !important; background-image: repeating-linear-gradient(45deg,transparent,transparent 10px,#334155 10px,#334155 20px) !important; }
-        html.dark .drag-over { background-color: rgba(79,70,229,0.25) !important; }
-        html.dark .text-violet-600 { color: #a78bfa !important; }
-        html.dark .border-violet-400 { border-color: #7c3aed !important; }
-        html.dark .hover\:bg-slate-50:hover { background-color: #0f172a !important; }
-        html.dark .hover\:bg-slate-100:hover { background-color: #1e293b !important; }
-        html.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569 !important; }
-        html.dark .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b !important; }
-        html.dark .bg-slate-800 { background-color: #0a1628 !important; }
-    </style>
 </head>
-<body class="bg-slate-100 text-slate-900 font-sans" x-data="classApp()" x-init="initApp()">
+<body class="bg-slate-100 text-slate-900 font-sans" x-data="classApp" x-init="initApp()">
 
     <div x-show="isCalculating" x-cloak class="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center text-white transition-opacity duration-300">
         <div class="loader mb-6 shadow-lg"></div>
@@ -133,10 +54,10 @@
                                 </div>
                                 <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3">
                                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">📏 Stature</p>
-                                    <div class="flex rounded-xl overflow-hidden border border-slate-200 text-xs font-black">
-                                        <button @click="selectedStudent.height = 'petit'" :class="selectedStudent.height === 'petit' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 transition">🧍 Petit</button>
-                                        <button @click="selectedStudent.height = ''" :class="selectedStudent.height === '' ? 'bg-slate-500 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 border-l transition">〰️ Moy.</button>
-                                        <button @click="selectedStudent.height = 'grand'" :class="selectedStudent.height === 'grand' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="flex-1 py-2 border-l transition">🧍 Grand</button>
+                                    <div class="flex rounded-xl overflow-hidden border border-indigo-200 text-xs font-black">
+                                        <button @click="selectedStudent.height = 'petit'" :class="selectedStudent.height === 'petit' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 transition">🧍 Petit</button>
+                                        <button @click="selectedStudent.height = ''" :class="selectedStudent.height === '' ? 'bg-indigo-400 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 border-l transition">〰️ Moy.</button>
+                                        <button @click="selectedStudent.height = 'grand'" :class="selectedStudent.height === 'grand' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 border-l transition">🧍 Grand</button>
                                     </div>
                                 </div>
                             </div>
@@ -145,39 +66,46 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     <button @click="selectedStudent.bavard = !selectedStudent.bavard" :class="selectedStudent.bavard ? 'bg-rose-50 border-rose-400 text-rose-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">🗣️</span><span class="text-xs font-black">Bavard(e)</span><span x-show="selectedStudent.bavard" class="ml-auto text-rose-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[9px] text-slate-400 font-medium">Séparer des autres bavards</p>
+                                        <p class="text-[11px] text-slate-400 font-medium">Séparer des autres bavards</p>
                                     </button>
                                     <button @click="selectedStudent.pap = !selectedStudent.pap" :class="selectedStudent.pap ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">📋</span><span class="text-xs font-black">PAP / PPRE</span><span x-show="selectedStudent.pap" class="ml-auto text-emerald-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[9px] text-slate-400 font-medium">Placer devant (2 premiers rangs)</p>
+                                        <p class="text-[11px] text-slate-400 font-medium">Placer devant (2 premiers rangs)</p>
                                     </button>
                                     <button @click="selectedStudent.vision = !selectedStudent.vision" :class="selectedStudent.vision ? 'bg-amber-50 border-amber-400 text-amber-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">👓</span><span class="text-xs font-black">Problème de vue</span><span x-show="selectedStudent.vision" class="ml-auto text-amber-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[9px] text-slate-400 font-medium">Priorité rang devant</p>
+                                        <p class="text-[11px] text-slate-400 font-medium">Priorité rang devant</p>
                                     </button>
                                     <button @click="selectedStudent.aisle = !selectedStudent.aisle" :class="selectedStudent.aisle ? 'bg-indigo-50 border-indigo-400 text-indigo-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">🚶</span><span class="text-xs font-black">Besoin allée</span><span x-show="selectedStudent.aisle" class="ml-auto text-indigo-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[9px] text-slate-400 font-medium">Placer à côté d'une allée</p>
+                                        <p class="text-[11px] text-slate-400 font-medium">Placer à côté d'une allée</p>
                                     </button>
                                 </div>
                             </div>
                             <div class="border border-slate-200 rounded-2xl p-4">
                                 <div class="flex items-center justify-between mb-3">
                                     <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">🔗 Relations de voisinage</p>
-                                    <div class="flex rounded-lg overflow-hidden border border-slate-200 text-[9px] font-black">
-                                        <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
-                                        <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
-                                        <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="flex rounded-lg overflow-hidden border border-slate-200 text-[11px] font-black">
+                                            <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
+                                            <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
+                                            <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
+                                        </div>
+                                        <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
+                                            class="px-2 py-1 rounded-lg border border-slate-200 text-[10px] font-black transition"
+                                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-500 text-white border-violet-500' : 'bg-white text-slate-400 hover:text-slate-600'"
+                                            :title="profileSortOrder === 'nomPrenom' ? 'Trier par Prénom' : 'Trier par Nom'"
+                                            x-text="profileSortOrder === 'nomPrenom' ? 'NOM' : 'PRÉNOM'"></button>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
                                         <div class="flex items-center justify-between mb-2">
-                                            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">✅ Placer à côté de :</p>
-                                            <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
+                                            <p class="text-[11px] font-black text-emerald-600 uppercase tracking-widest">✅ Placer à côté de :</p>
+                                            <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-[11px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
-                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (forceFilter === 'ALL' || s.gender === forceFilter)).sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (forceFilter === 'ALL' || s.gender === forceFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
                                                 <button @click="selectedStudent.force = selectedStudent.force || []; selectedStudent.force.includes(s.id) ? (selectedStudent.force = selectedStudent.force.filter(id => id !== s.id)) : selectedStudent.force.push(s.id)"
                                                     :class="selectedStudent.force && selectedStudent.force.includes(s.id) ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-400 hover:text-emerald-700'"
                                                     class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
@@ -189,11 +117,11 @@
                                     </div>
                                     <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
                                         <div class="flex items-center justify-between mb-2">
-                                            <p class="text-[9px] font-black text-rose-600 uppercase tracking-widest">🚫 Ne pas placer à côté de :</p>
-                                            <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
+                                            <p class="text-[11px] font-black text-rose-600 uppercase tracking-widest">🚫 Ne pas placer à côté de :</p>
+                                            <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-[11px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
-                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (avoidFilter === 'ALL' || s.gender === avoidFilter)).sort((a,b) => a.name.localeCompare(b.name))" :key="s.id">
+                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (avoidFilter === 'ALL' || s.gender === avoidFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
                                                 <button @click="selectedStudent.avoid = selectedStudent.avoid || []; selectedStudent.avoid.includes(s.id) ? (selectedStudent.avoid = selectedStudent.avoid.filter(id => id !== s.id)) : selectedStudent.avoid.push(s.id)"
                                                     :class="selectedStudent.avoid && selectedStudent.avoid.includes(s.id) ? 'bg-rose-500 text-white border-rose-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-rose-400 hover:text-rose-700'"
                                                     class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
@@ -217,7 +145,7 @@
                                 <div class="space-y-2">
                                     <template x-for="entry in getNeighborHistory(selectedStudent.id)" :key="entry.planName">
                                         <div class="flex items-start gap-2">
-                                            <span class="text-[9px] font-black text-slate-500 bg-slate-200 rounded-full px-2 py-0.5 shrink-0 mt-0.5" x-text="entry.planName"></span>
+                                            <span class="text-[11px] font-black text-slate-500 bg-slate-200 rounded-full px-2 py-0.5 shrink-0 mt-0.5" x-text="entry.planName"></span>
                                             <div class="flex flex-wrap gap-1">
                                                 <template x-for="n in entry.neighbors" :key="n.id">
                                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border"
@@ -340,16 +268,16 @@
                     <div class="grid grid-cols-3 gap-3">
                         <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-3 text-center">
                             <p class="text-2xl font-black text-indigo-700" x-text="classStats.total"></p>
-                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mt-0.5">Élèves</p>
+                            <p class="text-[11px] font-black text-indigo-400 uppercase tracking-widest mt-0.5">Élèves</p>
                         </div>
                         <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 text-center">
                             <p class="text-2xl font-black text-emerald-600" x-text="classStats.placed"></p>
-                            <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mt-0.5">Placés</p>
+                            <p class="text-[11px] font-black text-emerald-400 uppercase tracking-widest mt-0.5">Placés</p>
                         </div>
                         <div class="rounded-2xl p-3 text-center border"
                              :class="classStats.unplaced > 0 ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'">
                             <p class="text-2xl font-black" :class="classStats.unplaced > 0 ? 'text-amber-600' : 'text-slate-300'" x-text="classStats.unplaced"></p>
-                            <p class="text-[9px] font-black uppercase tracking-widest mt-0.5" :class="classStats.unplaced > 0 ? 'text-amber-400' : 'text-slate-300'">Non placés</p>
+                            <p class="text-[11px] font-black uppercase tracking-widest mt-0.5" :class="classStats.unplaced > 0 ? 'text-amber-400' : 'text-slate-300'">Non placés</p>
                         </div>
                     </div>
 
@@ -380,7 +308,7 @@
                                 <span class="text-base">🗣️</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Bavard(e)s</p>
-                                    <p class="text-[9px] text-slate-400">à séparer</p>
+                                    <p class="text-[11px] text-slate-400">à séparer</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.bavards > 0 ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-300'"
@@ -391,7 +319,7 @@
                                 <span class="text-base">📋</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">PAP / PPRE</p>
-                                    <p class="text-[9px] text-slate-400">devant</p>
+                                    <p class="text-[11px] text-slate-400">devant</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.pap > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-300'"
@@ -402,7 +330,7 @@
                                 <span class="text-base">👓</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Pb de vue</p>
-                                    <p class="text-[9px] text-slate-400">priorité devant</p>
+                                    <p class="text-[11px] text-slate-400">priorité devant</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.vision > 0 ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-300'"
@@ -413,7 +341,7 @@
                                 <span class="text-base">🚶</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Besoin allée</p>
-                                    <p class="text-[9px] text-slate-400">côté couloir</p>
+                                    <p class="text-[11px] text-slate-400">côté couloir</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.aisle > 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-300'"
@@ -513,7 +441,7 @@
                         </div>
                         <!-- Avertissement si multi verrouillé -->
                         <p x-show="appMode === 'multi' && !canSwitchToSolo"
-                           class="text-[9px] text-amber-500 font-bold leading-tight">
+                           class="text-[11px] text-amber-500 font-bold leading-tight">
                             ⚠️ Supprimez tous les profils pour revenir en mode Solo.
                         </p>
                     </div>
@@ -531,7 +459,7 @@
                             <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100 group">
                                 <span class="w-3 h-3 rounded-full shrink-0 shadow-sm" :style="'background:' + teacher.color"></span>
                                 <span class="flex-1 text-xs font-bold text-slate-700 truncate" x-text="teacher.name"></span>
-                                <span class="text-[9px] text-slate-400 font-medium"
+                                <span class="text-[11px] text-slate-400 font-medium"
                                       x-text="classes.filter(c => c.teacherId === teacher.id).length + ' cl.'"></span>
                                 <template x-if="teacher.id === currentTeacherId">
                                     <button @click="openEditTeacher(teacher); showConfigModal = false"
@@ -568,11 +496,11 @@
                 </div>
 
                 <div class="border-t border-slate-100 pt-3 space-y-2">
-                    <button @click="showOnboarding = true; onboardingStep = 0; showConfigModal = false" class="w-full py-2 bg-slate-50 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl text-[10px] font-black uppercase transition">🎓 Revoir le tutoriel</button>
-                    <button @click="hardReset(); showConfigModal = false" class="w-full py-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl text-[10px] font-black uppercase transition">⚠️ Réinitialiser toutes les données</button>
+                    <button @click="showOnboarding = true; onboardingStep = 0; showConfigModal = false" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-xl text-[10px] font-black uppercase transition shadow-md hover:shadow-lg hover:from-indigo-600 hover:to-violet-600">🎓 Revoir le tutoriel</button>
+                    <button @click="hardReset(); showConfigModal = false" class="w-full py-3 bg-red-50 border-2 border-red-300 text-red-600 hover:bg-red-100 hover:border-red-500 rounded-xl text-[10px] font-black uppercase transition shadow-sm">⚠️ Réinitialiser toutes les données</button>
                 </div>
                 <div x-show="appVersion" class="pt-2 text-center">
-                    <span class="text-[9px] font-black text-slate-300" x-text="'ClassManager Pro v' + appVersion"></span>
+                    <span class="text-[11px] font-black text-slate-300" x-text="'ClassManager Pro v' + appVersion"></span>
                 </div>
             </div>
         </div>
@@ -1155,24 +1083,36 @@
         </div>
     </div>
 
-	<header class="bg-white border-b border-slate-200 px-5 py-3 sticky top-0 z-40 flex justify-between items-center shadow-sm">
-        <!-- GAUCHE : Logo + Navigation -->
-        <div class="flex items-center gap-3">
+	<header class="bg-white border-b border-slate-200 px-5 py-3 sticky top-0 z-40 flex items-center shadow-sm">
+        <!-- GAUCHE : Hamburger + Logo -->
+        <div class="flex-1 flex items-center gap-3 min-w-0">
+            <button @click="toggleSidebar()"
+                    :title="sidebarVisible ? 'Masquer la barre de gestion' : 'Afficher la barre de gestion'"
+                    class="w-9 h-9 flex items-center justify-center rounded-xl border-2 transition shrink-0"
+                    :class="sidebarVisible ? 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600' : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700'">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                    <rect x="2" y="4" width="16" height="2" rx="1"/>
+                    <rect x="2" y="9" width="16" height="2" rx="1"/>
+                    <rect x="2" y="14" width="16" height="2" rx="1"/>
+                </svg>
+            </button>
             <h1 class="text-xl font-black text-indigo-600 uppercase tracking-tighter italic shrink-0">ClassManager <span class="text-slate-400 font-light">PRO</span></h1>
-
         </div>
 
-        <!-- DROITE : Actions + Utilisateur + Settings -->
-        <div class="flex items-center gap-2">
+        <!-- CENTRE : Actions plan -->
+        <div class="flex items-center gap-2 shrink-0">
             <span x-show="perfectScoreMsg" x-cloak class="text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 animate-bounce">✨ Plan Parfait !</span>
             <span x-show="saveStatus" x-text="saveStatus" class="text-xs text-emerald-600 font-bold w-4"></span>
 
             <!-- Actions plan -->
             <button @click="generateAutoPlan()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl font-black shadow-md transition-all text-sm flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="bg-white border-2 border-amber-400 text-amber-600 hover:bg-amber-50 px-3 py-2 rounded-xl font-black text-sm transition">🔍 TESTER</button>
-            <button @click="exportPDF()" class="bg-white border-2 border-rose-400 text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl font-black text-sm transition" title="Exporter en PDF">📄 PDF</button>
+            <button @click="testCurrentPlan()" class="bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 py-2 rounded-xl font-bold text-sm transition">🔍 Tester</button>
+            <button @click="exportPDF()" class="bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 px-3 py-2 rounded-xl font-bold text-sm transition" title="Exporter en PDF">📄 PDF</button>
 
-            <span class="w-px h-6 bg-slate-200 mx-1 shrink-0"></span>
+        </div>
+
+        <!-- DROITE : Utilisateur + Settings -->
+        <div class="flex-1 flex items-center justify-end gap-2 min-w-0">
 
             <!-- Mode sombre -->
             <button @click="toggleDarkMode()" :title="darkMode ? 'Mode clair' : 'Mode sombre'"
@@ -1207,8 +1147,26 @@
         </div>
     </header>
 
-    <main class="flex h-[calc(100vh-74px)] overflow-hidden">
-        <aside class="w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar relative z-20 shadow-md">
+    <main class="flex h-[calc(100vh-74px)] overflow-hidden relative">
+
+        <!-- Onglet de rappel quand sidebar masquée -->
+        <button x-show="!sidebarVisible" x-cloak
+                @click="toggleSidebar()"
+                title="Afficher la barre de gestion"
+                class="absolute left-0 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-5 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-r-xl shadow-lg transition">
+            <svg viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+            </svg>
+        </button>
+
+        <aside x-show="sidebarVisible" x-cloak
+               x-transition:enter="transition-all ease-out duration-200"
+               x-transition:enter-start="opacity-0 -translate-x-4"
+               x-transition:enter-end="opacity-100 translate-x-0"
+               x-transition:leave="transition-all ease-in duration-150"
+               x-transition:leave-start="opacity-100 translate-x-0"
+               x-transition:leave-end="opacity-0 -translate-x-4"
+               class="w-96 bg-white border-r border-slate-200 flex flex-col custom-scrollbar relative z-20 shadow-md shrink-0">
             <!-- Barre classe / plan / verrou -->
             <div class="bg-white border-b border-slate-200 px-2.5 py-2 flex items-center gap-2"
                  x-show="appMode === 'solo' || (appMode === 'multi' && currentTeacherId)">
@@ -1263,7 +1221,7 @@
                     <button @click="planOpen = !planOpen" @click.outside="planOpen = false; editingPlanIdx = null"
                             class="flex items-center gap-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-2.5 py-1.5 cursor-pointer outline-none transition"
                             style="min-width:100px">
-                        <span class="text-[9px] font-black text-indigo-400 bg-indigo-50 border border-indigo-100 rounded px-1 py-0.5 shrink-0 font-mono"
+                        <span class="text-[11px] font-black text-indigo-400 bg-indigo-50 border border-indigo-100 rounded px-1 py-0.5 shrink-0 font-mono"
                               x-text="String(currentPlanIndex + 1).padStart(2, '0')"></span>
                         <span class="truncate text-xs font-black text-indigo-700" x-text="plans[currentPlanIndex]?.name"></span>
                         <svg class="w-3 h-3 text-indigo-400 shrink-0 transition-transform ml-auto" :class="planOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
@@ -1279,7 +1237,7 @@
                                     <span x-show="currentPlanIndex !== index && plan.assignments && plan.assignments.length > 0" class="w-2 h-2 rounded-full bg-slate-400 block"></span>
                                     <span x-show="currentPlanIndex !== index && !(plan.assignments && plan.assignments.length > 0)" class="w-2 h-2 rounded-full bg-slate-200 block"></span>
                                 </span>
-                                <span class="text-[8px] font-black font-mono px-1 py-0.5 rounded shrink-0"
+                                <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
                                       :class="currentPlanIndex === index ? 'text-indigo-600 bg-indigo-100' : 'text-slate-400 bg-slate-100'"
                                       x-text="String(index + 1).padStart(2, '0')"></span>
                                 <input x-show="editingPlanIdx === index" x-model="editingName"
@@ -1321,8 +1279,8 @@
             <div class="p-5 flex-1 overflow-y-auto flex flex-col">
                 <section x-show="editMode" x-collapse class="mb-6 relative">
                     <div x-show="students.length === 0" class="mb-5 flex flex-col items-center justify-center gap-2">
-                        <span class="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg animate-pulse uppercase tracking-widest">Étape 1 : Importez vos élèves</span>
-                        <span class="text-3xl animate-bounce">👇</span>
+                        <span class="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-widest">Étape 1 : Importez vos élèves</span>
+                        
                     </div>
                     <div class="mb-3"><input type="file" accept=".xls,.xlsx,.csv" @change="importExcel" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer"></div>
                     <div class="pt-3 border-t border-slate-200">
@@ -1342,7 +1300,7 @@
                 <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
                     <button @click="showOnlyUnplaced = !showOnlyUnplaced" :class="showOnlyUnplaced ? 'bg-orange-100 border-orange-500' : 'bg-orange-50 border-orange-300 hover:bg-orange-100'" class="mb-3 w-full py-2 px-3 border-2 rounded-xl text-xs font-bold text-orange-700 transition-all flex items-center justify-between">
                         <span>⚠️ <span x-text="getUnplacedStudents().length"></span> élève(s) non placé(s)</span>
-                        <span class="text-[9px] text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
+                        <span class="text-[11px] text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
                     </button>
                 </template>
                 <template x-if="students.length > 0 && getUnplacedStudents().length === 0 && assignments.length > 0">
@@ -1364,8 +1322,8 @@
                                     <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '?')"></span>
                                 </div>
                                 <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="student.name"></p>
-                                <span x-show="isStudentPlaced(student.id)" class="text-[8px] font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
-                                <span x-show="!isStudentPlaced(student.id)" class="text-[8px] font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0">À PLACER</span>
+                                <span x-show="isStudentPlaced(student.id)" class="text-[11px] font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
+                                <span x-show="!isStudentPlaced(student.id)" class="text-[11px] font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0">À PLACER</span>
                             </div>
                             <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm">🗑️</button>
                         </div>
@@ -1384,49 +1342,125 @@
         </aside>
 
         <section class="flex-1 p-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
-            <div class="relative p-12 bg-white shadow-xl rounded-[40px] border border-slate-200 mt-6 min-w-[600px]">
+            <div class="relative p-12 bg-white shadow-xl rounded-3xl border border-slate-200 mt-6 min-w-[600px]">
 
                 <div class="absolute top-4 left-4">
                     <button @click="showStatsModal = true" x-show="students.length > 0"
                             title="Statistiques de la classe"
-                            class="flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 text-slate-500 hover:text-indigo-600 rounded-xl text-[10px] font-black transition shadow-sm">
+                            class="flex items-center gap-1.5 px-2.5 h-8 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 text-slate-500 hover:text-indigo-600 rounded-xl text-[10px] font-black transition shadow-sm">
                         📊 <span x-text="students.length + ' élèves'"></span>
                     </button>
                 </div>
 
-                <div class="absolute top-4 right-4 flex items-center gap-2">
-                    <!-- A>Z et Vider déplacés ici depuis le header -->
-                    <button @click="generateAlphaPreview()" title="Plan alphabétique (sans impact sur vos plans)"
-                            class="px-2.5 py-1.5 bg-white border-2 border-violet-300 text-violet-600 hover:bg-violet-50 rounded-xl font-black text-[10px] transition shadow-sm">A›Z</button>
-                    <button @click="clearGrid()"
-                            class="px-2.5 py-1.5 bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl font-black text-[10px] transition shadow-sm">🧹</button>
+                <div class="absolute top-4 right-4 flex items-center gap-2" @keydown.ctrl.z.window.prevent="undo()">
+                    <!-- Annuler (Ctrl+Z) -->
+                    <button @click="undo()" :disabled="undoStack.length === 0"
+                            title="Annuler la dernière action (Ctrl+Z)"
+                            class="h-8 w-8 flex items-center justify-center rounded-xl transition shadow-sm border-2 disabled:opacity-30 disabled:cursor-not-allowed relative"
+                            :class="undoStack.length > 0 ? 'bg-white border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50' : 'bg-white border-slate-100 text-slate-300'">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <path d="M5 3L2 6l3 3"/>
+                            <path d="M2 6h7a4 4 0 0 1 0 8H6"/>
+                        </svg>
+                        <span x-show="undoStack.length > 0"
+                              class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 text-white text-[8px] font-black flex items-center justify-center leading-none"
+                              x-text="undoStack.length"></span>
+                    </button>
+                    <span class="w-px h-5 bg-slate-200"></span>
+                    <!-- A>Z et Vider -->
+                    <button @click="_selectAlphaPlan()" title="Vue alphabétique (rentrée)"
+                            :class="_isAlphaPlan() ? 'bg-violet-600 text-white border-violet-600' : 'bg-white border-2 border-violet-300 text-violet-600 hover:bg-violet-50'"
+                            class="px-2.5 py-1.5 rounded-xl font-black text-[10px] transition shadow-sm border-2">A›Z</button>
+                    <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
+                            class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
+                            <path d="M3 3l10 10M13 3L3 13"/>
+                        </svg>
+                    </button>
                     <span class="w-px h-4 bg-slate-200"></span>
-                    <div class="flex border-2 border-slate-200 rounded-xl bg-white text-[10px] font-black uppercase shadow-sm">
-                        <div class="px-2.5 py-1.5 border-r border-slate-200 text-slate-500 flex items-center gap-1">Rangs <input type="number" x-model.number="rows" @change="saveLocal()" class="w-7 text-center bg-transparent outline-none font-black text-slate-700"></div>
-                        <div class="px-2.5 py-1.5 text-slate-500 flex items-center gap-1">Cols <input type="number" x-model.number="cols" @change="saveLocal()" class="w-7 text-center bg-transparent outline-none font-black text-slate-700"></div>
-                    </div>
-                    <button @click="viewFlipped = !viewFlipped"
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase transition shadow-sm border"
-                        :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
-                        <span>🔄</span>
-                        <span x-text="viewFlipped ? 'Vue élève' : 'Vue prof'"></span>
+                    <!-- Bouton config classe -->
+                    <button @click="showClassConfig = !showClassConfig"
+                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase transition shadow-sm border"
+                        :class="showClassConfig ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
+                        <span x-text="rows + '×' + cols"></span>
                     </button>
                 </div>
+
+                <!-- Tiroir config classe -->
+                <div x-show="showClassConfig" x-transition.opacity.duration.200ms
+                     class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-lg p-4 max-w-md mx-auto">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-black text-indigo-700 uppercase tracking-widest">Configuration de la classe</h3>
+                        <button @click="showClassConfig = false" class="text-slate-400 hover:text-red-500 transition">✕</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2">
+                            <span class="text-[10px] font-black text-slate-500 uppercase">Rangs</span>
+                            <div class="flex items-center gap-1 ml-auto">
+                                <button @click="rows = Math.max(1, rows-1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">−</button>
+                                <span class="w-6 text-center font-black text-indigo-700 text-sm" x-text="rows"></span>
+                                <button @click="rows = Math.min(20, rows+1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">+</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2">
+                            <span class="text-[10px] font-black text-slate-500 uppercase">Colonnes</span>
+                            <div class="flex items-center gap-1 ml-auto">
+                                <button @click="cols = Math.max(1, cols-1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">−</button>
+                                <span class="w-6 text-center font-black text-indigo-700 text-sm" x-text="cols"></span>
+                                <button @click="cols = Math.min(20, cols+1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Allées</span>
+                        <div class="flex flex-wrap gap-1.5 mt-1.5">
+                            <template x-for="c in getColsAscending()">
+                                <button @click="toggleAisle(c)" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition shadow-sm"
+                                    :class="aisles.includes(c) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'">Col. <span x-text="c"></span></button>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
+                        <button @click="viewFlipped = !viewFlipped"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition shadow-sm border"
+                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400'">
+                            <span>🔄</span>
+                            <span x-text="viewFlipped ? 'Vue élève' : 'Vue prof'"></span>
+                        </button>
+                        <span class="text-[10px] text-slate-400">Places : <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span></span>
+                    </div>
+                </div>
                 
-                <div class="flex justify-center mb-8">
+                <div class="flex flex-col items-center mb-8 gap-2">
                     <template x-if="!viewFlipped">
-                        <div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div>
+                        <div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[11px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div>
                     </template>
                     <template x-if="viewFlipped">
-                        <div class="w-3/4 h-8 bg-slate-800 rounded-t-xl flex items-center justify-center text-[10px] text-white font-black tracking-widest uppercase shadow-md border-b-4 border-indigo-500">TABLEAU (DEVANT DE LA CLASSE)</div>
+                        <div class="flex flex-col items-center gap-1 w-full">
+                            <div class="w-3/4 h-9 bg-indigo-700 rounded-t-xl flex items-center justify-between px-3 shadow-lg">
+                                <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                                <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
+                                <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                            </div>
+                            <!-- Prof -->
+                            <div class="flex items-center justify-center gap-2 py-1">
+                                <span class="text-xl">👨‍🏫</span>
+                            </div>
+                        </div>
                     </template>
                 </div>
 
-                <div class="flex mb-8 gap-3 justify-center">
-                    <template x-for="c in getColsAscending()">
-                        <button @click="toggleAisle(c)" :class="aisles.includes(c) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'" class="px-2 py-1 rounded text-[8px] font-black uppercase transition shadow-sm">Allée <span x-text="c"></span></button>
-                    </template>
-                </div>
+                <!-- Bandeau plan alpha -->
+                <template x-if="_isAlphaPlan()">
+                    <div class="mb-6 flex items-center gap-3 px-4 py-2.5 bg-violet-50 border-2 border-violet-200 rounded-2xl max-w-lg mx-auto">
+                        <span class="text-lg">🔤</span>
+                        <div>
+                            <p class="text-xs font-black text-violet-700 uppercase tracking-wide">Vue alphabétique — Rentrée</p>
+                            <p class="text-[11px] text-violet-500">Plan automatique A→Z. Choisissez un plan numéroté pour personnaliser.</p>
+                        </div>
+                    </div>
+                </template>
 
                 <div class="grid gap-3"
                      :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
@@ -1440,17 +1474,17 @@
                                  @dragleave="onDragLeave($event)"
                                  @drop="onDrop($event, cell.r, cell.c)"
                                  :class="aisles.includes(cell.c) ? 'aisle-bg border-transparent shadow-inner' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300'))">
-                                <template x-if="aisles.includes(cell.c)"><span class="text-[8px] font-black text-slate-300 rotate-90 tracking-[0.3em]">COULOIR</span></template>
+                                <template x-if="aisles.includes(cell.c)"><span class="text-[11px] font-black text-slate-300 rotate-90 tracking-[0.3em]">COULOIR</span></template>
                                 <template x-if="!aisles.includes(cell.c)">
                                     <div class="w-full h-full">
-                                        <template x-if="blockedSeats.includes(cell.r+'-'+cell.c)"><div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" @click="toggleBlockedSeat(cell.r, cell.c)"><span class="text-xl">🚫</span></div></template>
+                                        <template x-if="blockedSeats.includes(cell.r+'-'+cell.c)"><div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" @click="toggleBlockedSeat(cell.r, cell.c)"><svg viewBox="0 0 24 24" class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg></div></template>
                                         <template x-if="!blockedSeats.includes(cell.r+'-'+cell.c)">
                                             <div class="w-full h-full flex flex-col justify-center relative" @click.stop="getOccupant(cell.r, cell.c) ? openModal(getStudent(getOccupant(cell.r, cell.c))) : (openDropdown = openDropdown === `${cell.r}-${cell.c}` ? null : `${cell.r}-${cell.c}`)">
 
-                                                <button @click.stop="toggleBlockedSeat(cell.r, cell.c)" class="absolute -top-2 -right-2 w-6 h-6 bg-slate-100 border rounded-full flex items-center justify-center text-[10px] text-slate-400 hover:text-red-600 transition-colors z-20">🚫</button>
+                                                <button @click.stop="toggleBlockedSeat(cell.r, cell.c)" class="absolute top-0.5 right-0.5 w-5 h-5 bg-white/80 border border-slate-200 rounded-full flex items-center justify-center text-[10px] text-slate-400 hover:text-red-500 hover:border-red-300 transition-colors z-20 opacity-0 group-hover:opacity-100">✕</button>
                                                 <template x-if="isManual(cell.r, cell.c)">
                                                     <button @click.stop="toggleManual(cell.r, cell.c)"
-                                                        class="absolute -top-2 -left-2 w-6 h-6 rounded-full flex items-center justify-center text-[11px] transition-all z-20 border shadow-sm bg-amber-400 border-amber-400 text-white hover:bg-amber-500"
+                                                        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] transition-all z-20 border shadow-sm bg-amber-400 border-amber-400 text-white hover:bg-amber-500"
                                                         title="Déverrouiller (retirer le placement manuel fixe)">
                                                         🔒
                                                     </button>
@@ -1458,10 +1492,10 @@
                                                 <template x-if="getOccupant(cell.r, cell.c)">
                                                     <div class="absolute inset-0 flex flex-col items-center pointer-events-none z-20 px-1 pt-1 pb-1">
                                                         <div class="flex gap-0.5 justify-center items-center" style="pointer-events:auto">
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="tooltip-icon text-[9px] leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Bavard(e)">🗣️</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="tooltip-icon text-[9px] leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="PAP / PPRE">📋</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon text-[9px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Problème de vue">👓</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon text-[9px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Besoin allée">🚶</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="tooltip-icon text-[11px] leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Bavard(e)">🗣️</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="tooltip-icon text-[11px] leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="PAP / PPRE">📋</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon text-[11px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Problème de vue">👓</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon text-[11px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Besoin allée">🚶</span>
                                                         </div>
                                                         <div class="flex-1 flex flex-col items-center justify-center w-full">
                                                             <span class="font-black text-indigo-700 leading-tight w-full text-center"
@@ -1471,10 +1505,10 @@
                                                                   :style="'font-size:' + (splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom.length > 12 ? '8px' : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom.length > 8 ? '9px' : '10px')"
                                                                   x-text="splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom"></span>
                                                         </div>
-                                                        <span class="text-[8px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
+                                                        <span class="text-[11px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
                                                     </div>
                                                 </template>
-                                                <span x-show="!getOccupant(cell.r, cell.c)" class="text-[9px] font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
+                                                <span x-show="!getOccupant(cell.r, cell.c)" class="text-[11px] font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
                                                 <!-- Menu personnalisé -->
                                                 <div x-show="openDropdown === `${cell.r}-${cell.c}`"
                                                      @click.outside="openDropdown = null"
@@ -1489,7 +1523,7 @@
                                                         <div class="px-3 py-1.5 text-[10px] font-bold cursor-pointer flex items-center gap-2 transition-colors"
                                                              :class="getOccupant(cell.r, cell.c) === s.id ? 'bg-indigo-50 text-indigo-700 border-l-2 border-indigo-500' : (isStudentPlaced(s.id) ? 'text-slate-400 hover:bg-slate-50' : 'bg-amber-50 text-amber-700 hover:bg-amber-100')"
                                                              @click.stop="manualAssign(cell.r, cell.c, s.id); openDropdown = null">
-                                                            <span class="w-3 shrink-0 text-[9px] text-emerald-500" x-text="getOccupant(cell.r, cell.c) === s.id ? '●' : (isStudentPlaced(s.id) ? '✓' : '')"></span>
+                                                            <span class="w-3 shrink-0 text-[11px] text-emerald-500" x-text="getOccupant(cell.r, cell.c) === s.id ? '●' : (isStudentPlaced(s.id) ? '✓' : '')"></span>
                                                             <span x-text="s.name"></span>
                                                         </div>
                                                     </template>
@@ -1503,1343 +1537,25 @@
                 </div>
                 
                 <template x-if="!viewFlipped">
-                    <div class="w-3/4 mx-auto h-8 bg-slate-800 rounded-b-xl flex items-center justify-center text-[10px] text-white font-black tracking-widest uppercase shadow-md border-t-4 border-indigo-500 mt-8">TABLEAU (DEVANT DE LA CLASSE)</div>
+                    <div class="flex flex-col items-center mt-8 gap-1">
+                        <!-- Prof -->
+                        <div class="flex items-center justify-center gap-2 py-1">
+                            <span class="text-xl">👨‍🏫</span>
+                        </div>
+                        <div class="w-3/4 h-9 bg-indigo-700 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                            <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                        </div>
+                    </div>
                 </template>
                 <template x-if="viewFlipped">
-                    <div class="flex justify-center mt-8"><div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div></div>
+                    <div class="flex justify-center mt-8"><div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[11px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div></div>
                 </template>
 
             </div>
         </section>
     </main>
 
-    <script>
-    function classApp() {
-        return {
-            rows: 5, cols: 9, bulkList: '', students: [], aisles: [], blockedSeats: [], fixedSeats: [],
-            manualSeats: [],
-            plans: [], currentPlanIndex: 0, editMode: false, selectedStudent: null, searchQuery: '', mainGenderFilter: 'ALL', neighborFilter: 'ALL', forceFilter: 'ALL', avoidFilter: 'ALL',
-            _pdfWindow: null, openDropdown: null, showOnlyUnplaced: false,
-            isCalculating: false, calculationProgress: 0, saveStatus: '', showDiagnosticModal: false, showUnplacedModal: false, diagnosticIssues: [], perfectScoreMsg: false, viewFlipped: false,
-            dragState: { studentId: null, fromRow: null, fromCol: null, fromList: false },
-
-            showContactModal: false, showConfigModal: false, showStatsModal: false,
-            appVersion: '',
-            confirmModal: { show: false, title: '', message: '', suggestion: '', nextPlanIndex: -1, nextPlanName: '', onConfirm: null, confirmLabel: 'Confirmer', createNewPlan: false },
-            darkMode: false,
-            showOnboarding: false, onboardingStep: 0,
-
-            // === v2 : Multi-classes & profils ===
-            appMode: '',           // 'solo' | 'multi' | '' (non choisi)
-            showModeSelection: false,
-            classes: [],
-            currentClassId: null,
-            teachers: [],
-            showAddClassModal: false,
-            newClassForm: { name: '', level: '', year: '' },
-            showEditClassModal: false,
-            editClassForm: { id: '', name: '', level: '', year: '' },
-
-            // Mode Multi — session
-            sessionLocked: false,
-            currentTeacherId: null,
-            showPinModal: false,
-            pinTarget: null,
-            pinInput: '',
-            pinError: '',
-            showCreateTeacherModal: false,
-            newTeacherForm: { name: '', pin: '', pinConfirm: '', color: '#6366f1' },
-            showEditTeacherModal: false,
-            editTeacherForm: { id: '', name: '', color: '', pinOld: '', pinNew: '', pinConfirm: '', pinOldError: '', pinNewError: '' },
-            autoLockMinutes: 15,
-            _autoLockTimer: null,
-            TEACHER_COLORS: ['#6366f1','#10b981','#f59e0b','#ef4444','#3b82f6','#8b5cf6','#ec4899','#14b8a6'],
-
-            initApp() {
-                this._isElectron = !!window.electronAPI;
-
-                if (window.electronAPI?.getVersion) {
-                    window.electronAPI.getVersion().then(v => this.appVersion = v);
-                }
-
-                this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
-                if (this.darkMode) document.documentElement.classList.add('dark');
-
-                // Auto-lock : réinitialise le timer à chaque interaction (mode multi)
-                const _resetLock = () => this._resetAutoLock();
-                document.addEventListener('mousemove', _resetLock, { passive: true });
-                document.addEventListener('keydown',   _resetLock, { passive: true });
-                document.addEventListener('click',     _resetLock, { passive: true });
-
-                const _afterLoad = () => {
-                    if (this.students.length === 0) {
-                        this.editMode = true;
-                        // Onboarding différé si mode pas encore choisi
-                        if (!this.showModeSelection && !localStorage.getItem('cmOnboardingDone')) {
-                            this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
-                        }
-                    }
-                };
-
-                const _newEmptyClass = () => {
-                    const cls = { id: 'c_' + Date.now(), teacherId: null, name: 'Ma Classe', level: '', year: this._currentSchoolYear(), rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [], plans: [], currentPlanIndex: 0 };
-                    this.initEmptyPlans();
-                    cls.plans = this.plans;
-                    return cls;
-                };
-
-                const _loadV2 = (data) => {
-                    this.appMode    = data.appMode || '';
-                    this.teachers   = data.teachers || [];
-                    this.classes    = data.classes  || [];
-                    this.currentClassId = data.currentClassId || (this.classes[0]?.id ?? null);
-                    const cls = this.classes.find(c => c.id === this.currentClassId);
-                    if (cls) { this.loadClassData(cls); } else { this.initEmptyPlans(); }
-                    if (!this.appMode) this.showModeSelection = true;
-                };
-
-                if (this._isElectron) {
-                    window.electronAPI.loadData().then(data => {
-                        if (data) {
-                            if (data.version === 2) { _loadV2(data); }
-                            else { this._migrateFromV1(data); }
-                        } else {
-                            const cls = _newEmptyClass();
-                            this.classes = [cls];
-                            this.currentClassId = cls.id;
-                            this.showModeSelection = true;
-                        }
-                        _afterLoad();
-                    });
-                } else {
-                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9'))
-                        localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v9'));
-                    if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8'))
-                        localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v8'));
-                    const saved = localStorage.getItem('classManagerData_v10');
-                    if (saved) {
-                        const data = JSON.parse(saved);
-                        if (data.version === 2) { _loadV2(data); }
-                        else { this._migrateFromV1(data); }
-                    } else {
-                        const cls = _newEmptyClass();
-                        this.classes = [cls];
-                        this.currentClassId = cls.id;
-                        this.showModeSelection = true;
-                    }
-                    _afterLoad();
-                }
-            },
-            initEmptyPlans() { this.plans = [{ id: Date.now(), name: 'Plan 01', assignments: [] }]; },
-
-            // === v2 helpers ===
-            _currentSchoolYear() {
-                const y = new Date().getFullYear();
-                return new Date().getMonth() >= 8 ? `${y}-${y+1}` : `${y-1}-${y}`;
-            },
-            _migrateFromV1(data) {
-                const cls = {
-                    id: 'c_legacy', teacherId: null, name: 'Ma Classe', level: '',
-                    year: this._currentSchoolYear(),
-                    rows: data.rows || 5, cols: data.cols || 9,
-                    students: data.students || [], aisles: data.aisles || [],
-                    blockedSeats: data.blockedSeats || [], fixedSeats: data.fixedSeats || [],
-                    manualSeats: data.manualSeats || [],
-                    plans: data.plans || [], currentPlanIndex: data.currentPlanIndex || 0
-                };
-                if (!cls.plans.length) { this.initEmptyPlans(); cls.plans = this.plans; }
-                this.classes = [cls];
-                this.currentClassId = 'c_legacy';
-                this.loadClassData(cls);
-                this.showModeSelection = true;
-            },
-            loadClassData(cls) {
-                this.rows = cls.rows || 5; this.cols = cls.cols || 9;
-                this.students = cls.students || []; this.aisles = cls.aisles || [];
-                this.blockedSeats = cls.blockedSeats || []; this.fixedSeats = cls.fixedSeats || [];
-                this.manualSeats = cls.manualSeats || [];
-                if (cls.plans?.length) { this.plans = cls.plans; } else { this.initEmptyPlans(); }
-                this.currentPlanIndex = cls.currentPlanIndex || 0;
-            },
-            syncClassData() {
-                const cls = this.classes.find(c => c.id === this.currentClassId);
-                if (!cls) return;
-                cls.rows = this.rows; cls.cols = this.cols;
-                cls.students = this.students; cls.aisles = this.aisles;
-                cls.blockedSeats = this.blockedSeats; cls.fixedSeats = this.fixedSeats;
-                cls.manualSeats = this.manualSeats;
-                cls.plans = this.plans; cls.currentPlanIndex = this.currentPlanIndex;
-            },
-            switchClass(classId) {
-                if (classId === this.currentClassId) return;
-                this.syncClassData();
-                this.currentClassId = classId;
-                const cls = this.classes.find(c => c.id === classId);
-                if (cls) this.loadClassData(cls);
-                this.saveLocal();
-            },
-            addNewClass() {
-                if (!this.newClassForm.name.trim()) return;
-                this.syncClassData();
-                const cls = {
-                    id: 'c_' + Date.now(), teacherId: this.appMode === 'multi' ? this.currentTeacherId : null,
-                    name: this.newClassForm.name.trim(),
-                    level: this.newClassForm.level.trim(),
-                    year: this.newClassForm.year.trim() || this._currentSchoolYear(),
-                    rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [],
-                    fixedSeats: [], manualSeats: [],
-                    plans: [{ id: Date.now(), name: 'Plan 01', assignments: [] }],
-                    currentPlanIndex: 0
-                };
-                this.classes.push(cls);
-                this.currentClassId = cls.id;
-                this.loadClassData(cls);
-                this.showAddClassModal = false;
-                this.newClassForm = { name: '', level: '', year: '' };
-                this.editMode = true;
-                this.saveLocal();
-            },
-            get canSwitchToSolo() {
-                // Bloqué si on est en multi avec des profils déjà créés
-                return !(this.appMode === 'multi' && this.teachers.length > 0);
-            },
-            chooseSoloMode() {
-                if (!this.canSwitchToSolo) return; // garde silencieuse (l'UI gère le feedback)
-                this.appMode = 'solo';
-                this.showModeSelection = false;
-                this.saveLocal();
-                if (this.students.length === 0 && !localStorage.getItem('cmOnboardingDone')) {
-                    this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
-                }
-            },
-            chooseMultiMode() {
-                this.appMode = 'multi';
-                this.showModeSelection = false;
-                // En mode multi on lock immédiatement (écran de sélection de prof)
-                this.sessionLocked = true;
-                this.currentTeacherId = null;
-                this.saveLocal();
-            },
-
-            // === MODE MULTI — SESSION ===
-            get currentTeacher() {
-                return this.teachers.find(t => t.id === this.currentTeacherId) || null;
-            },
-            get visibleClasses() {
-                if (this.appMode === 'multi' && this.currentTeacherId) {
-                    return this.classes.filter(c => c.teacherId === this.currentTeacherId);
-                }
-                return this.classes;
-            },
-            lockSession() {
-                this.syncClassData();
-                this.saveLocal();
-                this.currentTeacherId = null;
-                this.sessionLocked = true;
-                this._clearAutoLock();
-            },
-            openPinModal(teacher) {
-                this.pinTarget = teacher;
-                this.pinInput  = '';
-                this.pinError  = '';
-                this.showPinModal = true;
-            },
-            submitPin() {
-                if (!this.pinTarget) return;
-                if (this.pinInput === this.pinTarget.pin) {
-                    this.currentTeacherId = this.pinTarget.id;
-                    this.sessionLocked    = false;
-                    this.showPinModal     = false;
-                    this.pinInput = ''; this.pinError = ''; this.pinTarget = null;
-                    // Bascule sur la première classe du prof si besoin
-                    const mine = this.classes.filter(c => c.teacherId === this.currentTeacherId);
-                    if (mine.length && !mine.find(c => c.id === this.currentClassId)) {
-                        this.currentClassId = mine[0].id;
-                        this.loadClassData(mine[0]);
-                    } else if (!mine.length) {
-                        // Premier accès : créer une classe par défaut
-                        this._createDefaultClassForTeacher(this.currentTeacherId);
-                    }
-                    this._startAutoLock();
-                    this.saveLocal();
-                } else {
-                    this.pinError = 'PIN incorrect ❌';
-                    this.pinInput = '';
-                }
-            },
-            createTeacher() {
-                const f = this.newTeacherForm;
-                if (!f.name.trim())  return;
-                if (!/^\d{4}$/.test(f.pin)) { return; }
-                if (f.pin !== f.pinConfirm)  { return; }
-                const teacher = { id: 't_' + Date.now(), name: f.name.trim(), pin: f.pin, color: f.color };
-                this.teachers.push(teacher);
-                this.showCreateTeacherModal = false;
-                this.newTeacherForm = { name: '', pin: '', pinConfirm: '', color: '#6366f1' };
-                // Connexion automatique
-                this.currentTeacherId = teacher.id;
-                this.sessionLocked    = false;
-                this._createDefaultClassForTeacher(teacher.id);
-                this._startAutoLock();
-                this.saveLocal();
-            },
-            _createDefaultClassForTeacher(teacherId) {
-                this.syncClassData();
-                const cls = {
-                    id: 'c_' + Date.now(), teacherId,
-                    name: 'Ma Classe', level: '', year: this._currentSchoolYear(),
-                    rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [],
-                    plans: [{ id: Date.now(), name: 'Plan 01', assignments: [] }],
-                    currentPlanIndex: 0
-                };
-                this.classes.push(cls);
-                this.currentClassId = cls.id;
-                this.loadClassData(cls);
-                this.editMode = true;
-            },
-            openEditTeacher(teacher) {
-                if (teacher.id !== this.currentTeacherId) return; // sécurité
-                this.editTeacherForm = { id: teacher.id, name: teacher.name, color: teacher.color, pinOld: '', pinNew: '', pinConfirm: '', pinOldError: '', pinNewError: '' };
-                this.showEditTeacherModal = true;
-            },
-            saveEditTeacher() {
-                const f = this.editTeacherForm;
-                const t = this.teachers.find(t => t.id === f.id);
-                if (!t) return;
-                f.pinOldError = ''; f.pinNewError = '';
-                // Changement de PIN optionnel
-                if (f.pinNew) {
-                    if (f.pinOld !== t.pin) { f.pinOldError = 'PIN actuel incorrect'; return; }
-                    if (!/^\d{4}$/.test(f.pinNew)) { f.pinNewError = 'PIN : 4 chiffres'; return; }
-                    if (f.pinNew !== f.pinConfirm)  { f.pinNewError = 'Les PINs ne correspondent pas'; return; }
-                    t.pin = f.pinNew;
-                }
-                t.name  = f.name.trim() || t.name;
-                t.color = f.color;
-                this.showEditTeacherModal = false;
-                this.saveLocal();
-            },
-            // === GESTION DES CLASSES ===
-            openEditClass(cls) {
-                this.editClassForm = { id: cls.id, name: cls.name, level: cls.level || '', year: cls.year || '' };
-                this.showEditClassModal = true;
-            },
-            saveEditClass() {
-                const f = this.editClassForm;
-                if (!f.name.trim()) return;
-                const cls = this.classes.find(c => c.id === f.id);
-                if (!cls) return;
-                cls.name  = f.name.trim();
-                cls.level = f.level.trim();
-                cls.year  = f.year.trim() || this._currentSchoolYear();
-                this.showEditClassModal = false;
-                this.saveLocal();
-            },
-            deleteClass(classId) {
-                const cls = this.classes.find(c => c.id === classId);
-                if (!cls) return;
-                const msg = cls.students?.length
-                    ? `Supprimer "${cls.name}" ? Elle contient ${cls.students.length} élève(s). Cette action est irréversible.`
-                    : `Supprimer "${cls.name}" ?`;
-                if (!confirm(msg)) return;
-                this.classes = this.classes.filter(c => c.id !== classId);
-                if (this.currentClassId === classId) {
-                    const next = this.visibleClasses[0];
-                    if (next) { this.currentClassId = next.id; this.loadClassData(next); }
-                }
-                this.saveLocal();
-            },
-            deleteTeacher(teacherId) {
-                if (teacherId !== this.currentTeacherId) return; // sécurité
-                const t = this.teachers.find(t => t.id === teacherId);
-                if (!confirm(`Supprimer le profil "${t?.name}" ? Toutes ses classes seront également supprimées.`)) return;
-                this.teachers = this.teachers.filter(t => t.id !== teacherId);
-                this.classes  = this.classes.filter(c => c.teacherId !== teacherId);
-                if (!this.classes.find(c => c.id === this.currentClassId)) {
-                    const first = this.classes[0];
-                    this.currentClassId = first?.id || null;
-                    if (first) this.loadClassData(first);
-                }
-                this.saveLocal();
-            },
-            _startAutoLock() {
-                this._clearAutoLock();
-                if (this.appMode !== 'multi' || !this.autoLockMinutes) return;
-                this._autoLockTimer = setTimeout(() => this.lockSession(), this.autoLockMinutes * 60 * 1000);
-            },
-            _clearAutoLock() {
-                if (this._autoLockTimer) { clearTimeout(this._autoLockTimer); this._autoLockTimer = null; }
-            },
-            _resetAutoLock() {
-                if (this.appMode === 'multi' && this.currentTeacherId && !this.sessionLocked) this._startAutoLock();
-            },
-            addPlan() {
-                const newIndex = this.plans.length;
-                this.plans.push({ id: Date.now(), name: `Plan ${String(newIndex + 1).padStart(2, '0')}`, assignments: [] });
-                this.currentPlanIndex = newIndex;
-                this.saveLocal();
-            },
-            deletePlan(index) {
-                if (this.plans.length <= 1) return;
-                const plan = this.plans[index];
-                const doDelete = () => this._doDeletePlan(index);
-                if (plan.assignments && plan.assignments.length > 0) {
-                    this.confirmModal = {
-                        show: true,
-                        title: 'Supprimer ce plan ?',
-                        message: `"${plan.name}" contient ${plan.assignments.length} élève(s) placé(s). Cette suppression est irréversible.`,
-                        suggestion: '',
-                        nextPlanIndex: -1,
-                        nextPlanName: '',
-                        confirmLabel: '🗑️ Supprimer',
-                        onConfirm: doDelete
-                    };
-                } else {
-                    doDelete();
-                }
-            },
-            _doDeletePlan(index) {
-                this.plans.splice(index, 1);
-                if (this.currentPlanIndex >= this.plans.length) {
-                    this.currentPlanIndex = this.plans.length - 1;
-                } else if (this.currentPlanIndex > index) {
-                    this.currentPlanIndex--;
-                }
-                this.saveLocal();
-            },
-            toggleDarkMode() {
-                this.darkMode = !this.darkMode;
-                document.documentElement.classList.toggle('dark', this.darkMode);
-                localStorage.setItem('cmDarkMode', this.darkMode);
-            },
-            get assignments() { return this.plans[this.currentPlanIndex].assignments; },
-            set assignments(newAssignments) { this.plans[this.currentPlanIndex].assignments = newAssignments; },
-            switchPlan(index) { this.currentPlanIndex = index; this.saveLocal(); },
-            getColsDescending() { return Array.from({length: Number(this.cols)}, (_, i) => i + 1).reverse(); },
-            getColsAscending() { return Array.from({length: Number(this.cols)}, (_, i) => i + 1); },
-            getRowsDescending() { 
-                const n = Number(this.rows);
-                const result = [];
-                for (let i = n; i >= 1; i--) result.push(i);
-                return result;
-            },
-            getRowsAscending() {
-                const n = Number(this.rows);
-                const result = [];
-                for (let i = 1; i <= n; i++) result.push(i);
-                return result;
-            },
-            get gridCells() {
-                const cells = [];
-                const n = Number(this.rows);
-                const m = Number(this.cols);
-                for (let r = n; r >= 1; r--) {
-                    for (let c = 1; c <= m; c++) {
-                        cells.push({ r, c, key: `${r}-${c}` });
-                    }
-                }
-                return cells;
-            },
-            toggleBlockedSeat(r, c) {
-                const key = `${r}-${c}`;
-                if (this.blockedSeats.includes(key)) { this.blockedSeats = this.blockedSeats.filter(b => b !== key); }
-                else { this.blockedSeats.push(key); this.assignments = this.assignments.filter(a => !(a.row === parseInt(r) && a.col === parseInt(c))); this.fixedSeats = this.fixedSeats.filter(k => k !== key); this.manualSeats = this.manualSeats.filter(k => k !== key); }
-                this.saveLocal();
-            },
-            getUnplacedStudents() {
-                const placedIds = new Set(this.assignments.map(a => a.studentId));
-                return this.students.filter(s => !placedIds.has(s.id));
-            },
-            isStudentPlaced(studentId) {
-                return this.assignments.some(a => a.studentId === studentId);
-            },
-            manualAssign(r, c, sid) {
-                const key = `${parseInt(r)}-${parseInt(c)}`;
-                this.manualSeats = this.manualSeats.filter(k => k !== key);
-                this.fixedSeats = this.fixedSeats.filter(k => k !== key);
-                if (sid) {
-                    const oldA = this.assignments.find(a => a.studentId === sid);
-                    if (oldA) {
-                        const oldKey = `${oldA.row}-${oldA.col}`;
-                        this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
-                        this.fixedSeats = this.fixedSeats.filter(k => k !== oldKey);
-                    }
-                }
-                this.assignments = this.assignments.filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c)));
-                if (sid) {
-                    this.assignments.push({ studentId: sid, row: parseInt(r), col: parseInt(c) });
-                    this.manualSeats.push(key);
-                    this.fixedSeats.push(key);
-                }
-                this.saveLocal();
-            },
-            isManual(r, c) {
-                return this.manualSeats.includes(`${r}-${c}`) && !!this.getOccupant(r, c);
-            },
-            toggleManual(r, c) {
-                const key = `${r}-${c}`;
-                this.manualSeats = this.manualSeats.filter(k => k !== key);
-                this.fixedSeats = this.fixedSeats.filter(k => k !== key);
-                this.saveLocal();
-            },
-            getPlacementIssues(placement) {
-                let issues = [];
-                let grid = {};
-                let studentMap = {};
-                this.students.forEach(s => studentMap[s.id] = s);
-                placement.forEach(p => grid[`${p.row}-${p.col}`] = studentMap[p.studentId]);
-                
-                let historySet = new Set();
-                for (let i = 0; i < this.currentPlanIndex; i++) {
-                    this.plans[i].assignments.forEach(a => historySet.add(`${a.studentId}-${a.row}-${a.col}`));
-                }
-
-                const placedIds = new Set(placement.map(p => p.studentId));
-                const unplaced = this.students.filter(s => !placedIds.has(s.id));
-                if (unplaced.length > 0) {
-                    issues.push(`${unplaced.length} élève(s) non placé(s) : ${unplaced.map(s => s.name).join(', ')}`);
-                }
-
-                placement.forEach(p => {
-                    let s = studentMap[p.studentId];
-                    if (!s) return;
-                    if ((s.pap || s.vision) && p.row > 2) issues.push(`${s.name} (PAP/Vue) éloigné du tableau.`);
-                    if (s.aisle && !this.aisles.includes(p.col-1) && !this.aisles.includes(p.col+1)) issues.push(`${s.name} (Besoin Allée) mal placé.`);
-                    if (historySet.has(`${s.id}-${p.row}-${p.col}`)) issues.push(`${s.name} remis à une ancienne place.`);
-                    
-                    let leftStudent = grid[`${p.row}-${p.col - 1}`];
-                    let rightStudent = grid[`${p.row}-${p.col + 1}`];
-                    
-                    if (s.force && s.force.length > 0) {
-                        s.force.forEach(tid => {
-                            if ((!leftStudent || leftStudent.id !== tid) && (!rightStudent || rightStudent.id !== tid)) issues.push(`${s.name} séparé de son binôme.`);
-                        });
-                    }
-                    
-                    if (s.avoid && s.avoid.length > 0) {
-                        for (let dr = -1; dr <= 1; dr++) {
-                            for (let dc = -1; dc <= 1; dc++) {
-                                if (dr === 0 && dc === 0) continue;
-                                let neighbor = grid[`${p.row + dr}-${p.col + dc}`];
-                                if (neighbor && s.avoid.includes(neighbor.id)) issues.push(`${s.name} trop proche de ${neighbor.name} (à éviter).`);
-                            }
-                        }
-                        for (const dc of [-1, 1]) {
-                            const adjCol = p.col + dc;
-                            if (this.aisles.includes(adjCol)) {
-                                const beyondNb = grid[`${p.row}-${p.col + dc * 2}`];
-                                if (beyondNb && s.avoid.includes(beyondNb.id)) issues.push(`${s.name} séparé de ${beyondNb.name} (à éviter) par une allée seulement.`);
-                            }
-                        }
-                    }
-                    if (s.bavard) {
-                        placement.filter(q => q.studentId !== s.id).forEach(q => {
-                            const nb = studentMap[q.studentId];
-                            if (!nb || !nb.bavard) return;
-                            if (q.row === p.row) {
-                                const dist = Math.abs(q.col - p.col);
-                                if (dist === 1) issues.push(`${s.name} (Bavard) adjacent à ${nb.name} (Bavard).`);
-                                else if (dist === 2) {
-                                    const midCol = (p.col + q.col) / 2;
-                                    if (this.aisles.includes(midCol)) issues.push(`${s.name} (Bavard) séparé de ${nb.name} (Bavard) par une allée seulement.`);
-                                }
-                            }
-                            if (q.col === p.col && Math.abs(q.row - p.row) === 1) {
-                                issues.push(`${s.name} (Bavard) derrière/devant ${nb.name} (Bavard).`);
-                            }
-                            if (Math.abs(q.row - p.row) === 1 && Math.abs(q.col - p.col) === 1) {
-                                issues.push(`${s.name} (Bavard) en diagonale de ${nb.name} (Bavard).`);
-                            }
-                        });
-                    }
-                });
-                return [...new Set(issues)];
-            },
-            generateAutoPlan() {
-                const currentPlan = this.plans[this.currentPlanIndex];
-                if (currentPlan.assignments && currentPlan.assignments.length > 0) {
-                    const nextPlanIndex = this.plans.findIndex((p, i) => i !== this.currentPlanIndex && (!p.assignments || p.assignments.length === 0));
-                    const nextPlan = nextPlanIndex !== -1 ? this.plans[nextPlanIndex] : null;
-                    const newPlanName = `Plan ${String(this.plans.length + 1).padStart(2, '0')}`;
-                    this.confirmModal = {
-                        show: true,
-                        title: 'Plan déjà utilisé',
-                        message: `Le plan "${currentPlan.name}" contient déjà ${currentPlan.assignments.length} élève(s) placé(s). Voulez-vous le remplacer ?`,
-                        suggestion: nextPlan
-                            ? `💡 Le plan "${nextPlan.name}" est vide et disponible.`
-                            : `💡 Tous les plans sont utilisés — créer "${newPlanName}" automatiquement ?`,
-                        nextPlanIndex,
-                        nextPlanName: nextPlan ? nextPlan.name : newPlanName,
-                        createNewPlan: !nextPlan,
-                        confirmLabel: '↺ Remplacer',
-                        onConfirm: () => this._runGenerateAutoPlan()
-                    };
-                    return;
-                }
-                this._runGenerateAutoPlan();
-            },
-            _runGenerateAutoPlan() {
-                let validSeats = [];
-                for (let r = 1; r <= this.rows; r++) {
-                    for (let c = 1; c <= this.cols; c++) {
-                        if (!this.aisles.includes(c) && !this.blockedSeats.includes(`${r}-${c}`)) validSeats.push({r, c});
-                    }
-                }
-                let fixedAssigned = this.assignments.filter(a => this.fixedSeats.includes(`${a.row}-${a.col}`));
-                
-                this.manualSeats.forEach(key => {
-                    if (fixedAssigned.some(a => `${a.row}-${a.col}` === key)) return;
-                    for (let i = 0; i < this.plans.length; i++) {
-                        const found = this.plans[i].assignments.find(a => `${a.row}-${a.col}` === key);
-                        if (found && this.students.some(s => s.id === found.studentId)) {
-                            if (!fixedAssigned.some(a => a.studentId === found.studentId)) {
-                                fixedAssigned.push({ studentId: found.studentId, row: found.row, col: found.col });
-                            }
-                            break;
-                        }
-                    }
-                });
-
-                let unassigned = this.students.filter(s => !fixedAssigned.some(a => a.studentId === s.id));
-                if (unassigned.length > validSeats.length - fixedAssigned.length) return alert("Pas assez de places !");
-
-                this.isCalculating = true;
-                this.calculationProgress = 0;
-                this.perfectScoreMsg = false;
-
-                setTimeout(() => {
-                    let historyMap = {};
-                    this.students.forEach(s => historyMap[s.id] = new Set());
-                    for (let i = 0; i < this.currentPlanIndex; i++) {
-                        this.plans[i].assignments.forEach(a => { if (historyMap[a.studentId]) historyMap[a.studentId].add(`${a.row}-${a.col}`); });
-                    }
-
-                    let currentPlacement = [...fixedAssigned];
-                    let shuffledStudents = [...unassigned].sort(() => Math.random() - 0.5);
-                    let availableSeats = validSeats.filter(vs => !fixedAssigned.some(a => a.row === vs.r && a.col === vs.c)).sort(() => Math.random() - 0.5);
-                    for (let i = 0; i < shuffledStudents.length; i++) currentPlacement.push({ studentId: shuffledStudents[i].id, row: availableSeats[i].r, col: availableSeats[i].c });
-
-                    const studentMap = {}; this.students.forEach(s => studentMap[s.id] = s);
-                    const calculateScore = (placement) => {
-                        let score = 0;
-                        let grid = {}; placement.forEach(p => grid[`${p.row}-${p.col}`] = studentMap[p.studentId]);
-                        placement.forEach(p => {
-                            let s = studentMap[p.studentId];
-                            if (!s) return;
-                            if ((s.pap || s.vision) && p.row > 2) score += 100000;
-                            if (s.aisle && !this.aisles.includes(p.col-1) && !this.aisles.includes(p.col+1)) score += 100000;
-                            if (historyMap[s.id] && historyMap[s.id].has(`${p.row}-${p.col}`)) score += 50000;
-                            let lS = grid[`${p.row}-${p.col-1}`], rS = grid[`${p.row}-${p.col+1}`];
-                            if (((p.col > 1 && !this.aisles.includes(p.col-1)) || (p.col < this.cols && !this.aisles.includes(p.col+1))) && !lS && !rS) score += 100000;
-                            if (s.force && s.force.length > 0) s.force.forEach(tid => { if ((!lS || lS.id !== tid) && (!rS || rS.id !== tid)) score += 100000; });
-                            if (s.avoid && s.avoid.length > 0) {
-                                for (let dr = -1; dr <= 1; dr++) {
-                                    for (let dc = -1; dc <= 1; dc++) {
-                                        if (dr === 0 && dc === 0) continue;
-                                        let nb = grid[`${p.row+dr}-${p.col+dc}`];
-                                        if (nb && s.avoid.includes(nb.id)) score += 100000;
-                                    }
-                                }
-                                for (const dc of [-1, 1]) {
-                                    const adjCol = p.col + dc;
-                                    if (this.aisles.includes(adjCol)) {
-                                        const beyondNb = grid[`${p.row}-${p.col + dc * 2}`];
-                                        if (beyondNb && s.avoid.includes(beyondNb.id)) score += 100000;
-                                    }
-                                }
-                            }
-                            if (s.bavard) {
-                                for (const q of placement) {
-                                    if (q.studentId === s.id) continue;
-                                    const nb = studentMap[q.studentId];
-                                    if (!nb || !nb.bavard) continue;
-                                    if (q.row === p.row) {
-                                        const dist = Math.abs(q.col - p.col);
-                                        if (dist === 1) score += 100000;
-                                        else if (dist === 2) {
-                                            const midCol = (p.col + q.col) / 2;
-                                            if (this.aisles.includes(midCol)) score += 100000;
-                                        }
-                                    }
-                                    if (q.col === p.col && Math.abs(q.row - p.row) === 1) score += 100000;
-                                    if (Math.abs(q.row - p.row) === 1 && Math.abs(q.col - p.col) === 1) score += 100000;
-                                }
-                            }
-                            if (s.height === 'petit') { for (let r = 1; r < p.row; r++) if (grid[`${r}-${p.col}`] && grid[`${r}-${p.col}`].height === 'grand') score += 5000; }
-                            if (p.row > 1 && !grid[`${p.row-1}-${p.col}`] && !this.aisles.includes(p.col) && !this.blockedSeats.includes(`${p.row-1}-${p.col}`)) score += 200000;
-                            score += p.row * 100;
-                            if (lS && lS.gender === s.gender) score += 50;
-                        });
-                        return score;
-                    };
-
-                    let temperature = 10000;
-                    const total = 150000, chunk = 2500;
-                    let bestP = JSON.parse(JSON.stringify(currentPlacement)), bestS = calculateScore(bestP), curS = bestS;
-                    let mut = []; currentPlacement.forEach((p,i) => { if (!fixedAssigned.some(f=>f.studentId===p.studentId)) mut.push({type:'student',idx:i,r:p.row,c:p.col}); });
-                    let occ = new Set(currentPlacement.map(p=>`${p.row}-${p.col}`)); validSeats.forEach(vs => { if(!occ.has(`${vs.r}-${vs.c}`)) mut.push({type:'empty',r:vs.r,c:vs.c}); });
-
-                    let iter = 0;
-                    const processChunk = () => {
-                        let end = Math.min(iter + chunk, total);
-                        for (let i = iter; i < end; i++) {
-                            let idx1 = Math.floor(Math.random()*mut.length), idx2 = Math.floor(Math.random()*mut.length);
-                            if (idx1===idx2) continue;
-                            let pos1 = mut[idx1], pos2 = mut[idx2], p1 = pos1.type==='student'?currentPlacement[pos1.idx]:null, p2 = pos2.type==='student'?currentPlacement[pos2.idx]:null;
-                            let r1=pos1.r, c1=pos1.c, r2=pos2.r, c2=pos2.c;
-                            if(p1){p1.row=r2; p1.col=c2;} if(p2){p2.row=r1; p2.col=c1;} pos1.r=r2; pos1.c=c2; pos2.r=r1; pos2.c=c1;
-                            let newS = calculateScore(currentPlacement);
-                            if (newS <= curS || Math.exp((curS - newS) / temperature) > Math.random()) { 
-                                curS=newS; 
-                                if(newS < bestS){
-                                    bestS=newS; 
-                                    bestP=JSON.parse(JSON.stringify(currentPlacement));
-                                } 
-                            }
-                            else { 
-                                if(p1){p1.row=r1; p1.col=c1;} 
-                                if(p2){p2.row=r2; p2.col=c2;} 
-                                pos1.r=r1; pos1.c=c1; pos2.r=r2; pos2.c=c2; 
-                            }
-                            temperature *= 0.9999;
-                        }
-                        
-                        iter = end; 
-                        this.calculationProgress = Math.round((iter/total)*100);
-                        
-                        if (iter < total) { 
-                            requestAnimationFrame(processChunk); 
-                        } else {
-                            this.assignments = bestP; 
-                            this.isCalculating = false; 
-                            this.saveLocal(); 
-                            if (bestS >= 100000) { 
-                                this.diagnosticIssues = this.getPlacementIssues(this.assignments); 
-                                this.showDiagnosticModal = true; 
-                            } else { 
-                                this.perfectScoreMsg = true; setTimeout(() => this.perfectScoreMsg = false, 4000); 
-                            }
-                        }
-                    };
-                    processChunk();
-                }, 100);
-            },
-            isFixed(r, c) { return this.fixedSeats.includes(`${r}-${c}`); },
-            toggleFixed(r, c) {
-                const key = `${r}-${c}`;
-                if (this.fixedSeats.includes(key)) { this.fixedSeats = this.fixedSeats.filter(k => k !== key); }
-                else { this.fixedSeats.push(key); }
-                this.saveLocal();
-            },
-            testCurrentPlan() {
-                if (this.assignments.length === 0) {
-                    alert("Le plan est vide, rien à tester.");
-                    return;
-                }
-                this.diagnosticIssues = this.getPlacementIssues(this.assignments);
-                if (this.diagnosticIssues.length === 0) {
-                    this.perfectScoreMsg = true;
-                    setTimeout(() => this.perfectScoreMsg = false, 4000);
-                } else {
-                    this.showDiagnosticModal = true;
-                }
-            },
-            onDragStartCell(e, r, c) {
-                const sid = this.getOccupant(r, c);
-                if (!sid) { e.preventDefault(); return; }
-                this.dragState = { studentId: sid, fromRow: r, fromCol: c, fromList: false };
-                e.dataTransfer.effectAllowed = 'move';
-                e.currentTarget.classList.add('dragging');
-            },
-            onDragStartList(e, studentId) {
-                this.dragState = { studentId, fromRow: null, fromCol: null, fromList: true };
-                e.dataTransfer.effectAllowed = 'move';
-            },
-            onDragEnd(e) {
-                e.currentTarget.classList.remove('dragging');
-                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-            },
-            onDragOver(e, r, c) {
-                if (this.aisles.includes(c) || this.blockedSeats.includes(`${r}-${c}`)) return;
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                e.currentTarget.classList.add('drag-over');
-            },
-            onDragLeave(e) {
-                e.currentTarget.classList.remove('drag-over');
-            },
-            onDrop(e, toRow, toCol) {
-                e.currentTarget.classList.remove('drag-over');
-                if (this.aisles.includes(toCol) || this.blockedSeats.includes(`${toRow}-${toCol}`)) return;
-                const { studentId, fromRow, fromCol, fromList } = this.dragState;
-                if (!studentId) return;
-                const targetOccupant = this.getOccupant(toRow, toCol);
-                const toKey = `${toRow}-${toCol}`;
-
-                if (!fromList && fromRow !== null) {
-                    const fromKey = `${fromRow}-${fromCol}`;
-                    this.assignments = this.assignments.filter(a => !(a.row === fromRow && a.col === fromCol));
-                    const wasManual = this.manualSeats.includes(fromKey);
-                    this.manualSeats = this.manualSeats.filter(k => k !== fromKey);
-                    this.fixedSeats = this.fixedSeats.filter(k => k !== fromKey);
-                    
-                    if (targetOccupant) {
-                        const targetWasManual = this.manualSeats.includes(toKey);
-                        this.assignments = this.assignments.filter(a => !(a.row === toRow && a.col === toCol));
-                        this.manualSeats = this.manualSeats.filter(k => k !== toKey);
-                        this.fixedSeats = this.fixedSeats.filter(k => k !== toKey);
-                        this.assignments.push({ studentId: targetOccupant, row: fromRow, col: fromCol });
-                        if (targetWasManual) { this.manualSeats.push(fromKey); this.fixedSeats.push(fromKey); }
-                    }
-                    this.assignments.push({ studentId, row: toRow, col: toCol });
-                    if (wasManual) { this.manualSeats.push(toKey); this.fixedSeats.push(toKey); }
-                } else if (fromList) {
-                    const oldA = this.assignments.find(a => a.studentId === studentId);
-                    if (oldA) {
-                        const oldKey = `${oldA.row}-${oldA.col}`;
-                        this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
-                        this.fixedSeats = this.fixedSeats.filter(k => k !== oldKey);
-                    }
-                    this.manualSeats = this.manualSeats.filter(k => k !== toKey);
-                    this.fixedSeats = this.fixedSeats.filter(k => k !== toKey);
-                    this.assignments = this.assignments.filter(a => a.studentId !== studentId && !(a.row === toRow && a.col === toCol));
-                    this.assignments.push({ studentId, row: toRow, col: toCol });
-                    this.manualSeats.push(toKey);
-                    this.fixedSeats.push(toKey);
-                }
-                this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
-                this.saveLocal();
-            },
-            clearGrid() {
-                this.assignments = [];
-                this.manualSeats = [];
-                this.fixedSeats = [];
-                this.saveLocal();
-            },
-            saveLocal() {
-                this.syncClassData();
-                const payload = {
-                    version: 2,
-                    appMode: this.appMode,
-                    teachers: this.teachers || [],
-                    classes: this.classes,
-                    currentClassId: this.currentClassId
-                };
-                const cleanPayload = JSON.parse(JSON.stringify(payload));
-                if (this._isElectron) {
-                    window.electronAPI.saveData(cleanPayload);
-                } else {
-                    localStorage.setItem('classManagerData_v10', JSON.stringify(cleanPayload));
-                }
-                this.saveStatus = '✓'; setTimeout(() => this.saveStatus = '', 1500);
-            },
-            hardReset() { 
-                if (confirm("Tout effacer ? Toutes les données seront supprimées.")) { 
-                    if (this._isElectron) {
-                        window.electronAPI.deleteData().then(() => { window.location.reload(); });
-                    } else {
-                        localStorage.clear(); sessionStorage.clear(); 
-                        window.location.href = window.location.href.split('?')[0] + '?reset=' + Date.now(); 
-                    }
-                } 
-            },
-            _getExportPayload() {
-                return JSON.stringify({ 
-                    rows: this.rows, cols: this.cols, students: this.students, 
-                    plans: this.plans, currentPlanIndex: this.currentPlanIndex, 
-                    aisles: this.aisles, blockedSeats: this.blockedSeats, 
-                    fixedSeats: this.fixedSeats, manualSeats: this.manualSeats 
-                });
-            },
-            exportData() { const blob = new Blob([this._getExportPayload()], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Classe_${new Date().toLocaleDateString()}.json`; a.click(); },
-            exportStudentsOnly() { const blob = new Blob([JSON.stringify({ type: 'students_only', students: this.students })], { type: "application/json" }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `Eleves_${new Date().toLocaleDateString()}.json`; a.click(); },
-            importData(e) {
-                const f = e.target.files[0]; if (!f) return;
-                const r = new FileReader(); r.onload = (ev) => {
-                    const d = JSON.parse(ev.target.result);
-                    if (d.type === 'students_only') { this.students = d.students; this.initEmptyPlans(); }
-                    else { Object.assign(this, d); if (!this.manualSeats) this.manualSeats = []; }
-                    this.saveLocal(); this.editMode = false; e.target.value = '';
-                }; r.readAsText(f);
-            },
-            
-            importExcel(e) {
-                const file = e.target.files[0]; if (!file) return;
-
-                // Correspondances de noms de colonnes (EcoleDirecte, Pronote, CSV génériques...)
-                const NOM_ALIASES     = ['nom', 'name', 'élève', 'eleve', 'nom de l\'élève', 'nom complet', 'étudiant', 'apprenant', 'identité', 'identite'];
-                const PRENOM_ALIASES  = ['prénom', 'prenom', 'first name', 'firstname', 'first_name'];
-                const SEXE_ALIASES    = ['sexe', 'sex', 'genre', 'gender', 'civilité', 'civilite'];
-                // Valeurs acceptées pour F et M
-                const FEMININ  = ['f', 'fille', 'female', 'femme', 'mme', 'mme.', 'féminin', 'feminin'];
-                const MASCULIN = ['m', 'garçon', 'garcon', 'male', 'homme', 'm.', 'mr', 'mr.', 'masculin'];
-
-                const match = (cell, aliases) => aliases.includes(String(cell).trim().toLowerCase());
-
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    const data = new Uint8Array(ev.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
-                    // Recherche de la ligne d'en-tête dans les 20 premières lignes
-                    let headerRow = -1, nomCol = -1, prenomCol = -1, sexeCol = -1;
-                    for (let i = 0; i < Math.min(rows.length, 20); i++) {
-                        rows[i].forEach((cell, j) => {
-                            if (match(cell, NOM_ALIASES))    { nomCol = j;    headerRow = i; }
-                            if (match(cell, PRENOM_ALIASES)) { prenomCol = j; headerRow = i; }
-                            if (match(cell, SEXE_ALIASES))     sexeCol = j;
-                        });
-                        if (headerRow !== -1) break;
-                    }
-
-                    if (headerRow === -1) {
-                        alert('⚠️ Aucune colonne "Nom" ou "Prénom" reconnue dans ce fichier.\n\nColonnes attendues : Nom, Prénom, Élève, Sexe, Genre, Civilité…');
-                        e.target.value = ''; return;
-                    }
-
-                    let added = 0;
-                    for (let i = headerRow + 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        let name = '';
-                        if (nomCol !== -1 && prenomCol !== -1) {
-                            // Deux colonnes séparées → "Prénom NOM"
-                            const prenom = String(row[prenomCol] || '').trim();
-                            const nom    = String(row[nomCol]    || '').trim();
-                            name = [prenom, nom].filter(Boolean).join(' ');
-                        } else if (nomCol !== -1) {
-                            name = String(row[nomCol] || '').trim();
-                        } else {
-                            name = String(row[prenomCol] || '').trim();
-                        }
-                        if (!name) continue;
-
-                        const sexeRaw = sexeCol !== -1 ? String(row[sexeCol] || '').trim().toLowerCase() : '';
-                        const gender = FEMININ.includes(sexeRaw) ? 'F' : MASCULIN.includes(sexeRaw) ? 'M' : '';
-
-                        if (!this.students.find(s => s.name === name)) {
-                            this.students.push({ id: Date.now() + Math.random(), name, gender, bavard: false, pap: false, vision: false, aisle: false, height: '', force: [], avoid: [], notes: '' });
-                            added++;
-                        }
-                    }
-
-                    if (added === 0) alert('⚠️ Aucun nouvel élève importé (déjà présents ou fichier vide).');
-                    else this.editMode = false;
-                    this.saveLocal(); e.target.value = '';
-                };
-                reader.readAsArrayBuffer(file);
-            },
-            
-            importStudentsText() {
-                const lines = this.bulkList.split('\n').map(l => l.trim()).filter(Boolean);
-                lines.forEach(name => {
-                    if (!this.students.find(s => s.name === name)) {
-                        this.students.push({ id: Date.now() + Math.random(), name, gender: '', bavard: false, pap: false, vision: false, aisle: false, height: '', force: [], avoid: [], notes: '' });
-                    }
-                });
-                this.bulkList = ''; this.saveLocal();
-            },
-            get filteredMainList() {
-                const base = this.students.filter(s => s.name.toLowerCase().includes(this.searchQuery.toLowerCase()) && (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter));
-                if (this.showOnlyUnplaced) {
-                    const unplaced = base.filter(s => !this.isStudentPlaced(s.id)).sort((a, b) => a.name.localeCompare(b.name));
-                    const placed   = base.filter(s =>  this.isStudentPlaced(s.id)).sort((a, b) => a.name.localeCompare(b.name));
-                    return [...unplaced, ...placed];
-                }
-                return base.sort((a, b) => a.name.localeCompare(b.name));
-            },
-            openModal(s) { this.selectedStudent = s; this.neighborFilter = 'ALL'; this.forceFilter = 'ALL'; this.avoidFilter = 'ALL'; },
-            getNeighborHistory(studentId) {
-                const result = [];
-                const studentMap = {};
-                this.students.forEach(s => studentMap[s.id] = s);
-                this.plans.forEach(plan => {
-                    const assignment = plan.assignments.find(a => a.studentId === studentId);
-                    if (!assignment) return;
-                    const neighbors = plan.assignments.filter(a =>
-                        a.row === assignment.row &&
-                        Math.abs(a.col - assignment.col) === 1 &&
-                        !this.aisles.includes(a.col)
-                    ).map(a => studentMap[a.studentId]).filter(Boolean);
-                    if (neighbors.length > 0) {
-                        result.push({ planName: plan.name, neighbors });
-                    }
-                });
-                return result;
-            },
-            closeModal() { this.selectedStudent = null; this.saveLocal(); },
-            get classStats() {
-                const total = this.students.length;
-                if (total === 0) return null;
-                const girls   = this.students.filter(s => s.gender === 'F').length;
-                const boys    = this.students.filter(s => s.gender === 'M').length;
-                const unknown = total - girls - boys;
-                const bavards = this.students.filter(s => s.bavard).length;
-                const pap     = this.students.filter(s => s.pap).length;
-                const vision  = this.students.filter(s => s.vision).length;
-                const aisle   = this.students.filter(s => s.aisle).length;
-                const petits  = this.students.filter(s => s.height === 'petit').length;
-                const grands  = this.students.filter(s => s.height === 'grand').length;
-                const withNotes = this.students.filter(s => s.notes && s.notes.trim()).length;
-                const withAvoid = this.students.filter(s => s.avoid && s.avoid.length > 0).length;
-                const withForce = this.students.filter(s => s.force && s.force.length > 0).length;
-                const placed  = this.assignments.length;
-                const unplaced = total - placed;
-                const pctGirls = total ? Math.round((girls / total) * 100) : 0;
-                const pctBoys  = total ? Math.round((boys  / total) * 100) : 0;
-                const anyProfile = bavards + pap + vision + aisle > 0;
-                const anyStature = petits + grands > 0;
-                const anyRelation = withAvoid + withForce > 0;
-                return { total, girls, boys, unknown, bavards, pap, vision, aisle,
-                         petits, grands, withNotes, withAvoid, withForce,
-                         placed, unplaced, pctGirls, pctBoys,
-                         anyProfile, anyStature, anyRelation };
-            },
-            get selectedStudentIndex() { return this.filteredMainList.findIndex(s => s.id === this.selectedStudent?.id); },
-            get hasPreviousStudent() { return this.selectedStudentIndex > 0; },
-            get hasNextStudent() { return this.selectedStudentIndex !== -1 && this.selectedStudentIndex < this.filteredMainList.length - 1; },
-            previousStudent() { this.openModal(this.filteredMainList[this.selectedStudentIndex - 1]); },
-            nextStudent() { this.openModal(this.filteredMainList[this.selectedStudentIndex + 1]); },
-            toggleAisle(c) { this.aisles.includes(c) ? this.aisles = this.aisles.filter(x => x !== c) : this.aisles.push(c); this.plans.forEach(p => p.assignments = p.assignments.filter(a => a.col !== c)); this.saveLocal(); },
-            assign(r, c, sid) { this.assignments = this.assignments.filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c))); if (sid) this.assignments.push({ studentId: sid, row: parseInt(r), col: parseInt(c) }); this.saveLocal(); },
-            getOccupant(r, c) { return this.assignments.find(a => a.row === parseInt(r) && a.col === parseInt(c))?.studentId || null; },
-            getStudent(id) { return this.students.find(s => s.id === id); },
-            splitStudentName(name) {
-                const parts = (name || '').split(' ');
-                const isUpper = w => w.length > 1 && w === w.toUpperCase();
-                const nomParts    = parts.filter(w => isUpper(w));
-                const prenomParts = parts.filter(w => !isUpper(w));
-                if (nomParts.length && prenomParts.length)
-                    return { nom: nomParts.join(' '), prenom: prenomParts.join(' ') };
-                // Fallback si pas de distinction possible : premier mot = prénom, reste = nom
-                return { nom: parts.slice(1).join(' ') || parts[0], prenom: parts.length > 1 ? parts[0] : '' };
-            },
-            removeStudent(id) {
-                this.plans.forEach(p => {
-                    const seat = p.assignments.find(a => a.studentId === id);
-                    if (seat) {
-                        const key = `${seat.row}-${seat.col}`;
-                        this.fixedSeats = this.fixedSeats.filter(k => k !== key);
-                        this.manualSeats = this.manualSeats.filter(k => k !== key);
-                    }
-                });
-                this.students = this.students.filter(s => s.id !== id);
-                this.plans.forEach(p => p.assignments = p.assignments.filter(a => a.studentId !== id));
-                this.saveLocal();
-            },
-            
-exportPDF() {
-    const planName = this.plans[this.currentPlanIndex].name;
-    const studentMap = {};
-    this.students.forEach(s => studentMap[s.id] = s);
-
-    const nRows = Number(this.rows);
-    const nCols = Number(this.cols);
-
-    const escapeHTML = (str) => {
-        if (!str) return '';
-        return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":"&#39;",'"':'&quot;'}[tag]));
-    };
-
-    // Élèves placés dans ce plan (pour la légende conditionnelle)
-    const placedStudents = this.assignments.map(a => studentMap[a.studentId]).filter(Boolean);
-    const hasAnyBavard  = placedStudents.some(s => s.bavard);
-    const hasAnyPap     = placedStudents.some(s => s.pap);
-    const hasAnyVision  = placedStudents.some(s => s.vision);
-    const hasAnyAisle   = placedStudents.some(s => s.aisle);
-    const hasAnyManual  = this.assignments.some(a => this.manualSeats.includes(`${a.row}-${a.col}`));
-    const hasAnyBlocked = this.blockedSeats.length > 0;
-    const hasAnyAislCol = this.aisles.length > 0;
-    const totalPlaced   = this.assignments.length;
-    const totalStudents = this.students.length;
-
-    let gridHTML = `<div class="grid" style="grid-template-columns: repeat(${nCols}, 1fr);">`;
-    for (let r = nRows; r >= 1; r--) {
-        for (let c = 1; c <= nCols; c++) {
-            if (this.aisles.includes(c)) {
-                gridHTML += '<div class="cell aisle"><span class="aisle-label">COULOIR</span></div>';
-                continue;
-            }
-            if (this.blockedSeats.includes(`${r}-${c}`)) {
-                gridHTML += '<div class="cell blocked">✕</div>';
-                continue;
-            }
-            const occupant = this.getOccupant(r, c);
-            if (occupant) {
-                const s = studentMap[occupant];
-                if (!s) { gridHTML += '<div class="cell empty"></div>'; continue; }
-
-                const isUpper = w => w.length > 1 && w === w.toUpperCase();
-                const nameParts   = s.name.split(' ');
-                const nomParts    = nameParts.filter(w => isUpper(w));
-                const prenomParts = nameParts.filter(w => !isUpper(w));
-                let nom, prenom;
-                if (nomParts.length && prenomParts.length) {
-                    nom = nomParts.join(' '); prenom = prenomParts.join(' ');
-                } else {
-                    nom = nameParts.slice(1).join(' ') || nameParts[0];
-                    prenom = nameParts.length > 1 ? nameParts[0] : '';
-                }
-                const maxLen = Math.max(nom.length, prenom.length);
-                const nameFontSize = maxLen > 12 ? '10px' : maxLen > 9 ? '11px' : '12px';
-                const isManualCell = this.manualSeats.includes(`${r}-${c}`);
-
-                // Icônes profil
-                let iconsHTML = '';
-                if (s.bavard || s.pap || s.vision || s.aisle) {
-                    iconsHTML += '<div class="icons">';
-                    if (s.bavard)  iconsHTML += '<span class="ico ico-bavard">🗣️</span>';
-                    if (s.pap)     iconsHTML += '<span class="ico ico-pap">📋</span>';
-                    if (s.vision)  iconsHTML += '<span class="ico ico-vision">👓</span>';
-                    if (s.aisle)   iconsHTML += '<span class="ico ico-aisle">🚶</span>';
-                    iconsHTML += '</div>';
-                }
-
-                gridHTML += `<div class="cell occupied${isManualCell ? ' manual' : ''}">`;
-                gridHTML += iconsHTML;
-                gridHTML += `<span class="name" style="font-size:${nameFontSize}">${escapeHTML(nom)}${prenom ? '<br><span class="prenom">' + escapeHTML(prenom) + '</span>' : ''}</span>`;
-                gridHTML += '</div>';
-            } else {
-                gridHTML += '<div class="cell empty"></div>';
-            }
-        }
-    }
-    gridHTML += '</div>';
-
-    // Légende — uniquement les entrées pertinentes
-    let legendItems = '';
-    if (hasAnyBavard)  legendItems += '<span class="leg-item"><span class="ico ico-bavard">🗣️</span> Bavard(e)</span>';
-    if (hasAnyPap)     legendItems += '<span class="leg-item"><span class="ico ico-pap">📋</span> PAP / PPRE</span>';
-    if (hasAnyVision)  legendItems += '<span class="leg-item"><span class="ico ico-vision">👓</span> Pb de vue</span>';
-    if (hasAnyAisle)   legendItems += '<span class="leg-item"><span class="ico ico-aisle">🚶</span> Besoin allée</span>';
-    if (hasAnyManual)  legendItems += '<span class="leg-item"><span class="swatch manual-sw"></span> Placement fixe</span>';
-    if (hasAnyBlocked) legendItems += '<span class="leg-item"><span class="swatch blocked-sw">✕</span> Place bloquée</span>';
-    if (hasAnyAislCol) legendItems += '<span class="leg-item"><span class="swatch aisle-sw"></span> Couloir</span>';
-    const legendHTML = legendItems
-        ? `<div class="legend"><span class="leg-title">Légende :</span>${legendItems}<span class="leg-stats">${totalPlaced} / ${totalStudents} élève${totalStudents > 1 ? 's' : ''} placé${totalPlaced > 1 ? 's' : ''}</span></div>`
-        : '';
-
-    const htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plan de classe</title>
-    <style>
-        @page { size: A4 landscape; margin: 8mm; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif; padding: 8px 14px 4px; color: #1e293b; background: #f8fafc; display: flex; flex-direction: column; min-height: calc(100vh - 16mm); }
-        .header { text-align: center; margin-bottom: 8px; }
-        .header h1 { font-size: 15px; font-weight: 900; color: #1e293b; margin-bottom: 1px; }
-        .header h1 span { color: #10b981; font-style: italic; }
-        .header .sub { font-size: 8px; color: #94a3b8; font-weight: 700; letter-spacing: 0.05em; }
-        .header .date { font-size: 7.5px; color: #94a3b8; font-weight: 600; }
-        .grid { display: grid; gap: 3px; max-width: 100%; flex: 1; padding: 6px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
-        .cell { border-radius: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 48px; padding: 2px 2px 1px; position: relative; }
-        .cell.aisle { background: #f1f5f9; opacity: 0.5; overflow: hidden; }
-        .aisle-label { font-size: 6px; font-weight: 900; color: #94a3b8; letter-spacing: 0.25em; text-transform: uppercase; writing-mode: vertical-rl; }
-        .cell.blocked { background: repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 5px,#e2e8f0 5px,#e2e8f0 10px); border: 1px solid #e2e8f0; color: #94a3b8; font-size: 10px; font-weight: 700; }
-        .cell.empty { border: 1.5px dashed #e2e8f0; background: #fafbfc; }
-        .cell.occupied { border: 1.5px solid #34d399; background: linear-gradient(145deg,#ecfdf5,#d1fae5); }
-        .cell.occupied.manual { border: 1.5px solid #f59e0b; background: linear-gradient(145deg,#fffbeb,#fef3c7); }
-        .icons { display: flex; gap: 2px; justify-content: center; margin-bottom: 2px; flex-wrap: wrap; }
-        .ico { font-size: 8px; width: 13px; height: 13px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
-        .ico-bavard { background: #fee2e2; }
-        .ico-pap    { background: #d1fae5; }
-        .ico-vision { background: #fef3c7; }
-        .ico-aisle  { background: #e0e7ff; }
-        .name { font-weight: 900; text-align: center; line-height: 1.2; color: #1e293b; }
-        .prenom { font-weight: 600; color: #475569; font-size: 0.85em; }
-        /* Légende */
-        .legend { margin-top: 6px; padding: 5px 10px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .leg-title { font-size: 7.5px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
-        .leg-item { display: inline-flex; align-items: center; gap: 3px; font-size: 7.5px; font-weight: 700; color: #475569; }
-        .leg-item .ico { width: 12px; height: 12px; font-size: 7px; }
-        .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; font-size: 7px; text-align: center; line-height: 12px; font-weight: 700; }
-        .manual-sw { background: linear-gradient(135deg,#fffbeb,#fef3c7); border: 1.5px solid #f59e0b; }
-        .blocked-sw { background: repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 3px,#e2e8f0 3px,#e2e8f0 6px); border: 1px solid #e2e8f0; color: #94a3b8; }
-        .aisle-sw   { background: #f1f5f9; border: 1px solid #e2e8f0; }
-        .leg-stats  { margin-left: auto; font-size: 7.5px; font-weight: 900; color: #10b981; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 1px 7px; }
-    </style></head><body>
-        <div class="header">
-            <h1><span>ClassManager</span> — ${escapeHTML(planName)}</h1>
-            <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
-        </div>
-        ${gridHTML}
-        ${legendHTML}
-    </body></html>`;
-
-    if (this._isElectron && window.electronAPI?.printToPdf) {
-        window.electronAPI.printToPdf(htmlContent).then(result => {
-            if (result && !result.success && !result.cancelled)
-                alert('⚠️ Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'));
-        });
-        return;
-    }
-
-    // Fallback navigateur
-    if (this._pdfWindow && !this._pdfWindow.closed) this._pdfWindow.close();
-    const w = window.open('', '_blank');
-    if (!w) { alert("⚠️ L'ouverture du PDF a été bloquée par votre navigateur."); return; }
-    this._pdfWindow = w;
-    w.document.write(htmlContent);
-    w.document.close();
-    setTimeout(() => { w.print(); }, 500);
-},
-
-// =========================================================
-// PLAN ALPHABÉTIQUE - JOUR DE LA RENTRÉE
-// Génère un placement A→Z temporaire sans toucher aux plans.
-// =========================================================
-generateAlphaPreview() {
-    if (this.students.length === 0) {
-        alert("⚠️ Aucun élève dans la liste !");
-        return;
-    }
-
-    const nRows = Number(this.rows);
-    const nCols = Number(this.cols);
-
-    // Colonnes disponibles (sans les allées)
-    const availableCols = [];
-    for (let c = 1; c <= nCols; c++) {
-        if (!this.aisles.includes(c)) availableCols.push(c);
-    }
-
-    // Sièges disponibles : on part du rang 1 (devant) vers le dernier rang
-    // pour que les premiers de la liste soient devant
-    const seats = [];
-    for (let r = 1; r <= nRows; r++) {
-        for (const c of availableCols) {
-            const key = `${r}-${c}`;
-            if (!this.blockedSeats.includes(key)) {
-                seats.push({ r, c });
-            }
-        }
-    }
-
-    // Tri alphabétique des élèves
-    const sorted = [...this.students].sort((a, b) =>
-        a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' })
-    );
-
-    // Placement temporaire (map seat → student)
-    const alphaMap = {};
-    sorted.forEach((student, i) => {
-        if (i < seats.length) {
-            alphaMap[`${seats[i].r}-${seats[i].c}`] = student;
-        }
-    });
-
-    const escapeHTML = (str) => {
-        if (!str) return '';
-        return str.replace(/[&<>'"]/g, tag => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-        }[tag]));
-    };
-
-    // Construction de la grille (même orientation que exportPDF : rang le plus haut en premier)
-    let gridHTML = `<div class="grid" style="grid-template-columns: repeat(${nCols}, 1fr);">`;
-    for (let r = nRows; r >= 1; r--) {
-        for (let c = 1; c <= nCols; c++) {
-            if (this.aisles.includes(c)) {
-                gridHTML += '<div class="cell aisle"></div>';
-                continue;
-            }
-            if (this.blockedSeats.includes(`${r}-${c}`)) {
-                gridHTML += '<div class="cell blocked">✕</div>';
-                continue;
-            }
-            const student = alphaMap[`${r}-${c}`];
-            if (student) {
-                const isUpper = w => w.length > 1 && w === w.toUpperCase();
-                const nameParts   = student.name.split(' ');
-                const nomParts    = nameParts.filter(w => isUpper(w));
-                const prenomParts = nameParts.filter(w => !isUpper(w));
-                let nom, prenom;
-                if (nomParts.length && prenomParts.length) {
-                    nom = nomParts.join(' '); prenom = prenomParts.join(' ');
-                } else {
-                    nom = nameParts.slice(1).join(' ') || nameParts[0];
-                    prenom = nameParts.length > 1 ? nameParts[0] : '';
-                }
-                const maxLen = Math.max(nom.length, prenom.length);
-                const nameFontSize = maxLen > 12 ? '11px' : maxLen > 9 ? '12px' : '13px';
-                gridHTML += `<div class="cell occupied">`;
-                gridHTML += `<span class="name" style="font-size:${nameFontSize}">${escapeHTML(nom)}${prenom ? '<br>' + escapeHTML(prenom) : ''}</span>`;
-                gridHTML += '</div>';
-            } else {
-                gridHTML += '<div class="cell empty"></div>';
-            }
-        }
-    }
-    gridHTML += '</div>';
-
-    // Génération de la liste alphabétique numérotée
-    let listHTML = '<ol class="alpha-list">';
-    sorted.forEach((s, i) => {
-        const placed = i < seats.length;
-        const seat = placed ? seats[i] : null;
-        listHTML += `<li>${escapeHTML(s.name)}${placed ? ` <span class="seat-ref">→ R${seat.r} C${seat.c}</span>` : ' <span class="seat-ref" style="color:#ef4444">⚠ Pas de place</span>'}</li>`;
-    });
-    listHTML += '</ol>';
-
-    const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-    const htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plan de rentrée — Alphabétique</title>
-    <style>
-        @page { size: A4 landscape; margin: 8mm; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif; padding: 10px 16px; color: #1e293b; background: #f8fafc; }
-        .header { text-align: center; margin-bottom: 10px; }
-        .header h1 { font-size: 16px; font-weight: 900; color: #1e293b; margin-bottom: 2px; }
-        .header h1 span { color: #7c3aed; font-style: italic; }
-        .header .badge { display: inline-block; background: #ede9fe; color: #7c3aed; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 20px; border: 1px solid #c4b5fd; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .header .date { font-size: 8px; color: #94a3b8; font-weight: 600; }
-        .grid { display: grid; gap: 3px; max-width: 100%; margin: 0 auto; padding: 8px; background: white; border-radius: 16px; border: 1px solid #e2e8f0; }
-        .cell { border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 52px; padding: 2px 1px; }
-        .cell.aisle { background: #f1f5f9; border-radius: 6px; opacity: 0.4; }
-        .cell.blocked { background: repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 5px,#e2e8f0 5px,#e2e8f0 10px); border: 1px solid #e2e8f0; color: #94a3b8; font-size: 11px; font-weight: 700; }
-        .cell.empty { border: 1.5px dashed #e2e8f0; background: #fafbfc; }
-        .cell.occupied { border: 1.5px solid #a78bfa; background: linear-gradient(145deg,#f5f3ff,#ede9fe); }
-        .name { font-weight: 800; text-align: center; line-height: 1.25; color: #1e293b; }
-        .tableau { width: 60%; margin: 0 auto 8px; background: #1e293b; color: white; text-align: center; font-size: 9px; font-weight: 800; padding: 4px; border-radius: 6px 6px 0 0; letter-spacing: 0.15em; text-transform: uppercase; }
-        /* Liste alphabétique — page 2 */
-        @media print { .page-break { page-break-before: always; } }
-        .alpha-section { margin-top: 20px; padding-top: 16px; border-top: 2px dashed #e2e8f0; }
-        .alpha-section h2 { font-size: 13px; font-weight: 900; color: #7c3aed; margin-bottom: 8px; }
-        .alpha-list { columns: 3; column-gap: 24px; list-style: decimal; padding-left: 16px; }
-        .alpha-list li { font-size: 10px; font-weight: 700; color: #1e293b; margin-bottom: 3px; break-inside: avoid; }
-        .seat-ref { font-weight: 600; color: #94a3b8; font-size: 9px; }
-    </style></head><body>
-        <div class="header">
-            <div class="badge">🔤 Plan de rentrée — Ordre alphabétique</div>
-            <h1><span>ClassManager</span> — PLAN DE CLASSE</h1>
-            <div class="date">${today}</div>
-        </div>
-        <div class="tableau" style="display:none">TABLEAU — DEVANT DE LA CLASSE</div>
-        ${gridHTML}
-        <div class="alpha-section">
-            <h2>📋 Liste alphabétique complète</h2>
-            ${listHTML}
-        </div>
-    </body></html>`;
-
-    if (this._isElectron && window.electronAPI?.printToPdf) {
-        window.electronAPI.printToPdf(htmlContent).then(result => {
-            if (result && !result.success && !result.cancelled)
-                alert('⚠️ Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'));
-        });
-        return;
-    }
-
-    // Fallback navigateur
-    if (this._alphaPdfWindow && !this._alphaPdfWindow.closed) this._alphaPdfWindow.close();
-    const w = window.open('', '_blank');
-    if (!w) { alert("⚠️ L'ouverture du PDF a été bloquée par votre navigateur."); return; }
-    this._alphaPdfWindow = w;
-    w.document.write(htmlContent);
-    w.document.close();
-    setTimeout(() => { w.print(); }, 500);
-}
-        };
-    }
-    </script>
 </body>
 </html>
