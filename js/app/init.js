@@ -107,8 +107,14 @@ export function initModule() {
             this.students = cls.students || []; this.aisles = cls.aisles || [];
             this.blockedSeats = cls.blockedSeats || []; this.fixedSeats = cls.fixedSeats || [];
             this.manualSeats = cls.manualSeats || [];
-            if (cls.plans?.length) { this.plans = cls.plans; } else { this.initEmptyPlans(); }
-            this.currentPlanIndex = cls.currentPlanIndex || 0;
+            if (cls.plans?.length) {
+                this.plans = cls.plans;
+                // Start on the last numbered plan if plans exist
+                this.currentPlanIndex = cls.plans.length - 1;
+            } else {
+                this.initEmptyPlans();
+                this.currentPlanIndex = -1;
+            }
         },
 
         syncClassData() {
