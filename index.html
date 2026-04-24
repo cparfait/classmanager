@@ -1470,15 +1470,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Allées</span>
-                        <div class="flex flex-wrap gap-1.5 mt-1.5">
-                            <template x-for="c in getColsAscending()">
-                                <button @click="toggleAisle(c)" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition shadow-sm"
-                                    :class="aisles.includes(c) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'">Col. <span x-text="c"></span></button>
-                            </template>
-                        </div>
-                    </div>
                     <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
                         <span class="text-[10px] text-slate-400">Places disponibles : <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span></span>
                     </div>
@@ -1505,6 +1496,24 @@
                             <p class="text-xs font-black text-violet-700 uppercase tracking-wide">Vue alphabétique — Rentrée</p>
                             <p class="text-[11px] text-violet-500">Plan automatique A→Z. Choisissez un plan numéroté pour personnaliser.</p>
                         </div>
+                    </div>
+                </template>
+
+                <!-- Boutons allée par colonne — visibles uniquement en mode config -->
+                <template x-if="showClassConfig && !viewFlipped">
+                    <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full mb-1"
+                         :style="`grid-template-columns: repeat(${cols}, 1fr);`">
+                        <template x-for="c in getColsAscending()" :key="c">
+                            <button @click="toggleAisle(c)"
+                                    class="h-7 rounded-lg text-[10px] font-black transition flex items-center justify-center gap-1 border-2"
+                                    :class="aisles.includes(c) ? 'bg-indigo-600 text-white border-indigo-600 shadow' : 'bg-slate-50 text-slate-400 border-dashed border-slate-300 hover:border-indigo-400 hover:text-indigo-500'"
+                                    :title="aisles.includes(c) ? 'Retirer l\'allée col.' + c : 'Ajouter une allée col.' + c">
+                                <span x-show="aisles.includes(c)" class="leading-none">Allée</span>
+                                <svg viewBox="0 0 10 10" class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="1" x2="5" y2="8"/><polyline points="2,6 5,9 8,6"/>
+                                </svg>
+                            </button>
+                        </template>
                     </div>
                 </template>
 
