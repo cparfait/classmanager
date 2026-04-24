@@ -1546,11 +1546,11 @@
                                                         </div>
                                                         <div class="flex-1 flex flex-col items-center justify-center w-full">
                                                             <span class="font-black text-indigo-700 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + (((!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom).length > 12 ? '10px' : ((!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom).length > 8 ? '12px' : '13px')"
-                                                                  x-text="(!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom"></span>
+                                                                  :style="'font-size:' + _cellFontSize(getCellTopText(cell.r, cell.c), '10px', '12px', '13px')"
+                                                                  x-text="getCellTopText(cell.r, cell.c)"></span>
                                                             <span class="font-semibold text-slate-400 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + (((!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom).length > 12 ? '8px' : ((!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom).length > 8 ? '9px' : '10px')"
-                                                                  x-text="(!_isAlphaPlan() && profileSortOrder === 'nomPrenom') ? splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).prenom : splitStudentName(getStudent(getOccupant(cell.r, cell.c))?.name).nom"></span>
+                                                                  :style="'font-size:' + _cellFontSize(getCellBottomText(cell.r, cell.c), '8px', '9px', '10px')"
+                                                                  x-text="getCellBottomText(cell.r, cell.c)"></span>
                                                         </div>
                                                         <span class="text-[11px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
                                                     </div>

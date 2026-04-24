@@ -95,6 +95,20 @@ export function studentsModule() {
 
         getStudent(id) { return this.students.find(s => s.id === id); },
 
+        getCellTopText(r, c) {
+            const sn = this.splitStudentName(this.getStudent(this.getOccupant(r, c))?.name);
+            return (!this._isAlphaPlan() && this.profileSortOrder === 'nomPrenom') ? sn.nom : sn.prenom;
+        },
+
+        getCellBottomText(r, c) {
+            const sn = this.splitStudentName(this.getStudent(this.getOccupant(r, c))?.name);
+            return (!this._isAlphaPlan() && this.profileSortOrder === 'nomPrenom') ? sn.prenom : sn.nom;
+        },
+
+        _cellFontSize(text, big, mid, small) {
+            return text.length > 12 ? big : text.length > 8 ? mid : small;
+        },
+
         splitStudentName(name) {
             const parts = (name || '').split(' ');
             const isUpper = w => w.length > 1 && w === w.toUpperCase();
