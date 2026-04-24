@@ -1508,11 +1508,11 @@
                     </div>
                 </template>
 
-                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 mx-auto w-full max-w-5xl"
+                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full"
                      :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
                     <template x-for="cell in gridCells" :key="cell.key">
-                            <div class="aspect-[8/5] min-h-[36px] max-h-[68px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 lg:p-2 relative transition-all group"
-                                 :style="viewFlipped ? 'transform: rotate(180deg);' : ''"
+                            <div class="aspect-[8/5] min-h-[36px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all group"
+                                 :style="'container-type:inline-size;' + (viewFlipped ? 'transform:rotate(180deg);' : '')"
                                  :draggable="!!getOccupant(cell.r, cell.c) && !aisles.includes(cell.c)"
                                  @dragstart="onDragStartCell($event, cell.r, cell.c)"
                                  @dragend="onDragEnd($event)"
@@ -1537,22 +1537,22 @@
                                                     </button>
                                                 </template>
                                                 <template x-if="getOccupant(cell.r, cell.c)">
-                                                    <div class="absolute inset-0 flex flex-col items-center pointer-events-none z-20 px-1 pt-1 pb-1">
+                                                    <div class="absolute inset-0 flex flex-col items-center pointer-events-none z-20 px-1 pt-1 pb-1 overflow-hidden">
                                                         <div class="flex gap-0.5 justify-center items-center" style="pointer-events:auto">
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="tooltip-icon text-[11px] leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Bavard(e)">🗣️</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="tooltip-icon text-[11px] leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="PAP / PPRE">📋</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon text-[11px] leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Problème de vue">👓</span>
-                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon text-[11px] leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" data-tip="Besoin allée">🚶</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.bavard" class="tooltip-icon leading-none bg-rose-100 rounded-full w-4 h-4 flex items-center justify-center" style="font-size:clamp(8px,10cqw,11px)" data-tip="Bavard(e)">🗣️</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.pap" class="tooltip-icon leading-none bg-emerald-100 rounded-full w-4 h-4 flex items-center justify-center" style="font-size:clamp(8px,10cqw,11px)" data-tip="PAP / PPRE">📋</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.vision" class="tooltip-icon leading-none bg-amber-100 rounded-full w-4 h-4 flex items-center justify-center" style="font-size:clamp(8px,10cqw,11px)" data-tip="Problème de vue">👓</span>
+                                                            <span x-show="getStudent(getOccupant(cell.r, cell.c))?.aisle" class="tooltip-icon leading-none bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center" style="font-size:clamp(8px,10cqw,11px)" data-tip="Besoin allée">🚶</span>
                                                         </div>
-                                                        <div class="flex-1 flex flex-col items-center justify-center w-full">
-                                                            <span class="font-black text-indigo-700 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + _cellFontSize(getCellTopText(cell.r, cell.c), '10px', '12px', '13px')"
+                                                        <div class="flex-1 flex flex-col items-center justify-center w-full overflow-hidden">
+                                                            <span class="font-black text-indigo-700 leading-tight w-full text-center block truncate"
+                                                                  style="font-size:clamp(7px,13cqw,14px)"
                                                                   x-text="getCellTopText(cell.r, cell.c)"></span>
-                                                            <span class="font-semibold text-slate-400 leading-tight w-full text-center"
-                                                                  :style="'font-size:' + _cellFontSize(getCellBottomText(cell.r, cell.c), '8px', '9px', '10px')"
+                                                            <span class="font-semibold text-slate-400 leading-tight w-full text-center block truncate"
+                                                                  style="font-size:clamp(6px,10cqw,11px)"
                                                                   x-text="getCellBottomText(cell.r, cell.c)"></span>
                                                         </div>
-                                                        <span class="text-[11px] absolute bottom-1 right-2 font-black opacity-50" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
+                                                        <span class="absolute bottom-1 right-1 font-black opacity-40" style="font-size:clamp(6px,9cqw,10px)" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
                                                     </div>
                                                 </template>
                                                 <span x-show="!getOccupant(cell.r, cell.c)" class="text-[11px] font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
