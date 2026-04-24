@@ -41,21 +41,16 @@ export function dragdropModule() {
 
             if (!fromList && fromRow !== null) {
                 const fromKey = `${fromRow}-${fromCol}`;
+                // Clear manual state of both involved seats — drag never fixes
+                this.manualSeats = this.manualSeats.filter(k => k !== fromKey && k !== toKey);
+                this.fixedSeats  = this.fixedSeats.filter(k => k !== fromKey && k !== toKey);
                 let arr = this._getAssignments().filter(a => !(a.row === fromRow && a.col === fromCol));
-                const wasManual = this.manualSeats.includes(fromKey);
-                this.manualSeats = this.manualSeats.filter(k => k !== fromKey);
-                this.fixedSeats  = this.fixedSeats.filter(k => k !== fromKey);
                 if (targetOccupant) {
-                    const targetWasManual = this.manualSeats.includes(toKey);
                     arr = arr.filter(a => !(a.row === toRow && a.col === toCol));
-                    this.manualSeats = this.manualSeats.filter(k => k !== toKey);
-                    this.fixedSeats  = this.fixedSeats.filter(k => k !== toKey);
                     arr.push({ studentId: targetOccupant, row: fromRow, col: fromCol });
-                    if (targetWasManual) { this.manualSeats.push(fromKey); this.fixedSeats.push(fromKey); }
                 }
                 arr.push({ studentId, row: toRow, col: toCol });
                 this._setAssignments(arr);
-                if (wasManual) { this.manualSeats.push(toKey); this.fixedSeats.push(toKey); }
             } else if (fromList) {
                 const oldA = this._getAssignments().find(a => a.studentId === studentId);
                 if (oldA) {
@@ -63,13 +58,12 @@ export function dragdropModule() {
                     this.manualSeats = this.manualSeats.filter(k => k !== oldKey);
                     this.fixedSeats  = this.fixedSeats.filter(k => k !== oldKey);
                 }
+                // Drop from list: assign without fixing
                 this.manualSeats = this.manualSeats.filter(k => k !== toKey);
                 this.fixedSeats  = this.fixedSeats.filter(k => k !== toKey);
                 let arr = this._getAssignments().filter(a => a.studentId !== studentId && !(a.row === toRow && a.col === toCol));
                 arr.push({ studentId, row: toRow, col: toCol });
                 this._setAssignments(arr);
-                this.manualSeats.push(toKey);
-                this.fixedSeats.push(toKey);
             }
             this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
             this.saveLocal();

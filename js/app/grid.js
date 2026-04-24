@@ -65,11 +65,7 @@ export function gridModule() {
                 }
             }
             let arr = this._getAssignments().filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c)));
-            if (sid) {
-                arr.push({ studentId: sid, row: parseInt(r), col: parseInt(c) });
-                this.manualSeats.push(key);
-                this.fixedSeats.push(key);
-            }
+            if (sid) arr.push({ studentId: sid, row: parseInt(r), col: parseInt(c) });
             this._setAssignments(arr);
             this.saveLocal();
         },
@@ -78,8 +74,13 @@ export function gridModule() {
 
         toggleManual(r, c) {
             const key = `${r}-${c}`;
-            this.manualSeats = this.manualSeats.filter(k => k !== key);
-            this.fixedSeats  = this.fixedSeats.filter(k => k !== key);
+            if (this.manualSeats.includes(key)) {
+                this.manualSeats = this.manualSeats.filter(k => k !== key);
+                this.fixedSeats  = this.fixedSeats.filter(k => k !== key);
+            } else if (this.getOccupant(r, c)) {
+                this.manualSeats.push(key);
+                this.fixedSeats.push(key);
+            }
             this.saveLocal();
         },
 

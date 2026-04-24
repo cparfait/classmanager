@@ -1310,20 +1310,29 @@
                         <button @click="importStudentsText()" class="w-full py-1.5 bg-slate-800 text-white text-[10px] rounded-lg font-bold hover:bg-black">AJOUTER MANUELLEMENT</button>
                     </div>
                 </section>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-4 space-y-3">
-                    <div class="relative"><span class="absolute left-2 top-1.5 text-slate-400">🔍</span><input type="text" x-model="searchQuery" placeholder="Rechercher..." class="w-full pl-8 pr-2 py-1.5 text-xs rounded-lg border outline-none focus:ring-2 focus:ring-indigo-500"></div>
-                    <div class="flex rounded-lg overflow-hidden border text-[10px] font-bold">
-                        <button @click="mainGenderFilter = 'ALL'" :class="mainGenderFilter === 'ALL' ? 'bg-slate-800 text-white' : 'bg-white'" class="flex-1 py-1">TOUS</button>
-                        <button @click="mainGenderFilter = 'F'" :class="mainGenderFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">FILLES</button>
-                        <button @click="mainGenderFilter = 'M'" :class="mainGenderFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white'" class="flex-1 py-1 border-l">GARÇONS</button>
+                <div class="mb-4 space-y-2">
+                    <div class="relative">
+                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                        <input type="text" x-model="searchQuery" placeholder="Rechercher un élève…"
+                               class="w-full pl-8 pr-3 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
+                    </div>
+                    <div class="flex gap-1.5 text-xs font-black">
+                        <button @click="mainGenderFilter = 'ALL'"
+                                class="flex-1 py-1.5 rounded-xl border-2 transition"
+                                :class="mainGenderFilter === 'ALL' ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-500'">Tous</button>
+                        <button @click="mainGenderFilter = 'F'"
+                                class="flex-1 py-1.5 rounded-xl border-2 transition"
+                                :class="mainGenderFilter === 'F' ? 'bg-pink-500 border-pink-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-pink-300 hover:text-pink-500'">Filles</button>
+                        <button @click="mainGenderFilter = 'M'"
+                                class="flex-1 py-1.5 rounded-xl border-2 transition"
+                                :class="mainGenderFilter === 'M' ? 'bg-blue-500 border-blue-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500'">Garçons</button>
                     </div>
                     <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
-                            class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-[10px] font-bold transition"
-                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-50 border-violet-300 text-violet-700' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'"
-                            :title="profileSortOrder === 'nomPrenom' ? 'Passer au tri Prénom → Nom' : 'Passer au tri Nom → Prénom'">
-                        <span>Tri liste :</span>
-                        <span class="font-black tracking-wide" x-text="profileSortOrder === 'nomPrenom' ? 'NOM Prénom' : 'Prénom NOM'"></span>
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-3 h-3 shrink-0"><path d="M2 5h12M4 8h8M6 11h4"/></svg>
+                            class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl border-2 text-xs font-black transition shadow-sm"
+                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-50 border-violet-400 text-violet-700' : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'">
+                        <span class="text-slate-400 font-medium">Tri :</span>
+                        <span x-text="profileSortOrder === 'nomPrenom' ? 'NOM · Prénom' : 'Prénom · NOM'"></span>
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-3 h-3 shrink-0 opacity-60"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
                     </button>
                 </div>
 
@@ -1376,10 +1385,12 @@
 
                 <!-- Titre classe + plan -->
                 <div class="text-center mb-4 pt-10 lg:pt-0 -mt-2">
-                    <h2 class="text-base font-black text-slate-700 leading-tight"
-                        x-text="(classes.find(c => c.id === currentClassId)?.name || 'Ma Classe')"></h2>
-                    <p class="text-[11px] font-bold text-slate-400 mt-0.5"
-                       x-text="_isAlphaPlan() ? 'Plan 00 · Vue alphabétique' : (plans[currentPlanIndex]?.name || '')"></p>
+                    <h2 class="text-sm font-black text-slate-700 leading-tight flex items-center justify-center gap-2 flex-wrap">
+                        <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
+                        <span class="text-slate-300 font-light" x-show="(_isAlphaPlan() ? 'Plan 00' : plans[currentPlanIndex]?.name)">—</span>
+                        <span class="text-indigo-500 font-black"
+                              x-text="_isAlphaPlan() ? 'Plan 00 · A→Z' : (plans[currentPlanIndex]?.name || '')"></span>
+                    </h2>
                 </div>
 
                 <div class="absolute top-4 left-4">
@@ -1405,10 +1416,13 @@
                               x-text="undoStack.length"></span>
                     </button>
                     <span class="w-px h-5 bg-slate-200"></span>
-                    <!-- A>Z et Vider -->
-                    <button @click="_selectAlphaPlan()" title="Vue alphabétique (rentrée)"
-                            :class="_isAlphaPlan() ? 'bg-violet-600 text-white border-violet-600' : 'bg-white border-2 border-violet-300 text-violet-600 hover:bg-violet-50'"
-                            class="h-8 px-3 rounded-xl font-black text-xs transition shadow-sm border-2">A›Z</button>
+                    <!-- Indice config (remplace A>Z) -->
+                    <template x-if="students.length > 0 && _isAlphaPlan() && !showClassConfig">
+                        <div class="flex items-center gap-1 h-8 px-2">
+                            <span class="text-xs text-slate-400 font-bold italic hidden sm:block">Configurer</span>
+                            <span class="text-base animate-bounce leading-none">👉</span>
+                        </div>
+                    </template>
                     <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
                             class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
@@ -1470,34 +1484,16 @@
                     </div>
                 </div>
                 
-                <div class="flex flex-col items-center mb-8 gap-2">
-                    <template x-if="!viewFlipped">
-                        <div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[11px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div>
-                    </template>
-                    <template x-if="viewFlipped">
-                        <div class="flex flex-col items-center gap-1 w-full">
-                            <div class="w-3/4 h-9 bg-indigo-700 rounded-t-xl flex items-center justify-between px-3 shadow-lg">
-                                <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
-                                <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
-                                <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
-                            </div>
-                            <!-- Prof -->
-                            <div class="flex items-center justify-center gap-2 py-1">
-                                <span class="text-xl">👨‍🏫</span>
-                            </div>
+                <template x-if="viewFlipped">
+                    <div class="flex flex-col items-center mb-8 gap-1 w-full">
+                        <div class="w-3/4 h-9 bg-indigo-700 rounded-t-xl flex items-center justify-between px-3 shadow-lg">
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                            <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
                         </div>
-                    </template>
-                </div>
-
-                <!-- Indice config post-import -->
-                <template x-if="students.length > 0 && _isAlphaPlan() && !showClassConfig">
-                    <div class="mb-4 flex items-center justify-center gap-2">
-                        <span class="text-slate-400 text-xs font-bold italic">Configurez votre salle</span>
-                        <span class="text-lg animate-bounce">👉</span>
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
-                        </span>
+                        <div class="flex items-center justify-center py-1">
+                            <span class="text-5xl">👨‍🏫</span>
+                        </div>
                     </div>
                 </template>
 
@@ -1532,10 +1528,11 @@
                                             <div class="w-full h-full flex flex-col justify-center relative" @click.stop="getOccupant(cell.r, cell.c) ? openModal(getStudent(getOccupant(cell.r, cell.c))) : (openDropdown = openDropdown === `${cell.r}-${cell.c}` ? null : `${cell.r}-${cell.c}`)">
 
                                                 <button @click.stop="toggleBlockedSeat(cell.r, cell.c)" class="absolute top-0.5 right-0.5 w-5 h-5 bg-white/80 border border-slate-200 rounded-full flex items-center justify-center text-[10px] text-slate-400 hover:text-red-500 hover:border-red-300 transition-colors z-20 opacity-0 group-hover:opacity-100">✕</button>
-                                                <template x-if="isManual(cell.r, cell.c)">
+                                                <template x-if="getOccupant(cell.r, cell.c)">
                                                     <button @click.stop="toggleManual(cell.r, cell.c)"
-                                                        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] transition-all z-20 border shadow-sm bg-amber-400 border-amber-400 text-white hover:bg-amber-500"
-                                                        title="Déverrouiller (retirer le placement manuel fixe)">
+                                                        class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] transition-all z-20 border shadow-sm"
+                                                        :class="isManual(cell.r, cell.c) ? 'bg-amber-400 border-amber-400 text-white hover:bg-amber-500' : 'bg-white/80 border-slate-200 text-slate-300 hover:border-amber-400 hover:text-amber-500 opacity-0 group-hover:opacity-100'"
+                                                        :title="isManual(cell.r, cell.c) ? 'Déverrouiller cette place' : 'Fixer cet élève ici'">
                                                         🔒
                                                     </button>
                                                 </template>
@@ -1598,9 +1595,6 @@
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
                         </div>
                     </div>
-                </template>
-                <template x-if="viewFlipped">
-                    <div class="flex justify-center mt-8"><div class="px-6 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-[11px] font-black text-slate-400 uppercase tracking-widest">🏫 Fond de la classe</div></div>
                 </template>
 
             </div>
