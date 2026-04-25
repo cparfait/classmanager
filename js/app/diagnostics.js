@@ -38,6 +38,12 @@ export function diagnosticsModule() {
                         }
                     }
                 }
+                if (s.height === 'petit' && p.row > 1) {
+                    const front = grid[`${p.row-1}-${p.col}`];
+                    if (front && front.height === 'grand') {
+                        issues.push(`${s.name} (Petit) juste derrière ${front.name} (Grand).`);
+                    }
+                }
                 if (s.bavard) {
                     placement.filter(q => q.studentId !== s.id).forEach(q => {
                         const nb = studentMap[q.studentId]; if (!nb || !nb.bavard) return;
@@ -54,16 +60,27 @@ export function diagnosticsModule() {
             return [...new Set(issues)];
         },
 
+        _snapshotIssues() {
+            const asgn = this._getAssignments();
+            return asgn.length === 0 ? [] : this.getPlacementIssues(asgn);
+        },
+
+        _alertNewIssues(prevIssues) {
+            const newIssues = this._snapshotIssues();
+            const prevSet = new Set(prevIssues);
+            const added = newIssues.filter(i => !prevSet.has(i));
+            if (added.length === 0) return;
+            const msg = added.length === 1
+                ? '⚠️ ' + added[0]
+                : `⚠️ ${added.length} contraintes non respectées : ` + added.slice(0, 2).join(' • ') + (added.length > 2 ? ` (+${added.length - 2})` : '');
+            this.showToast(msg, 'warning');
+        },
+
         testCurrentPlan() {
             const asgn = this._getAssignments();
-            if (asgn.length === 0) { this.showToast('Le plan est vide, rien à tester.', 'warning'); return; }
+            if (asgn.length === 0) { this.showEmptyPlanModal = true; return; }
             this.diagnosticIssues = this.getPlacementIssues(asgn);
-            if (this.diagnosticIssues.length === 0) {
-                this.perfectScoreMsg = true;
-                setTimeout(() => this.perfectScoreMsg = false, 4000);
-            } else {
-                this.showDiagnosticModal = true;
-            }
+            this.showDiagnosticModal = true;
         },
     };
 }

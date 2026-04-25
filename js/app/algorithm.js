@@ -102,7 +102,7 @@ export function algorithmModule() {
                                 if (Math.abs(q.row - p.row) === 1 && Math.abs(q.col - p.col) === 1) score += 100000;
                             }
                         }
-                        if (s.height === 'petit') { for (let r = 1; r < p.row; r++) if (grid[`${r}-${p.col}`] && grid[`${r}-${p.col}`].height === 'grand') score += 5000; }
+                        if (s.height === 'petit' && p.row > 1) { const front = grid[`${p.row-1}-${p.col}`]; if (front && front.height === 'grand') score += 5000; }
                         if (p.row > 1 && !grid[`${p.row-1}-${p.col}`] && !this.aisles.includes(p.col) && !this.blockedSeats.includes(`${p.row-1}-${p.col}`)) score += 200000;
                         score += p.row * 100;
                         if (lS && lS.gender === s.gender) score += 50;
@@ -143,8 +143,8 @@ export function algorithmModule() {
                         this._setAssignments(bestP);
                         this.isCalculating = false;
                         this.saveLocal();
-                        if (bestS >= 100000) {
-                            this.diagnosticIssues = this.getPlacementIssues(this._getAssignments());
+                        this.diagnosticIssues = this.getPlacementIssues(this._getAssignments());
+                        if (this.diagnosticIssues.length > 0) {
                             this.showDiagnosticModal = true;
                         } else {
                             this.perfectScoreMsg = true;

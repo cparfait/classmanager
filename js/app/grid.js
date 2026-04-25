@@ -53,6 +53,7 @@ export function gridModule() {
 
         manualAssign(r, c, sid) {
             if (this._isAlphaPlan()) return;
+            const prevIssues = this._snapshotIssues();
             const key = `${parseInt(r)}-${parseInt(c)}`;
             this.manualSeats = this.manualSeats.filter(k => k !== key);
             this.fixedSeats  = this.fixedSeats.filter(k => k !== key);
@@ -67,6 +68,7 @@ export function gridModule() {
             let arr = this._getAssignments().filter(a => a.studentId !== sid && !(a.row === parseInt(r) && a.col === parseInt(c)));
             if (sid) arr.push({ studentId: sid, row: parseInt(r), col: parseInt(c) });
             this._setAssignments(arr);
+            this._alertNewIssues(prevIssues);
             this.saveLocal();
         },
 

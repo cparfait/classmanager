@@ -40,6 +40,7 @@ export function dragdropModule() {
             const toKey = `${toRow}-${toCol}`;
 
             this.pushUndo();
+            const prevIssues = this._snapshotIssues();
 
             if (!fromList && fromRow !== null) {
                 const fromKey = `${fromRow}-${fromCol}`;
@@ -66,6 +67,7 @@ export function dragdropModule() {
                 this._setAssignments(arr);
             }
             this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
+            this._alertNewIssues(prevIssues);
             // Defer save so Alpine re-renders before the synchronous JSON serialisation
             setTimeout(() => this.saveLocal(), 0);
         },

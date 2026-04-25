@@ -34,16 +34,22 @@ function createWindow() {
         minHeight: 700,
         title: 'ClassManager Pro',
         icon: path.join(__dirname, 'icon.ico'),
+        show: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false
         },
-        autoHideMenuBar: true, // Cache la barre de menu Alt
-        backgroundColor: '#f1f5f9'
+        autoHideMenuBar: true,
+        backgroundColor: '#f5f3ff'
     });
 
     mainWindow.loadFile('index.html');
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.maximize();
+        mainWindow.show();
+    });
 
     /**
      * Sécurité : Ouvre les liens externes (http, mailto) dans le navigateur par défaut
@@ -67,8 +73,6 @@ function createWindow() {
         }
     });
 
-    // Démarre l'application en fenêtre agrandie
-    mainWindow.maximize();
 }
 
 // === GESTION DES DONNÉES (Communication avec index.html) ===

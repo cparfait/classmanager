@@ -11,6 +11,7 @@ export function initModule() {
             if (this.darkMode) document.documentElement.classList.add('dark');
 
             this.sidebarVisible = localStorage.getItem('cmSidebarVisible') !== 'false';
+            this.configHintDismissed = localStorage.getItem('cmConfigHintDismissed') === 'true';
 
             const _resetLock = () => this._resetAutoLock();
             document.addEventListener('mousemove', _resetLock, { passive: true });

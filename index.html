@@ -66,19 +66,19 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     <button @click="selectedStudent.bavard = !selectedStudent.bavard" :class="selectedStudent.bavard ? 'bg-rose-50 border-rose-400 text-rose-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">🗣️</span><span class="text-xs font-black">Bavard(e)</span><span x-show="selectedStudent.bavard" class="ml-auto text-rose-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[11px] text-slate-400 font-medium">Séparer des autres bavards</p>
+                                        <p class="text-xs text-slate-400 font-medium">Séparer des autres bavards</p>
                                     </button>
                                     <button @click="selectedStudent.pap = !selectedStudent.pap" :class="selectedStudent.pap ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">📋</span><span class="text-xs font-black">PAP / PPRE</span><span x-show="selectedStudent.pap" class="ml-auto text-emerald-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[11px] text-slate-400 font-medium">Placer devant (2 premiers rangs)</p>
+                                        <p class="text-xs text-slate-400 font-medium">Placer devant (2 premiers rangs)</p>
                                     </button>
                                     <button @click="selectedStudent.vision = !selectedStudent.vision" :class="selectedStudent.vision ? 'bg-amber-50 border-amber-400 text-amber-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">👓</span><span class="text-xs font-black">Problème de vue</span><span x-show="selectedStudent.vision" class="ml-auto text-amber-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[11px] text-slate-400 font-medium">Priorité rang devant</p>
+                                        <p class="text-xs text-slate-400 font-medium">Priorité rang devant</p>
                                     </button>
                                     <button @click="selectedStudent.aisle = !selectedStudent.aisle" :class="selectedStudent.aisle ? 'bg-indigo-50 border-indigo-400 text-indigo-700' : 'bg-white border-slate-200 text-slate-500'" class="border-2 rounded-2xl p-3 text-left transition-all hover:shadow-md">
                                         <div class="flex items-center gap-2 mb-1"><span class="text-base">🚶</span><span class="text-xs font-black">Besoin allée</span><span x-show="selectedStudent.aisle" class="ml-auto text-indigo-500 text-xs font-black">✓</span></div>
-                                        <p class="text-[11px] text-slate-400 font-medium">Placer à côté d'une allée</p>
+                                        <p class="text-xs text-slate-400 font-medium">Placer à côté d'une allée</p>
                                     </button>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                                 <div class="flex items-center justify-between mb-3">
                                     <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">🔗 Relations de voisinage</p>
                                     <div class="flex items-center gap-1.5">
-                                        <div class="flex rounded-lg overflow-hidden border border-slate-200 text-[11px] font-black">
+                                        <div class="flex rounded-lg overflow-hidden border border-slate-200 text-xs font-black">
                                             <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
                                             <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
                                             <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
@@ -101,8 +101,8 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
                                         <div class="flex items-center justify-between mb-2">
-                                            <p class="text-[11px] font-black text-emerald-600 uppercase tracking-widest">✅ Placer à côté de :</p>
-                                            <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-[11px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
+                                            <p class="text-xs font-black text-emerald-600 uppercase tracking-widest">✅ Placer à côté de :</p>
+                                            <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-xs font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
                                             <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (forceFilter === 'ALL' || s.gender === forceFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
@@ -117,8 +117,8 @@
                                     </div>
                                     <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
                                         <div class="flex items-center justify-between mb-2">
-                                            <p class="text-[11px] font-black text-rose-600 uppercase tracking-widest">🚫 Ne pas placer à côté de :</p>
-                                            <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-[11px] font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
+                                            <p class="text-xs font-black text-rose-600 uppercase tracking-widest">🚫 Ne pas placer à côté de :</p>
+                                            <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-xs font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
                                             <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (avoidFilter === 'ALL' || s.gender === avoidFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
@@ -145,7 +145,7 @@
                                 <div class="space-y-2">
                                     <template x-for="entry in getNeighborHistory(selectedStudent.id)" :key="entry.planName">
                                         <div class="flex items-start gap-2">
-                                            <span class="text-[11px] font-black text-slate-500 bg-slate-200 rounded-full px-2 py-0.5 shrink-0 mt-0.5" x-text="entry.planName"></span>
+                                            <span class="text-xs font-black text-slate-500 bg-slate-200 rounded-full px-2 py-0.5 shrink-0 mt-0.5" x-text="entry.planName"></span>
                                             <div class="flex flex-wrap gap-1">
                                                 <template x-for="n in entry.neighbors" :key="n.id">
                                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border"
@@ -167,26 +167,95 @@
         </div>
     </div>
 
-    <div x-show="showDiagnosticModal && diagnosticIssues.length > 0" x-cloak class="fixed inset-0 z-[150] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden" @click.away="showDiagnosticModal = false">
-            <div class="bg-amber-500 text-white p-5 flex justify-between items-center">
+    <div x-show="showDiagnosticModal" x-cloak class="fixed inset-0 z-[150] bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4" @click.self="showDiagnosticModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
+
+            <!-- CAS 1 : Plan parfait -->
+            <template x-if="diagnosticIssues.length === 0">
                 <div>
-                    <h2 class="text-xl font-black flex items-center gap-2">⚠️ Problèmes détectés</h2>
-                    <p class="text-amber-100 text-xs font-bold uppercase tracking-widest mt-1">Contraintes non respectées dans ce plan</p>
+                    <div class="bg-gradient-to-br from-emerald-400 to-teal-500 px-8 py-8 text-center">
+                        <div class="text-6xl mb-3">✨</div>
+                        <h2 class="text-2xl font-black text-white">Plan parfait !</h2>
+                        <p class="text-emerald-100 text-sm mt-1 font-medium">Toutes les contraintes sont respectées</p>
+                    </div>
+                    <div class="px-8 py-6 text-center">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">Aucun problème détecté dans ce plan. Les séparations, regroupements et besoins spéciaux sont tous pris en compte.</p>
+                        <button @click="showDiagnosticModal = false"
+                                class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black rounded-2xl shadow-lg transition-all text-sm">
+                            Parfait, merci ! 🎉
+                        </button>
+                    </div>
                 </div>
-                <button @click="showDiagnosticModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition font-bold">✕</button>
+            </template>
+
+            <!-- CAS 2 : Problèmes détectés -->
+            <template x-if="diagnosticIssues.length > 0">
+                <div>
+                    <div class="bg-gradient-to-br from-amber-400 to-orange-500 px-8 py-6 flex items-start justify-between">
+                        <div>
+                            <div class="text-4xl mb-2">⚠️</div>
+                            <h2 class="text-xl font-black text-white">Problèmes détectés</h2>
+                            <p class="text-amber-100 text-xs font-bold uppercase tracking-widest mt-1">
+                                <span x-text="diagnosticIssues.length"></span> contrainte(s) non respectée(s)
+                            </p>
+                        </div>
+                        <button @click="showDiagnosticModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition font-bold text-white shrink-0">✕</button>
+                    </div>
+                    <div class="px-6 py-5">
+                        <ul class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs mb-5">
+                            <template x-for="(issue, index) in diagnosticIssues" :key="index">
+                                <li class="font-bold text-slate-700 flex items-start gap-2">
+                                    <span class="text-amber-500 shrink-0 mt-0.5">●</span>
+                                    <span x-text="issue"></span>
+                                </li>
+                            </template>
+                        </ul>
+                        <button @click="showDiagnosticModal = false"
+                                class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-black rounded-2xl text-sm uppercase tracking-widest shadow-lg transition-all">
+                            J'ai compris, voir le plan
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+    </div>
+
+    <!-- Modale : plan vide à tester -->
+    <div x-show="showEmptyPlanModal" x-cloak class="fixed inset-0 z-[150] bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4" @click.self="showEmptyPlanModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div class="bg-gradient-to-br from-indigo-500 to-violet-600 px-8 py-6 flex items-start justify-between">
+                <div>
+                    <div class="text-4xl mb-2">📋</div>
+                    <h2 class="text-xl font-black text-white">Aucun élève placé</h2>
+                    <p class="text-indigo-100 text-xs font-bold uppercase tracking-widest mt-1">Le plan est vide pour l'instant</p>
+                </div>
+                <button @click="showEmptyPlanModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition font-bold text-white shrink-0">✕</button>
             </div>
-            <div class="p-6">
-                <p class="text-sm text-slate-600 mb-4 font-medium">L'algorithme n'a pas pu respecter <strong class="text-amber-600" x-text="diagnosticIssues.length"></strong> contrainte(s) :</p>
-                <ul class="space-y-2 max-h-64 overflow-y-auto custom-scrollbar bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner text-xs">
-                    <template x-for="(issue, index) in diagnosticIssues" :key="index">
-                        <li class="font-bold text-slate-700 flex items-start gap-2">
-                            <span class="text-amber-500 mt-1">●</span>
-                            <span x-text="issue"></span>
-                        </li>
-                    </template>
-                </ul>
-                <button @click="showDiagnosticModal = false" class="w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg transition-all">J'ai compris, voir le plan</button>
+            <div class="px-6 py-5 space-y-4">
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Pour vérifier les contraintes, commencez par placer vos élèves. Deux options s'offrent à vous :
+                </p>
+                <div class="space-y-3">
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 flex gap-3">
+                        <span class="text-2xl shrink-0">🤖</span>
+                        <div>
+                            <p class="text-xs font-black text-indigo-700 uppercase tracking-wide mb-1">Placement automatique</p>
+                            <p class="text-xs text-slate-600 leading-snug">Cliquez sur <strong>AUTO</strong> dans le bandeau du haut. L'algorithme respectera vos critères (binômes, à éviter, PAP/Vue, allées, bavards…) et évitera de remettre un élève à une place qu'il a déjà occupée dans un plan précédent.</p>
+                        </div>
+                    </div>
+                    <div class="bg-violet-50 border border-violet-200 rounded-2xl p-4 flex gap-3">
+                        <span class="text-2xl shrink-0">✋</span>
+                        <div>
+                            <p class="text-xs font-black text-violet-700 uppercase tracking-wide mb-1">Placement manuel</p>
+                            <p class="text-xs text-slate-600 leading-snug">Glissez-déposez les élèves depuis la liste de gauche vers une case de la grille, ou cliquez sur une case pour choisir un élève. Le bouton <strong>🔍 TESTER</strong> sera alors disponible pour vérifier vos contraintes.</p>
+                        </div>
+                    </div>
+                </div>
+                <button @click="showEmptyPlanModal = false"
+                        class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-black rounded-2xl text-sm uppercase tracking-widest shadow-lg transition-all">
+                    J'ai compris
+                </button>
             </div>
         </div>
     </div>
@@ -268,16 +337,16 @@
                     <div class="grid grid-cols-3 gap-3">
                         <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-3 text-center">
                             <p class="text-2xl font-black text-indigo-700" x-text="classStats.total"></p>
-                            <p class="text-[11px] font-black text-indigo-400 uppercase tracking-widest mt-0.5">Élèves</p>
+                            <p class="text-xs font-black text-indigo-400 uppercase tracking-widest mt-0.5">Élèves</p>
                         </div>
                         <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 text-center">
                             <p class="text-2xl font-black text-emerald-600" x-text="classStats.placed"></p>
-                            <p class="text-[11px] font-black text-emerald-400 uppercase tracking-widest mt-0.5">Placés</p>
+                            <p class="text-xs font-black text-emerald-400 uppercase tracking-widest mt-0.5">Placés</p>
                         </div>
                         <div class="rounded-2xl p-3 text-center border"
                              :class="classStats.unplaced > 0 ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'">
                             <p class="text-2xl font-black" :class="classStats.unplaced > 0 ? 'text-amber-600' : 'text-slate-300'" x-text="classStats.unplaced"></p>
-                            <p class="text-[11px] font-black uppercase tracking-widest mt-0.5" :class="classStats.unplaced > 0 ? 'text-amber-400' : 'text-slate-300'">Non placés</p>
+                            <p class="text-xs font-black uppercase tracking-widest mt-0.5" :class="classStats.unplaced > 0 ? 'text-amber-400' : 'text-slate-300'">Non placés</p>
                         </div>
                     </div>
 
@@ -308,7 +377,7 @@
                                 <span class="text-base">🗣️</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Bavard(e)s</p>
-                                    <p class="text-[11px] text-slate-400">à séparer</p>
+                                    <p class="text-xs text-slate-400">à séparer</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.bavards > 0 ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-300'"
@@ -319,7 +388,7 @@
                                 <span class="text-base">📋</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">PAP / PPRE</p>
-                                    <p class="text-[11px] text-slate-400">devant</p>
+                                    <p class="text-xs text-slate-400">devant</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.pap > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-300'"
@@ -330,7 +399,7 @@
                                 <span class="text-base">👓</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Pb de vue</p>
-                                    <p class="text-[11px] text-slate-400">priorité devant</p>
+                                    <p class="text-xs text-slate-400">priorité devant</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.vision > 0 ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-300'"
@@ -341,7 +410,7 @@
                                 <span class="text-base">🚶</span>
                                 <div class="flex-1">
                                     <p class="text-xs font-black text-slate-700">Besoin allée</p>
-                                    <p class="text-[11px] text-slate-400">côté couloir</p>
+                                    <p class="text-xs text-slate-400">côté couloir</p>
                                 </div>
                                 <span class="text-sm font-black px-2 py-0.5 rounded-full"
                                       :class="classStats.aisle > 0 ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-300'"
@@ -422,10 +491,10 @@
             <div class="p-6 space-y-3">
                 <p class="text-xs text-slate-500 font-medium">Sauvegardez ou restaurez l'intégralité de vos données : élèves, plans de classe et placements.</p>
                 <div class="flex gap-3 pt-1">
-                    <button @click="exportData(); showConfigModal = false" class="flex-1 py-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition shadow-sm">💾 Exporter</button>
-                    <label class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
+                    <button @click="exportData(); showConfigModal = false" class="flex-1 py-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-xs font-black uppercase transition shadow-sm">💾 Exporter</button>
+                    <label class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
                 </div>
-                <button @click="exportStudentsOnly(); showConfigModal = false" class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-[11px] font-black uppercase transition shadow-sm">👥 Exporter fiches élèves</button>
+                <button @click="exportStudentsOnly(); showConfigModal = false" class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-xs font-black uppercase transition shadow-sm">👥 Exporter fiches élèves</button>
                 <!-- Mode d'utilisation -->
                 <div class="border-t border-slate-100 pt-3">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d'utilisation</p>
@@ -441,7 +510,7 @@
                         </div>
                         <!-- Avertissement si multi verrouillé -->
                         <p x-show="appMode === 'multi' && !canSwitchToSolo"
-                           class="text-[11px] text-amber-500 font-bold leading-tight">
+                           class="text-xs text-amber-500 font-bold leading-tight">
                             ⚠️ Supprimez tous les profils pour revenir en mode Solo.
                         </p>
                     </div>
@@ -459,7 +528,7 @@
                             <div class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-100 group">
                                 <span class="w-3 h-3 rounded-full shrink-0 shadow-sm" :style="'background:' + teacher.color"></span>
                                 <span class="flex-1 text-xs font-bold text-slate-700 truncate" x-text="teacher.name"></span>
-                                <span class="text-[11px] text-slate-400 font-medium"
+                                <span class="text-xs text-slate-400 font-medium"
                                       x-text="classes.filter(c => c.teacherId === teacher.id).length + ' cl.'"></span>
                                 <template x-if="teacher.id === currentTeacherId">
                                     <button @click="openEditTeacher(teacher); showConfigModal = false"
@@ -500,7 +569,7 @@
                     <button @click="hardReset(); showConfigModal = false" class="w-full py-3 bg-red-50 border-2 border-red-300 text-red-600 hover:bg-red-100 hover:border-red-500 rounded-xl text-[10px] font-black uppercase transition shadow-sm">⚠️ Réinitialiser toutes les données</button>
                 </div>
                 <div x-show="appVersion" class="pt-2 text-center">
-                    <span class="text-[11px] font-black text-slate-300" x-text="'ClassManager Pro v' + appVersion"></span>
+                    <span class="text-xs font-black text-slate-300" x-text="'ClassManager Pro v' + appVersion"></span>
                 </div>
             </div>
         </div>
@@ -1083,24 +1152,14 @@
         </div>
     </div>
 
-	<header class="bg-white border-b border-slate-200 px-5 py-3 sticky top-0 z-40 flex items-center shadow-sm">
-        <!-- GAUCHE : Hamburger + Logo -->
+	<header class="border-b border-violet-200 px-5 py-3 sticky top-0 z-40 flex items-center shadow-sm rounded-b-2xl" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);"
+        <!-- GAUCHE : Logo -->
         <div class="flex-1 flex items-center gap-3 min-w-0">
-            <button @click="toggleSidebar()"
-                    :title="sidebarVisible ? 'Masquer la barre de gestion' : 'Afficher la barre de gestion'"
-                    class="w-9 h-9 flex items-center justify-center rounded-xl border-2 transition shrink-0"
-                    :class="sidebarVisible ? 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600' : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700'">
-                <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                    <rect x="2" y="4" width="16" height="2" rx="1"/>
-                    <rect x="2" y="9" width="16" height="2" rx="1"/>
-                    <rect x="2" y="14" width="16" height="2" rx="1"/>
-                </svg>
-            </button>
             <h1 class="text-base lg:text-xl font-black text-indigo-600 uppercase tracking-tighter italic shrink-0">ClassManager <span class="text-slate-400 font-light hidden sm:inline">PRO</span></h1>
         </div>
 
-        <!-- CENTRE : Actions plan -->
-        <div class="flex items-center gap-2 shrink-0">
+        <!-- DROITE : Actions plan + Utilisateur + Settings -->
+        <div class="flex-1 flex items-center justify-end gap-2 min-w-0">
             <span x-show="perfectScoreMsg" x-cloak class="text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 animate-bounce">✨ Plan Parfait !</span>
             <span x-show="saveStatus" x-text="saveStatus" class="text-xs text-emerald-600 font-bold w-4"></span>
 
@@ -1109,10 +1168,8 @@
             <button @click="testCurrentPlan()" class="h-8 items-center gap-1.5 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-black text-xs transition hidden md:flex">🔍 TESTER</button>
             <button @click="exportPDF()" class="h-8 items-center gap-1.5 bg-indigo-50 border-2 border-indigo-300 text-indigo-700 hover:bg-indigo-100 px-3 rounded-xl font-black text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
 
-        </div>
+            <span class="w-px h-6 bg-slate-200 mx-1"></span>
 
-        <!-- DROITE : Utilisateur + Settings -->
-        <div class="flex-1 flex items-center justify-end gap-2 min-w-0">
 
             <!-- Mode sombre -->
             <button @click="toggleDarkMode()" :title="darkMode ? 'Mode clair' : 'Mode sombre'"
@@ -1171,7 +1228,7 @@
                x-transition:leave="transition-all ease-in duration-150"
                x-transition:leave-start="opacity-100 translate-x-0"
                x-transition:leave-end="opacity-0 -translate-x-4"
-               class="w-80 lg:w-96 border-r border-violet-100 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);">
+               class="w-80 lg:w-96 border-r border-violet-100 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative rounded-r-2xl overflow-hidden" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);">
             <!-- Bouton fermer sidebar -->
             <button @click="toggleSidebar()"
                     title="Masquer la barre de gestion"
@@ -1239,7 +1296,7 @@
                             class="w-full flex items-center gap-2 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 rounded-2xl px-3 py-2 cursor-pointer outline-none transition">
                         <span class="w-7 h-7 flex items-center justify-center rounded-xl shrink-0 text-sm"
                               :class="_isAlphaPlan() ? 'bg-violet-50' : 'bg-indigo-50'">📋</span>
-                        <span class="text-[11px] font-black border rounded-lg px-1.5 py-0.5 shrink-0 font-mono"
+                        <span class="text-xs font-black border rounded-lg px-1.5 py-0.5 shrink-0 font-mono"
                               :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-50 border-violet-200' : 'text-indigo-500 bg-indigo-50 border-indigo-100'"
                               x-text="_isAlphaPlan() ? '00' : String(currentPlanIndex + 1).padStart(2, '0')"></span>
                         <span class="truncate flex-1 text-left text-sm font-black text-slate-800"
@@ -1257,7 +1314,7 @@
                                 <svg x-show="_isAlphaPlan()" class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 <span x-show="!_isAlphaPlan()" class="text-base leading-none">🔤</span>
                             </span>
-                            <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
+                            <span class="text-xs font-black font-mono px-1 py-0.5 rounded shrink-0"
                                   :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-100' : 'text-slate-400 bg-slate-100'">00</span>
                             <span class="flex-1 text-left text-sm font-bold"
                                   :class="_isAlphaPlan() ? 'text-violet-700' : 'text-slate-500'">Plan Alphabétique</span>
@@ -1272,7 +1329,7 @@
                                     <span x-show="(currentPlanIndex !== index || _isAlphaPlan()) && plan.assignments && plan.assignments.length > 0" class="w-2 h-2 rounded-full bg-slate-400 block"></span>
                                     <span x-show="(currentPlanIndex !== index || _isAlphaPlan()) && !(plan.assignments && plan.assignments.length > 0)" class="w-2 h-2 rounded-full bg-slate-200 block"></span>
                                 </span>
-                                <span class="text-[11px] font-black font-mono px-1 py-0.5 rounded shrink-0"
+                                <span class="text-xs font-black font-mono px-1 py-0.5 rounded shrink-0"
                                       :class="currentPlanIndex === index && !_isAlphaPlan() ? 'text-indigo-600 bg-indigo-100' : 'text-slate-400 bg-slate-100'"
                                       x-text="String(index + 1).padStart(2, '0')"></span>
                                 <input x-show="editingPlanIdx === index" x-model="editingName"
@@ -1305,27 +1362,41 @@
                 </div><!-- /Ligne 2 -->
             </div><!-- /border-b wrapper -->
             <div class="px-5 pt-6 pb-5 flex-1 overflow-y-auto flex flex-col">
-                <section x-show="editMode" x-collapse class="mb-6 relative">
-                    <div x-show="students.length === 0" class="mb-4 flex flex-col items-center gap-2">
-                        <span class="import-pulse bg-violet-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg uppercase tracking-widest">📥 Étape 1 : Importez vos élèves</span>
-                        <span class="text-3xl animate-bounce">👇</span>
-                    </div>
-                    <div class="mb-3" x-data="{ filename: '' }">
-                        <input id="fileImport" type="file" accept=".xls,.xlsx,.csv"
-                               @change="importExcel($event); filename = $event.target.files[0]?.name || ''"
-                               class="hidden">
-                        <button @click="$el.closest('[x-data]').querySelector('#fileImport').click()"
-                                class="w-full flex flex-col items-center gap-1 py-3 rounded-2xl border-2 border-dashed border-violet-400 bg-white/60 hover:bg-white transition cursor-pointer import-pulse">
-                            <span class="text-4xl">📂</span>
-                            <span class="text-[10px] font-bold text-violet-600" x-text="filename || 'Cliquez pour importer Excel / CSV'"></span>
-                        </button>
-                    </div>
-                    <div class="pt-3 border-t border-slate-200">
-                        <textarea x-model="bulkList" placeholder="Copier-coller des noms ici..." class="w-full h-12 p-2 text-xs border rounded-lg bg-slate-50 outline-none mb-2 focus:ring-2 focus:ring-indigo-500"></textarea>
-                        <button @click="importStudentsText()" class="w-full py-1.5 bg-violet-600 text-white text-[10px] rounded-lg font-bold hover:bg-violet-700">AJOUTER MANUELLEMENT</button>
+                <section x-show="editMode" x-collapse class="mb-6 relative" x-data="{ filename: '' }">
+                    <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden">
+                        <div class="px-4 py-2.5 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+                            <span class="text-xs font-black text-indigo-700 uppercase tracking-widest" x-text="students.length === 0 ? '📥 Étape 1 — Importer vos élèves' : '📥 Importer vos élèves'"></span>
+                            <span x-show="students.length === 0" class="text-base animate-bounce">👇</span>
+                        </div>
+
+                        <div class="p-4 space-y-3">
+                            <input id="fileImport" type="file" accept=".xls,.xlsx,.csv"
+                                   @change="importExcel($event); filename = $event.target.files[0]?.name || ''"
+                                   class="hidden">
+                            <button @click="document.getElementById('fileImport').click()"
+                                    class="w-full flex flex-col items-center gap-1 py-3 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50 hover:border-indigo-400 transition cursor-pointer">
+                                <span class="text-3xl">📂</span>
+                                <span class="text-xs font-bold text-indigo-600" x-text="filename || 'Importer un fichier Excel / CSV'"></span>
+                            </button>
+
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-px bg-slate-200"></div>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">ou</span>
+                                <div class="flex-1 h-px bg-slate-200"></div>
+                            </div>
+
+                            <div>
+                                <textarea x-model="bulkList" placeholder="Copier-coller des noms ici…"
+                                          class="w-full h-14 p-2 text-xs font-medium rounded-xl border-2 border-slate-200 bg-white outline-none mb-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition placeholder-slate-300"></textarea>
+                                <button @click="importStudentsText()"
+                                        class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-widest rounded-xl transition shadow-sm">
+                                    Ajouter manuellement
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </section>
-                <div class="mb-4 space-y-2">
+                <div class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-sm p-4 space-y-2">
                     <div class="flex items-center gap-2">
                         <div class="relative flex-1">
                             <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
@@ -1365,7 +1436,7 @@
                 <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
                     <button @click="showOnlyUnplaced = !showOnlyUnplaced" :class="showOnlyUnplaced ? 'bg-orange-100 border-orange-500' : 'bg-orange-50 border-orange-300 hover:bg-orange-100'" class="mb-3 w-full py-2 px-3 border-2 rounded-xl text-xs font-bold text-orange-700 transition-all flex items-center justify-between">
                         <span>⚠️ <span x-text="getUnplacedStudents().length"></span> élève(s) non placé(s)</span>
-                        <span class="text-[11px] text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
+                        <span class="text-xs text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
                     </button>
                 </template>
                 <template x-if="students.length > 0 && getUnplacedStudents().length === 0 && _getAssignments().length > 0">
@@ -1382,15 +1453,15 @@
                              @dragend="onDragEnd($event)"
                              :class="isStudentPlaced(student.id) ? 'bg-white border border-l-4 border-l-emerald-400 hover:border-indigo-400' : 'bg-amber-50 border border-l-4 border-l-amber-400 hover:border-amber-500'"
                              class="rounded-xl p-3 cursor-pointer transition-all group flex justify-between items-center shadow-sm hover:shadow-md drag-source-list">
-                            <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
                                 <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" :class="student.gender === 'F' ? 'bg-pink-100 text-pink-600' : (student.gender === 'M' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400')">
                                     <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '?')"></span>
                                 </div>
                                 <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="student.name"></p>
-                                <span x-show="isStudentPlaced(student.id)" class="text-[11px] font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
-                                <span x-show="!isStudentPlaced(student.id)" class="text-[11px] font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0">À PLACER</span>
                             </div>
-                            <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm">🗑️</button>
+                            <span x-show="isStudentPlaced(student.id)" class="text-xs font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 ml-2" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
+                            <span x-show="!isStudentPlaced(student.id)" class="text-xs font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 ml-2">À PLACER</span>
+                            <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm ml-2">🗑️</button>
                         </div>
                     </template>
                 </div>
@@ -1406,32 +1477,57 @@
             </div>
         </aside>
 
-        <section class="flex-1 px-3 py-1 sm:px-5 lg:px-8 overflow-y-auto flex flex-col items-center custom-scrollbar z-10">
-            <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full">
+        <section class="flex-1 px-3 py-1 sm:px-5 lg:px-8 overflow-hidden flex flex-col items-center z-10 min-h-0">
+            <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full flex flex-col min-h-0 flex-1">
 
                 <!-- Titre classe + plan -->
-                <div class="text-center mb-8 pt-10 lg:pt-2">
-                    <h2 class="text-sm font-black text-slate-700 leading-tight flex items-center justify-center gap-2 flex-wrap">
-                        <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
-                        <span class="text-slate-300 font-light">—</span>
-                        <span x-show="!_isAlphaPlan()" class="text-indigo-500 font-black"
-                              x-text="plans[currentPlanIndex]?.name || ''"></span>
-                        <span x-show="_isAlphaPlan()" class="text-violet-500 font-black">Plan Alphabétique</span>
+                <div class="text-center mb-12 lg:mb-16 pt-10 lg:pt-2">
+                    <h2 class="font-black leading-tight flex items-center justify-center" style="font-size:clamp(11px,1.2vw,14px)">
+                        <span class="bg-white text-indigo-600 border border-slate-200 px-3 py-1 rounded-full shadow-md flex items-center gap-2 uppercase tracking-wider">
+                            <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
+                            <span class="text-indigo-300 font-light">—</span>
+                            <span x-show="!_isAlphaPlan()" x-text="plans[currentPlanIndex]?.name || ''"></span>
+                            <span x-show="_isAlphaPlan()">Plan Alphabétique</span>
+                        </span>
                     </h2>
                     <p x-show="_isAlphaPlan()" class="mt-1 text-[10px] text-violet-400 font-medium">
                         Cliquez sur <strong>Auto</strong> après avoir paramétré votre salle et vos élèves, ou placez les librement en glisser / déposer.
                     </p>
                 </div>
 
-                <div class="absolute top-4 left-4">
+                <div class="absolute top-4 left-4 flex items-center gap-2">
                     <button @click="showStatsModal = true" x-show="students.length > 0"
                             title="Statistiques de la classe"
                             class="flex items-center gap-1.5 px-2.5 h-8 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 text-slate-500 hover:text-indigo-600 rounded-xl text-[10px] font-black transition shadow-sm">
                         📊 <span x-text="students.length + ' élèves'"></span>
                     </button>
+                    <button @click="viewFlipped = !viewFlipped" title="Retourner la vue"
+                            class="flex items-center justify-center w-8 h-8 rounded-xl transition border-2 shadow-sm"
+                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-300 hover:text-indigo-600'">
+                        🔄
+                    </button>
                 </div>
 
                 <div class="absolute top-4 right-4 flex items-center gap-2" @keydown.ctrl.z.window.prevent="undo()">
+                    <!-- Main animée vers config (uniquement après import, avant 1ère config) -->
+                    <template x-if="students.length > 0 && !showClassConfig && !configHintDismissed">
+                        <span class="text-xl arrow-bounce leading-none">👉</span>
+                    </template>
+                    <!-- Bouton config classe -->
+                    <button @click="showClassConfig = !showClassConfig; if(showClassConfig) { configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true'); }"
+                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition border"
+                        :class="(students.length > 0 && !configHintDismissed) ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : (showClassConfig ? 'bg-white text-indigo-600 border-indigo-400 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')"
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
+                        <span>Config. classe</span>
+                    </button>
+                    <span class="w-px h-5 bg-slate-200"></span>
+                    <!-- Vider le plan -->
+                    <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
+                            class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <path d="M13.5 8a5.5 5.5 0 1 1-1.1-3.3"/><polyline points="14,2 13.5,5.5 10,5"/>
+                        </svg>
+                    </button>
                     <!-- Annuler (Ctrl+Z) -->
                     <button @click="undo()" :disabled="undoStack.length === 0"
                             title="Annuler la dernière action (Ctrl+Z)"
@@ -1442,66 +1538,86 @@
                             <path d="M2 6h7a4 4 0 0 1 0 8H6"/>
                         </svg>
                         <span x-show="undoStack.length > 0"
-                              class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 text-white text-[8px] font-black flex items-center justify-center leading-none"
+                              class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 text-white text-[10px] font-black flex items-center justify-center leading-none"
                               x-text="undoStack.length"></span>
                     </button>
-                    <span class="w-px h-5 bg-slate-200"></span>
-                    <!-- Main animée vers config (uniquement après import, avant 1ère config) -->
-                    <template x-if="students.length > 0 && !showClassConfig && !configHintDismissed">
-                        <span class="text-xl arrow-bounce leading-none">👉</span>
-                    </template>
-                    <button @click="clearGrid()" title="Vider le plan actuel" x-show="!_isAlphaPlan()"
-                            class="h-8 w-8 flex items-center justify-center bg-white border-2 border-rose-300 text-rose-500 hover:bg-rose-50 rounded-xl transition shadow-sm">
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
-                            <path d="M3 3l10 10M13 3L3 13"/>
-                        </svg>
-                    </button>
-                    <!-- Bouton config classe -->
-                    <button @click="showClassConfig = !showClassConfig; if(showClassConfig) configHintDismissed = true"
-                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition border"
-                        :class="showClassConfig ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : (students.length > 0 && !configHintDismissed ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')"
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
-                        <span>Config. classe</span>
-                    </button>
-                    <span class="w-px h-4 bg-slate-200"></span>
                 </div>
 
                 <!-- Tiroir config classe -->
                 <div x-show="showClassConfig" x-transition.opacity.duration.200ms
-                     class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-lg p-4 max-w-md mx-auto">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xs font-black text-indigo-700 uppercase tracking-widest">Configuration de la classe</h3>
-                        <button @click="showClassConfig = false" class="text-slate-400 hover:text-red-500 transition">✕</button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2">
-                            <span class="text-[10px] font-black text-slate-500 uppercase">Rangs</span>
-                            <div class="flex items-center gap-1 ml-auto">
-                                <button @click="rows = Math.max(1, rows-1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">−</button>
-                                <span class="w-6 text-center font-black text-indigo-700 text-sm" x-text="rows"></span>
-                                <button @click="rows = Math.min(20, rows+1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">+</button>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2">
-                            <span class="text-[10px] font-black text-slate-500 uppercase">Colonnes</span>
-                            <div class="flex items-center gap-1 ml-auto">
-                                <button @click="cols = Math.max(1, cols-1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">−</button>
-                                <span class="w-6 text-center font-black text-indigo-700 text-sm" x-text="cols"></span>
-                                <button @click="cols = Math.min(20, cols+1); saveLocal()" class="w-6 h-6 flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-400 rounded-lg transition font-black text-sm">+</button>
-                            </div>
+                     class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-xl overflow-hidden max-w-4xl mx-auto">
+                    <!-- En-tête compact -->
+                    <div class="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-indigo-50 to-violet-50 border-b border-indigo-100">
+                        <h3 class="text-xs font-black text-indigo-700 uppercase tracking-widest">⚙️ Configuration de la salle</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-500">
+                                <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span> places •
+                                <span class="font-black text-violet-600" x-text="aisles.length"></span> allée(s) •
+                                <span class="font-black text-rose-500" x-text="blockedSeats.length"></span> bloquée(s)
+                            </span>
+                            <button @click="showClassConfig = false; configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true')"
+                                    class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-sm transition">
+                                ✓ Valider
+                            </button>
+                            <button @click="showClassConfig = false" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">✕</button>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-                        <span class="text-[10px] text-slate-400">Places disponibles : <span class="font-black text-indigo-600" x-text="(rows * cols) - aisles.length * rows - blockedSeats.length"></span></span>
+
+                    <!-- 3 colonnes en ligne -->
+                    <div class="grid grid-cols-3 gap-3 p-3">
+                        <!-- Étape 1 : dimensions -->
+                        <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-200 flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-black shrink-0">1</span>
+                                <p class="text-xs font-black text-slate-700 uppercase tracking-wide">Dimensions</p>
+                            </div>
+                            <p class="text-[10px] text-slate-600 leading-tight">Indiquez le nombre de <strong>rangées</strong> et de <strong>colonnes</strong> de votre salle de classe pour reproduire sa disposition.</p>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <div class="flex items-center bg-white rounded-lg px-2 py-1 border border-slate-200">
+                                    <span class="text-[10px] font-black text-slate-500 uppercase">Rangées</span>
+                                    <div class="flex items-center gap-0.5 ml-auto">
+                                        <button @click="rows = Math.max(1, rows-1); saveLocal()" class="w-5 h-5 flex items-center justify-center bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-700 rounded transition font-black text-xs">−</button>
+                                        <span class="w-5 text-center font-black text-indigo-700 text-xs" x-text="rows"></span>
+                                        <button @click="rows = Math.min(20, rows+1); saveLocal()" class="w-5 h-5 flex items-center justify-center bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-700 rounded transition font-black text-xs">+</button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center bg-white rounded-lg px-2 py-1 border border-slate-200">
+                                    <span class="text-[10px] font-black text-slate-500 uppercase">Colonnes</span>
+                                    <div class="flex items-center gap-0.5 ml-auto">
+                                        <button @click="cols = Math.max(1, cols-1); saveLocal()" class="w-5 h-5 flex items-center justify-center bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-700 rounded transition font-black text-xs">−</button>
+                                        <span class="w-5 text-center font-black text-indigo-700 text-xs" x-text="cols"></span>
+                                        <button @click="cols = Math.min(20, cols+1); saveLocal()" class="w-5 h-5 flex items-center justify-center bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-700 rounded transition font-black text-xs">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Étape 2 : allées -->
+                        <div class="bg-violet-50 rounded-xl p-2.5 border border-violet-200 flex flex-col gap-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-violet-600 text-white text-[10px] font-black shrink-0">2</span>
+                                <p class="text-xs font-black text-violet-700 uppercase tracking-wide">Allées</p>
+                            </div>
+                            <p class="text-[10px] text-slate-600 leading-tight">Cliquez sur les boutons <span class="inline-flex items-center bg-white border border-violet-200 rounded px-1 font-black text-violet-600 text-[10px]">↓</span> au-dessus de la grille pour insérer une allée. Pratique pour séparer les bavards.</p>
+                        </div>
+
+                        <!-- Étape 3 : blocage -->
+                        <div class="bg-rose-50 rounded-xl p-2.5 border border-rose-200 flex flex-col gap-1.5">
+                            <div class="flex items-center gap-2">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-black shrink-0">3</span>
+                                <p class="text-xs font-black text-rose-700 uppercase tracking-wide">Bloquer une place</p>
+                            </div>
+                            <p class="text-[10px] text-slate-600 leading-tight">Cliquez sur une case <span class="inline-flex items-center bg-white border border-rose-200 rounded px-1 font-black text-rose-500 text-[10px]">⊘</span> pour la marquer indisponible (table cassée, etc.). Recliquez pour libérer.</p>
+                        </div>
                     </div>
                 </div>
                 
                 <template x-if="viewFlipped">
                     <div class="flex flex-col items-center mb-8 gap-1 w-full">
-                        <div class="w-3/4 h-9 bg-indigo-700 rounded-t-xl flex items-center justify-between px-3 shadow-lg">
-                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
-                            <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
-                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                        <div class="w-72 h-9 bg-white border border-slate-200 rounded-t-xl flex items-center justify-between px-3 shadow-lg">
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
+                            <span class="text-xs text-indigo-700 font-black tracking-widest uppercase">TABLEAU</span>
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
                         </div>
                         <div class="flex items-center justify-center py-1">
                             <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
@@ -1509,6 +1625,9 @@
                     </div>
                 </template>
 
+
+                <!-- Zone grille flexible -->
+                <div class="flex-1 min-h-0 flex flex-col">
 
                 <!-- Boutons allée par colonne — visibles uniquement en mode config -->
                 <template x-if="showClassConfig && !viewFlipped">
@@ -1531,7 +1650,7 @@
                     </div>
                 </template>
 
-                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full"
+                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full mx-auto"
                      :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
                     <template x-for="cell in gridCells" :key="cell.key">
                             <div class="aspect-[8/5] min-h-[36px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all group"
@@ -1542,20 +1661,20 @@
                                  @dragover="onDragOver($event, cell.r, cell.c)"
                                  @dragleave="onDragLeave($event)"
                                  @drop="onDrop($event, cell.r, cell.c)"
-                                 :class="aisles.includes(cell.c) ? 'bg-transparent border-transparent' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300'))">
+                                 :class="aisles.includes(cell.c) ? 'bg-transparent border-transparent overflow-visible' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70 overflow-hidden' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300 overflow-hidden'))">
                                 <template x-if="aisles.includes(cell.c)">
-                                    <div class="w-full h-full flex items-center justify-center relative">
-                                        <div class="absolute left-0 top-0 h-full w-[2px] bg-slate-300 rounded-full"></div>
-                                        <div class="absolute right-0 top-0 h-full w-[2px] bg-slate-300 rounded-full"></div>
+                                    <div class="w-full h-full flex items-center justify-center relative" style="overflow:visible">
+                                        <div class="absolute left-0 w-[2px] bg-slate-300" style="top:-12px; bottom:-12px;"></div>
+                                        <div class="absolute right-0 w-[2px] bg-slate-300" style="top:-12px; bottom:-12px;"></div>
                                     </div>
                                 </template>
                                 <template x-if="!aisles.includes(cell.c)">
                                     <div class="w-full h-full">
                                         <template x-if="blockedSeats.includes(cell.r+'-'+cell.c)"><div class="w-full h-full flex flex-col items-center justify-center cursor-pointer" @click="toggleBlockedSeat(cell.r, cell.c)"><svg viewBox="0 0 24 24" class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg></div></template>
                                         <template x-if="!blockedSeats.includes(cell.r+'-'+cell.c)">
-                                            <div class="w-full h-full flex flex-col justify-center relative" @click.stop="getOccupant(cell.r, cell.c) ? openModal(getStudent(getOccupant(cell.r, cell.c))) : (openDropdown = openDropdown === `${cell.r}-${cell.c}` ? null : `${cell.r}-${cell.c}`)">
+                                            <div class="w-full h-full flex flex-col justify-center relative" @click.stop="showClassConfig ? toggleBlockedSeat(cell.r, cell.c) : (getOccupant(cell.r, cell.c) ? openModal(getStudent(getOccupant(cell.r, cell.c))) : (openDropdown = openDropdown === `${cell.r}-${cell.c}` ? null : `${cell.r}-${cell.c}`))">
 
-                                                <button x-show="!showClassConfig && !_isAlphaPlan() && _getAssignments().length > 0" @click.stop="toggleBlockedSeat(cell.r, cell.c)" title="Bloquer / libérer cette place" class="absolute top-[5%] right-[5%] bg-white/80 border border-slate-200 rounded-full flex items-center justify-center transition-colors z-20 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-orange-500 hover:border-orange-300" style="width:clamp(14px,18cqw,22px);height:clamp(14px,18cqw,22px);padding:clamp(2px,2cqw,4px)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%"><path d="M13.5 8a5.5 5.5 0 1 1-1.1-3.3"/><polyline points="14,2 13.5,5.5 10,5"/></svg></button>
+                                                <button x-show="!showClassConfig && !_isAlphaPlan() && _getAssignments().length > 0" @click.stop="toggleBlockedSeat(cell.r, cell.c)" title="Bloquer cette place" class="absolute top-[5%] right-[5%] bg-white/80 border border-slate-200 rounded-full flex items-center justify-center transition-colors z-20 opacity-0 group-hover:opacity-100 text-red-400 group-hover:border-red-300 border-red-200" style="width:clamp(14px,18cqw,22px);height:clamp(14px,18cqw,22px);font-size:clamp(7px,10cqw,12px)">✕</button>
                                                 <template x-if="getOccupant(cell.r, cell.c)">
                                                     <button @click.stop="toggleManual(cell.r, cell.c)"
                                                         class="absolute top-[5%] left-[5%] rounded-full flex items-center justify-center transition-all z-20 border shadow-sm"
@@ -1584,7 +1703,11 @@
                                                         <span class="absolute bottom-1 right-1 font-black opacity-40" style="font-size:clamp(6px,9cqw,10px)" x-text="getStudent(getOccupant(cell.r, cell.c))?.gender"></span>
                                                     </div>
                                                 </template>
-                                                <span x-show="!getOccupant(cell.r, cell.c)" class="text-[11px] font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
+                                                <span x-show="!getOccupant(cell.r, cell.c) && !showClassConfig" class="text-xs font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
+                                                <span x-show="!getOccupant(cell.r, cell.c) && showClassConfig" class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-red-500 transition pointer-events-none w-full" :title="'Cliquez pour bloquer cette place'">
+                                                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>
+                                                    <span class="text-[10px] font-black uppercase tracking-widest">Bloquer</span>
+                                                </span>
                                                 <!-- Menu personnalisé -->
                                                 <div x-show="openDropdown === `${cell.r}-${cell.c}`"
                                                      @click.outside="openDropdown = null"
@@ -1599,7 +1722,7 @@
                                                         <div class="px-3 py-1.5 text-[10px] font-bold cursor-pointer flex items-center gap-2 transition-colors"
                                                              :class="getOccupant(cell.r, cell.c) === s.id ? 'bg-indigo-50 text-indigo-700 border-l-2 border-indigo-500' : (isStudentPlaced(s.id) ? 'text-slate-400 hover:bg-slate-50' : 'bg-amber-50 text-amber-700 hover:bg-amber-100')"
                                                              @click.stop="manualAssign(cell.r, cell.c, s.id); openDropdown = null">
-                                                            <span class="w-3 shrink-0 text-[11px] text-emerald-500" x-text="getOccupant(cell.r, cell.c) === s.id ? '●' : (isStudentPlaced(s.id) ? '✓' : '')"></span>
+                                                            <span class="w-3 shrink-0 text-xs text-emerald-500" x-text="getOccupant(cell.r, cell.c) === s.id ? '●' : (isStudentPlaced(s.id) ? '✓' : '')"></span>
                                                             <span x-text="s.name"></span>
                                                         </div>
                                                     </template>
@@ -1614,14 +1737,13 @@
                 
                 <template x-if="!viewFlipped">
                     <div class="flex flex-col items-center mt-4 gap-1">
-                        <!-- Prof -->
                         <div class="flex items-center justify-center gap-2 py-1">
                             <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
                         </div>
-                        <div class="w-3/4 h-9 bg-indigo-700 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
-                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
-                            <span class="text-[10px] text-white font-black tracking-widest uppercase">TABLEAU</span>
-                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-white/70" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="white" opacity="0.5"/></svg>
+                        <div class="w-72 h-9 bg-white border border-slate-200 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
+                            <span class="text-xs text-indigo-700 font-black tracking-widest uppercase">TABLEAU</span>
+                            <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
                         </div>
                     </div>
                 </template>
@@ -1692,15 +1814,6 @@
                 </div>
                 </template>
 
-                <!-- Bouton Vue flottant bas-droite -->
-                <div class="flex justify-end mt-3">
-                    <button @click="viewFlipped = !viewFlipped" title="Retourner la vue"
-                            class="h-8 px-3 rounded-xl text-xs font-black transition border shadow-sm"
-                            :class="viewFlipped ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400 hover:text-indigo-600'">
-                        🔄 Vue
-                    </button>
-                </div>
-
             </div>
         </section>
     </main>
@@ -1723,7 +1836,7 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-6">
                         Maintenant, <strong class="text-slate-800">configurez votre salle</strong> : définissez le nombre de rangs, les allées et les places bloquées.
                     </p>
-                    <button @click="importSuccessModal.show = false; if(_isAlphaPlan()) switchPlan(0); showClassConfig = true; configHintDismissed = true"
+                    <button @click="importSuccessModal.show = false; if(_isAlphaPlan()) switchPlan(0); showClassConfig = true; configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true')"
                             class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm flex items-center justify-center gap-2">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
                         Configurer la salle

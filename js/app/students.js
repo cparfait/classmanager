@@ -1,8 +1,10 @@
 export function studentsModule() {
     return {
         get filteredMainList() {
+            const norm = str => (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+            const q = norm(this.searchQuery);
             const base = this.students.filter(s =>
-                s.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
+                norm(s.name).includes(q) &&
                 (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter)
             );
             const sortKey = s => {
