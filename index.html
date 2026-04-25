@@ -29,7 +29,7 @@
                 <div class="flex flex-col h-full overflow-hidden">
                     <div class="p-5 flex justify-between items-center shrink-0" :class="selectedStudent.gender === 'F' ? 'bg-gradient-to-r from-pink-500 to-rose-500' : (selectedStudent.gender === 'M' ? 'bg-gradient-to-r from-blue-500 to-indigo-500' : 'bg-gradient-to-r from-slate-600 to-slate-700')">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-black text-white text-lg" x-text="selectedStudent.gender || '?'"></div>
+                            <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-black text-white text-lg" x-text="selectedStudent.gender || '•'"></div>
                             <div>
                                 <h2 class="text-xl font-black text-white" x-text="selectedStudent.name"></h2>
                                 <p class="text-white/60 text-[10px] font-bold uppercase tracking-widest">Fiche élève</p>
@@ -49,15 +49,14 @@
                                     <div class="flex rounded-xl overflow-hidden border border-pink-200 text-xs font-black">
                                         <button @click="selectedStudent.gender = 'F'" :class="selectedStudent.gender === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="flex-1 py-2 transition">👧 Fille</button>
                                         <button @click="selectedStudent.gender = 'M'" :class="selectedStudent.gender === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="flex-1 py-2 border-l border-pink-200 transition">👦 Garçon</button>
-                                        <button @click="selectedStudent.gender = ''" :class="selectedStudent.gender === '' ? 'bg-slate-400 text-white' : 'bg-white text-slate-400 hover:bg-slate-50'" class="flex-1 py-2 border-l border-pink-200 transition">❓</button>
+                                        <button @click="selectedStudent.gender = ''" :class="selectedStudent.gender === '' ? 'bg-slate-400 text-white' : 'bg-white text-slate-400 hover:bg-slate-50'" class="flex-1 py-2 border-l border-pink-200 transition text-[10px]">❓ À définir</button>
                                     </div>
                                 </div>
                                 <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3">
                                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">📏 Stature</p>
                                     <div class="flex rounded-xl overflow-hidden border border-indigo-200 text-xs font-black">
-                                        <button @click="selectedStudent.height = 'petit'" :class="selectedStudent.height === 'petit' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 transition">🧍 Petit</button>
-                                        <button @click="selectedStudent.height = ''" :class="selectedStudent.height === '' ? 'bg-indigo-400 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 border-l transition">〰️ Moy.</button>
-                                        <button @click="selectedStudent.height = 'grand'" :class="selectedStudent.height === 'grand' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 border-l transition">🧍 Grand</button>
+                                        <button @click="selectedStudent.height = selectedStudent.height === 'petit' ? '' : 'petit'" :class="selectedStudent.height === 'petit' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 transition">🧍 Petit</button>
+                                        <button @click="selectedStudent.height = selectedStudent.height === 'grand' ? '' : 'grand'" :class="selectedStudent.height === 'grand' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-500 hover:bg-indigo-50 hover:text-indigo-600'" class="flex-1 py-2 border-l transition">🧍 Grand</button>
                                     </div>
                                 </div>
                             </div>
@@ -85,17 +84,14 @@
                             <div class="border border-slate-200 rounded-2xl p-4">
                                 <div class="flex items-center justify-between mb-3">
                                     <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">🔗 Relations de voisinage</p>
-                                    <div class="flex items-center gap-1.5">
-                                        <div class="flex rounded-lg overflow-hidden border border-slate-200 text-xs font-black">
-                                            <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
-                                            <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
-                                            <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
-                                        </div>
+                                    <div class="flex rounded-lg overflow-hidden border border-slate-200 text-xs font-black">
+                                        <button @click="forceFilter = 'ALL'; avoidFilter = 'ALL'" :class="forceFilter === 'ALL' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 hover:bg-slate-100'" class="px-3 py-1 transition">Tous</button>
+                                        <button @click="forceFilter = 'F'; avoidFilter = 'F'" :class="forceFilter === 'F' ? 'bg-pink-500 text-white' : 'bg-white text-pink-400 hover:bg-pink-50'" class="px-3 py-1 border-l transition">👧 Filles</button>
+                                        <button @click="forceFilter = 'M'; avoidFilter = 'M'" :class="forceFilter === 'M' ? 'bg-blue-500 text-white' : 'bg-white text-blue-400 hover:bg-blue-50'" class="px-3 py-1 border-l transition">👦 Garçons</button>
                                         <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
-                                            class="px-2 py-1 rounded-lg border border-slate-200 text-[10px] font-black transition"
-                                            :class="profileSortOrder === 'prenomNom' ? 'bg-violet-500 text-white border-violet-500' : 'bg-white text-slate-400 hover:text-slate-600'"
+                                            class="px-3 py-1 border-l transition normal-case bg-white text-slate-500 hover:bg-slate-100"
                                             :title="profileSortOrder === 'nomPrenom' ? 'Trier par Prénom' : 'Trier par Nom'"
-                                            x-text="profileSortOrder === 'nomPrenom' ? 'NOM' : 'PRÉNOM'"></button>
+                                            x-text="profileSortOrder === 'nomPrenom' ? 'Nom' : 'Prénom'"></button>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
@@ -491,10 +487,15 @@
             <div class="p-6 space-y-3">
                 <p class="text-xs text-slate-500 font-medium">Sauvegardez ou restaurez l'intégralité de vos données : élèves, plans de classe et placements.</p>
                 <div class="flex gap-3 pt-1">
-                    <button @click="exportData(); showConfigModal = false" class="flex-1 py-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-xs font-black uppercase transition shadow-sm">💾 Exporter</button>
-                    <label class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-black uppercase transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
+                    <button @click="exportData(); showConfigModal = false"
+                            title="Télécharge un fichier .json contenant l'intégralité de la classe : élèves, plans, placements, allées, places bloquées. Idéal pour archiver ou transférer."
+                            class="flex-1 py-3 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-xs font-black transition shadow-sm">💾 Export complet</button>
+                    <label title="Restaure une sauvegarde précédemment exportée. Remplace les données actuelles par celles du fichier."
+                           class="flex-1 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-black transition text-center cursor-pointer shadow-sm">📂 Importer<input type="file" accept=".json" @change="importData($event); showConfigModal = false" class="hidden"></label>
                 </div>
-                <button @click="exportStudentsOnly(); showConfigModal = false" class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-xs font-black uppercase transition shadow-sm">👥 Exporter fiches élèves</button>
+                <button @click="exportStudentsOnly(); showConfigModal = false"
+                        title="Télécharge uniquement la liste des élèves (noms, profils, contraintes, notes), sans la salle ni les plans. Pratique pour réutiliser la même classe ailleurs."
+                        class="w-full py-3 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-xs font-black transition shadow-sm">👥 Exporter les fiches élèves</button>
                 <!-- Mode d'utilisation -->
                 <div class="border-t border-slate-100 pt-3">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode d'utilisation</p>
@@ -745,6 +746,95 @@
             </div>
         </div>
     </div>
+
+    <!-- === MODALE AIDE IMPORT (mode solo, liste vide) === -->
+    <template x-if="showImportHelpModal">
+        <div class="fixed inset-0 z-[9998] flex items-center justify-center p-4" @click.self="showImportHelpModal = false">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden">
+                <!-- Header coloré -->
+                <div class="bg-gradient-to-br from-violet-500 to-indigo-600 px-8 py-8 text-center">
+                    <div class="text-6xl mb-3">📥</div>
+                    <h2 class="text-2xl font-black text-white">Bienvenue !</h2>
+                    <p class="text-violet-200 text-sm mt-1 font-medium">Commencez par ajouter vos élèves</p>
+                </div>
+                <!-- Corps -->
+                <div class="px-8 py-6 text-center">
+                    <p class="text-slate-600 text-sm leading-relaxed mb-5">
+                        Cliquez sur le bandeau <strong class="text-amber-600">« Importer vos élèves »</strong> dans la barre latérale, puis choisissez :
+                    </p>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-3 mb-6 border border-slate-200">
+                        <div class="flex items-start gap-3">
+                            <span class="text-xl">📂</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Importer un fichier Excel ou CSV</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Compatible EcoleDirecte, Pronote ou tout tableau avec colonnes <span class="font-bold">Nom</span> et <span class="font-bold">Sexe</span>.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-xl">✏️</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Saisir la liste à la main</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Collez ou tapez les noms un par ligne. Les informations de chaque élève pourront être ajustées ensuite dans la liste.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button @click="showImportHelpModal = false"
+                            class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm">
+                        J'ai compris
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- === MODALE AIDE PLACEMENT (après 1ère config salle) === -->
+    <template x-if="showPlacementHelpModal">
+        <div class="fixed inset-0 z-[9998] flex items-center justify-center p-4" @click.self="showPlacementHelpModal = false; searchQuery = ''; mainGenderFilter = 'ALL'; mainProfileFilter = []; showOnlyUnplaced = false">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden">
+                <!-- Header coloré -->
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-600 px-8 py-8 text-center">
+                    <div class="text-6xl mb-3">🪑</div>
+                    <h2 class="text-2xl font-black text-white">Salle configurée !</h2>
+                    <p class="text-emerald-100 text-sm mt-1 font-medium">Place maintenant à vos élèves</p>
+                </div>
+                <!-- Corps -->
+                <div class="px-8 py-6 text-center">
+                    <p class="text-slate-600 text-sm leading-relaxed mb-5">
+                        Personnalisez chaque élève puis placez-les automatiquement ou à la main.
+                    </p>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-3 mb-6 border border-slate-200">
+                        <div class="flex items-start gap-3">
+                            <span class="text-xl">👤</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Configurer un élève</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Cliquez sur un nom dans la liste pour ajouter un profil (bavard·e, PAP, problème de vue…) ou définir des contraintes (à côté de / loin de).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-xl">⚡</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Placement automatique</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Lancez l'algorithme pour générer un plan optimisé respectant tous les profils et contraintes définis.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-xl">🖱️</span>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">Placement manuel</p>
+                                <p class="text-xs text-slate-500 leading-relaxed">Glissez-déposez un élève depuis la liste vers une place, ou réorganisez les places entre elles.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button @click="showPlacementHelpModal = false; searchQuery = ''; mainGenderFilter = 'ALL'; mainProfileFilter = []; showOnlyUnplaced = false"
+                            class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm">
+                        C'est parti !
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!-- ====================================================
          ÉCRAN DE SÉLECTION DE PROFIL (mode multi, session verrouillée)
@@ -1361,11 +1451,10 @@
             </div><!-- /wrapper -->
             <div class="px-5 pt-6 pb-5 flex-1 overflow-y-auto flex flex-col">
                 <section x-show="editMode" x-collapse class="mb-6 relative" x-data="{ filename: '' }">
-                    <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden">
+                    <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden" :class="students.length === 0 ? 'import-pulse' : ''">
                         <div class="px-4 py-2.5 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between cursor-pointer" @click="importDrawerOpen = !importDrawerOpen; filename = ''">
                             <span class="text-xs font-black text-indigo-700 uppercase tracking-widest" x-text="students.length === 0 ? '📥 Étape 1 — Importer vos élèves' : '📥 Importer vos élèves'"></span>
-                            <span x-show="students.length === 0" class="text-base animate-bounce">👇</span>
-                            <svg x-show="students.length > 0" class="w-4 h-4 text-indigo-400 transition-transform" :class="importDrawerOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <svg class="w-4 h-4 text-indigo-400 transition-transform" :class="importDrawerOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                         <div x-show="importDrawerOpen" x-collapse>
 
@@ -1373,11 +1462,15 @@
                             <input id="fileImport" type="file" accept=".xls,.xlsx,.csv"
                                    @change="importExcel($event); filename = $event.target.files[0]?.name || ''"
                                    class="hidden">
-                            <button @click="document.getElementById('fileImport').click()"
-                                    class="w-full flex flex-col items-center gap-1 py-3 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50 hover:border-indigo-400 transition cursor-pointer">
-                                <span class="text-3xl">📂</span>
-                                <span class="text-xs font-bold text-indigo-600" x-text="filename || 'Importer un fichier Excel / CSV'"></span>
-                            </button>
+                            <div class="relative">
+                                <button @click="document.getElementById('fileImport').click()"
+                                        class="w-full flex flex-col items-center gap-1 py-3 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50 hover:border-indigo-400 transition cursor-pointer">
+                                    <span class="text-3xl">📂</span>
+                                    <span class="text-xs font-bold text-indigo-600" x-text="filename || 'Importer un fichier Excel / CSV'"></span>
+                                </button>
+                                <span class="tooltip-icon-wide absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center rounded-full bg-white border border-indigo-200 text-indigo-500 text-[11px] font-black cursor-help shadow-sm"
+                                      data-tip="Le fichier doit contenir une colonne « Nom » (ou « Élève », « Prénom »…) et, idéalement, une colonne « Sexe » (F/M). Compatible exports EcoleDirecte et Pronote.">ⓘ</span>
+                            </div>
 
                             <div class="flex items-center gap-2">
                                 <div class="flex-1 h-px bg-slate-200"></div>
@@ -1386,7 +1479,7 @@
                             </div>
 
                             <div>
-                                <textarea x-model="bulkList" placeholder="Copier-coller des noms ici…"
+                                <textarea x-model="bulkList" placeholder="Collez la liste des élèves, un par ligne (Nom Prénom ou Prénom Nom)…"
                                           class="w-full h-14 p-2 text-xs font-medium rounded-xl border-2 border-slate-200 bg-white outline-none mb-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition placeholder-slate-300"></textarea>
                                 <button @click="importStudentsText()"
                                         class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-widest rounded-xl transition shadow-sm">
@@ -1404,7 +1497,7 @@
                             <input type="text" x-model="searchQuery" placeholder="Rechercher un élève…"
                                    class="w-full pl-8 pr-8 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
                             <button x-show="searchQuery || mainProfileFilter.length > 0 || mainGenderFilter !== 'ALL'" @click="searchQuery = ''; mainProfileFilter = []; mainGenderFilter = 'ALL'"
-                                    class="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-slate-200 hover:bg-red-200 text-slate-500 hover:text-red-500 transition text-[10px] font-bold" title="Effacer les filtres">✕</button>
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white transition text-[10px] font-bold shadow-sm" title="Effacer les filtres">✕</button>
                         </div>
                         <button @click="editMode = !editMode; if(editMode) { importDrawerOpen = students.length === 0; }"
                                 :class="editMode ? 'bg-red-50 text-red-400 border-red-200 hover:bg-red-100' : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'"
@@ -1510,21 +1603,29 @@
 
                 <div class="space-y-2 flex-1 overflow-y-auto pr-1 custom-scrollbar">
                     <template x-for="student in filteredMainList" :key="student.id">
-                        <div @click="openModal(student)"
-                             draggable="true"
+                        <div x-data="{ editingName: false, nameDraft: '' }"
+                             @click="if(!editingName) openModal(student)"
+                             :draggable="!editingName"
                              @dragstart="onDragStartList($event, student.id)"
                              @dragend="onDragEnd($event)"
                              :class="isStudentPlaced(student.id) ? 'bg-white border border-l-4 border-l-emerald-400 hover:border-indigo-400' : 'bg-amber-50 border border-l-4 border-l-amber-400 hover:border-amber-500'"
                              class="rounded-xl p-3 cursor-pointer transition-all group flex justify-between items-center shadow-sm hover:shadow-md drag-source-list">
                             <div class="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
                                 <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" :class="student.gender === 'F' ? 'bg-pink-100 text-pink-600' : (student.gender === 'M' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400')">
-                                    <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '?')"></span>
+                                    <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '•')"></span>
                                 </div>
-                                <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="profileSortOrder === 'prenomNom' ? (splitStudentName(student.name).prenom + ' ' + splitStudentName(student.name).nom) : student.name"></p>
+                                <p x-show="!editingName" class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="profileSortOrder === 'prenomNom' ? (splitStudentName(student.name).prenom + ' ' + splitStudentName(student.name).nom) : student.name"></p>
+                                <input x-show="editingName" x-model="nameDraft"
+                                       @click.stop
+                                       @keydown.enter="if(nameDraft.trim()) { student.name = nameDraft.trim(); saveLocal(); } editingName = false"
+                                       @keydown.escape="editingName = false"
+                                       @blur="if(nameDraft.trim() && nameDraft.trim() !== student.name) { student.name = nameDraft.trim(); saveLocal(); } editingName = false"
+                                       class="font-bold text-sm flex-1 min-w-0 px-2 py-0.5 rounded-md border border-indigo-300 bg-white outline-none focus:ring-2 focus:ring-indigo-400 text-slate-800">
                             </div>
-                            <span x-show="isStudentPlaced(student.id)" class="text-xs font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 ml-2" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
-                            <span x-show="!isStudentPlaced(student.id)" class="text-xs font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 ml-2">À PLACER</span>
-                            <button x-show="editMode" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition text-sm ml-2">🗑️</button>
+                            <span x-show="isStudentPlaced(student.id) && !editingName" class="text-xs font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 ml-2" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
+                            <span x-show="!isStudentPlaced(student.id) && !editingName" class="text-xs font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 ml-2">À PLACER</span>
+                            <button x-show="editMode && !editingName" @click.stop="nameDraft = student.name; editingName = true; $nextTick(() => $el.parentElement.querySelector('input').focus())" title="Modifier le nom" class="text-slate-400 hover:text-indigo-600 transition text-sm ml-2">✏️</button>
+                            <button x-show="editMode && !editingName" @click.stop="if(confirm('Supprimer ' + student.name + ' ?')) removeStudent(student.id)" class="text-slate-400 hover:text-red-500 transition text-sm ml-2">🗑️</button>
                         </div>
                     </template>
                 </div>
@@ -1544,7 +1645,7 @@
             <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full flex flex-col min-h-0 flex-1">
 
                 <!-- Titre classe + plan -->
-                <div class="text-center pt-10 lg:pt-2" :class="showClassConfig ? 'mb-2' : 'mb-12 lg:mb-16'">
+                <div x-show="!showClassConfig" class="text-center pt-10 lg:pt-2 mb-12 lg:mb-16">
                     <h2 class="font-black leading-tight flex items-center justify-center" style="font-size:clamp(11px,1.2vw,14px)">
                         <span class="bg-white text-indigo-600 border border-slate-200 px-3 py-1 rounded-full shadow-md flex items-center gap-2 uppercase tracking-wider">
                             <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
@@ -1555,7 +1656,7 @@
                     </h2>
                 </div>
 
-                <div class="absolute top-4 left-4 flex items-center gap-2">
+                <div class="absolute top-4 left-4 flex items-center gap-2" x-show="!showClassConfig">
                     <button @click="showStatsModal = true" x-show="students.length > 0"
                             title="Statistiques de la classe"
                             class="flex items-center gap-1.5 px-2.5 h-8 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 text-slate-500 hover:text-indigo-600 rounded-xl text-[10px] font-black transition shadow-sm">
@@ -1568,7 +1669,7 @@
                     </button>
                 </div>
 
-                <div class="absolute top-4 right-4 flex items-center gap-2" @keydown.ctrl.z.window.prevent="undo()">
+                <div class="absolute top-4 right-4 flex items-center gap-2" x-show="!showClassConfig" @keydown.ctrl.z.window.prevent="undo()">
                     <!-- Main animée vers config (uniquement après import, avant 1ère config) -->
                     <template x-if="students.length > 0 && !showClassConfig && !configHintDismissed">
                         <span class="text-xl arrow-bounce leading-none">👉</span>
@@ -1576,7 +1677,7 @@
                     <!-- Bouton config classe -->
                     <button @click="showClassConfig = !showClassConfig; if(showClassConfig) { configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true'); }"
                         class="h-8 flex items-center gap-1.5 px-2.5 rounded-xl text-[10px] font-black transition border-2"
-                        :class="(students.length > 0 && !configHintDismissed) ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : (showClassConfig ? 'bg-white text-indigo-600 border-indigo-400 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')"
+                        :class="(students.length > 0 && !configHintDismissed) ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : (showClassConfig ? 'bg-white text-indigo-600 border-indigo-400 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')">
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
                         <span>Config. classe</span>
                     </button>
@@ -1615,11 +1716,10 @@
                                 <span class="font-black text-violet-600" x-text="aisles.length"></span> allée(s) •
                                 <span class="font-black text-rose-500" x-text="blockedSeats.length"></span> bloquée(s)
                             </span>
-                            <button @click="showClassConfig = false; configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true')"
+                            <button @click="showClassConfig = false; configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true'); if(students.length > 0 && (!plans[currentPlanIndex]?.assignments || plans[currentPlanIndex].assignments.length === 0)) { showPlacementHelpModal = true; }"
                                     class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-sm transition">
                                 ✓ Valider
                             </button>
-                            <button @click="showClassConfig = false" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">✕</button>
                         </div>
                     </div>
 
@@ -1691,7 +1791,7 @@
 
                 <!-- Boutons allée par colonne — visibles uniquement en mode config -->
                 <template x-if="showClassConfig && !viewFlipped">
-                    <div class="w-full mb-1">
+                    <div class="w-full mb-1 mt-6">
                     <p class="text-center text-[10px] font-black text-violet-500 uppercase tracking-widest mb-1">↓ Ajouter des allées</p>
                     <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full"
                          :style="`grid-template-columns: repeat(${cols}, 1fr);`">
@@ -1809,7 +1909,7 @@
                 </template>
 
                 <!-- Légende -->
-                <template x-if="students.length > 0">
+                <template x-if="students.length > 0 && !showClassConfig">
                 <div class="mt-6 mb-2 px-2">
                     <div class="bg-white/70 border border-slate-200 rounded-2xl p-4">
                         <div class="flex items-center justify-between mb-3">

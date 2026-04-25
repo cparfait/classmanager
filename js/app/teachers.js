@@ -11,6 +11,8 @@ export function teachersModule() {
             this.saveLocal();
             if (this.students.length === 0 && !localStorage.getItem('cmOnboardingDone')) {
                 this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+            } else if (this.students.length === 0) {
+                this.$nextTick(() => { this.showImportHelpModal = true; });
             }
         },
 

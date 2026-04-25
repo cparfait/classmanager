@@ -21,8 +21,11 @@ export function initModule() {
             const _afterLoad = () => {
                 if (this.students.length === 0) {
                     this.editMode = true;
+                    this.importDrawerOpen = true;
                     if (!this.showModeSelection && !localStorage.getItem('cmOnboardingDone')) {
                         this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+                    } else if (this.appMode === 'solo' && !this.showModeSelection) {
+                        this.$nextTick(() => { this.showImportHelpModal = true; });
                     }
                 }
             };

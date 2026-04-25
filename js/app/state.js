@@ -26,6 +26,8 @@ export function state() {
         sidebarVisible: true,
         undoStack: [],
         showOnboarding: false, onboardingStep: 0,
+        showImportHelpModal: false,
+        showPlacementHelpModal: false,
 
         // === v2 : Multi-classes & profils ===
         appMode: '',

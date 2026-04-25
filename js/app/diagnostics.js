@@ -68,7 +68,9 @@ export function diagnosticsModule() {
         _alertNewIssues(prevIssues) {
             const newIssues = this._snapshotIssues();
             const prevSet = new Set(prevIssues);
-            const added = newIssues.filter(i => !prevSet.has(i));
+            const added = newIssues
+                .filter(i => !prevSet.has(i))
+                .filter(i => !/élève\(s\) non placé\(s\)/.test(i));
             if (added.length === 0) return;
             const msg = added.length === 1
                 ? '⚠️ ' + added[0]
