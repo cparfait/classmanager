@@ -111,7 +111,10 @@ export function algorithmModule() {
                 };
 
                 let temperature = 10000;
-                const total = 150000, chunk = 2500;
+                const total = Math.max(50000, unassigned.length * validSeats.length * 200);
+                this.calculationTotal = total;
+                const coolingFactor = Math.pow(0.01 / 10000, 1 / total);
+                const chunk = Math.max(500, Math.round(total / 60));
                 let bestP = JSON.parse(JSON.stringify(currentPlacement)), bestS = calculateScore(bestP), curS = bestS;
                 let mut = []; currentPlacement.forEach((p,i) => { if (!fixedAssigned.some(f=>f.studentId===p.studentId)) mut.push({type:'student',idx:i,r:p.row,c:p.col}); });
                 let occ = new Set(currentPlacement.map(p=>`${p.row}-${p.col}`)); validSeats.forEach(vs => { if(!occ.has(`${vs.r}-${vs.c}`)) mut.push({type:'empty',r:vs.r,c:vs.c}); });
@@ -133,7 +136,7 @@ export function algorithmModule() {
                             if(p1){p1.row=r1; p1.col=c1;} if(p2){p2.row=r2; p2.col=c2;}
                             pos1.r=r1; pos1.c=c1; pos2.r=r2; pos2.c=c2;
                         }
-                        temperature *= 0.9999;
+                        temperature *= coolingFactor;
                     }
                     iter = end;
                     this.calculationProgress = Math.round((iter/total)*100);

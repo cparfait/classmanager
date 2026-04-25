@@ -1,11 +1,29 @@
 export function studentsModule() {
     return {
+        _matchProfile(s) {
+            if (this.mainProfileFilter.length === 0) return true;
+            const m = {
+                bavard: s.bavard,
+                pap: s.pap,
+                vision: s.vision,
+                aisle: s.aisle,
+                petit: s.height === 'petit',
+                grand: s.height === 'grand',
+                avoid: s.avoid && s.avoid.length > 0,
+                force: s.force && s.force.length > 0,
+                placed: this.isStudentPlaced(s.id),
+                unplaced: !this.isStudentPlaced(s.id),
+            };
+            return this.mainProfileFilter.every(f => m[f]);
+        },
+
         get filteredMainList() {
             const norm = str => (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
             const q = norm(this.searchQuery);
             const base = this.students.filter(s =>
                 norm(s.name).includes(q) &&
-                (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter)
+                (this.mainGenderFilter === 'ALL' || s.gender === this.mainGenderFilter) &&
+                this._matchProfile(s)
             );
             const sortKey = s => {
                 if (this.profileSortOrder === 'prenomNom') {
@@ -76,6 +94,13 @@ export function studentsModule() {
         previousStudent() { this.openModal(this.filteredMainList[this.selectedStudentIndex - 1]); },
         nextStudent()     { this.openModal(this.filteredMainList[this.selectedStudentIndex + 1]); },
 
+        toggleProfileFilter(key) {
+            const i = this.mainProfileFilter.indexOf(key);
+            if (i !== -1) this.mainProfileFilter.splice(i, 1);
+            else this.mainProfileFilter.push(key);
+        },
+        hasProfileFilter(key) { return this.mainProfileFilter.includes(key); },
+
         getNeighborHistory(studentId) {
             const result = [];
             const studentMap = {};
@@ -97,14 +122,28 @@ export function studentsModule() {
 
         getStudent(id) { return this.students.find(s => s.id === id); },
 
+        isSearchHighlight(r, c) {
+            const s = this.getStudent(this.getOccupant(r, c));
+            if (!s) return false;
+            if (this.searchQuery) {
+                const norm = str => (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+                const q = norm(this.searchQuery);
+                if (norm(s.name).includes(q)) return true;
+            }
+            if (this.mainProfileFilter.length > 0 && this._matchProfile(s)) return true;
+            return false;
+        },
+
         getCellTopText(r, c) {
             const sn = this.splitStudentName(this.getStudent(this.getOccupant(r, c))?.name);
-            return (!this._isAlphaPlan() && this.profileSortOrder === 'nomPrenom') ? sn.nom : sn.prenom;
+            if (this._isAlphaPlan()) return sn.nom;
+            return this.profileSortOrder === 'nomPrenom' ? sn.nom : sn.prenom;
         },
 
         getCellBottomText(r, c) {
             const sn = this.splitStudentName(this.getStudent(this.getOccupant(r, c))?.name);
-            return (!this._isAlphaPlan() && this.profileSortOrder === 'nomPrenom') ? sn.prenom : sn.nom;
+            if (this._isAlphaPlan()) return sn.prenom;
+            return this.profileSortOrder === 'nomPrenom' ? sn.prenom : sn.nom;
         },
 
         _cellFontSize(text, big, mid, small) {

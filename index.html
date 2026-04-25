@@ -16,7 +16,7 @@
     <div x-show="isCalculating" x-cloak class="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-md flex flex-col justify-center items-center text-white transition-opacity duration-300">
         <div class="loader mb-6 shadow-lg"></div>
         <h2 class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 drop-shadow-md">Calcul du placement optimal...</h2>
-        <p class="text-slate-300 text-sm font-bold uppercase tracking-widest mb-8">Évaluation de 150 000 combinaisons en cours</p>
+        <p class="text-slate-300 text-sm font-bold uppercase tracking-widest mb-8">Évaluation de <span x-text="calculationTotal > 0 ? calculationTotal.toLocaleString('fr-FR') : '...'">...</span> combinaisons en cours</p>
         <div class="w-80 h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700 shadow-inner">
             <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-75 ease-linear flex justify-end items-center pr-2" :style="`width: ${calculationProgress}%`"></div>
         </div>
@@ -695,7 +695,7 @@
                     <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🤖</span>
-                            <div><p class="text-sm font-bold text-slate-700">Bouton AUTO</p><p class="text-xs text-slate-400">Lance 150 000 simulations pour trouver le plan optimal selon tous les profils.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Bouton AUTO</p><p class="text-xs text-slate-400">Lance un recuit simulé pour trouver le plan optimal selon tous les profils.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🖱️</span>
@@ -1222,13 +1222,13 @@
              class="fixed inset-0 bg-black/30 z-40 lg:hidden"></div>
 
         <aside x-show="sidebarVisible" x-cloak
-               x-transition:enter="transition-all ease-out duration-200"
-               x-transition:enter-start="opacity-0 -translate-x-4"
+               x-transition:enter="sidebar-enter"
+               x-transition:enter-start="opacity-0 -translate-x-full"
                x-transition:enter-end="opacity-100 translate-x-0"
-               x-transition:leave="transition-all ease-in duration-150"
+               x-transition:leave="sidebar-leave"
                x-transition:leave-start="opacity-100 translate-x-0"
-               x-transition:leave-end="opacity-0 -translate-x-4"
-               class="w-80 lg:w-96 border-r border-violet-100 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative rounded-r-2xl overflow-hidden" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);">
+               x-transition:leave-end="opacity-0 -translate-x-full"
+               class="w-80 lg:w-96 border-r border-violet-100 flex flex-col custom-scrollbar z-50 shadow-md shrink-0 max-lg:fixed max-lg:top-[74px] max-lg:bottom-0 max-lg:left-0 relative rounded-r-2xl" style="background: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 40%, #eef2ff 100%);">
             <!-- Bouton fermer sidebar -->
             <button @click="toggleSidebar()"
                     title="Masquer la barre de gestion"
@@ -1239,13 +1239,14 @@
             </button>
             <!-- Barre classe / plan / verrou -->
             <div x-show="students.length > 0 && (appMode === 'solo' || (appMode === 'multi' && currentTeacherId))"
-                 class="border-b border-violet-200"
+                 class="px-5 pt-5 pb-3"
 
+                <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm p-3 space-y-2">
                 <!-- Ligne 1 : Classe + Verrou -->
-                <div class="flex items-center gap-2 px-3 pt-3 pb-1.5">
+                <div class="flex items-center gap-2">
                 <div class="relative flex-1 min-w-0" x-data="{ classOpen: false }">
                     <button @click="classOpen = !classOpen" @click.outside="classOpen = false"
-                            class="w-full flex items-center gap-2 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 rounded-2xl px-3 py-2 cursor-pointer outline-none transition">
+                            class="w-full flex items-center gap-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-3 py-2 cursor-pointer outline-none transition">
                         <span class="w-7 h-7 flex items-center justify-center bg-indigo-50 rounded-xl shrink-0 text-sm">🏫</span>
                         <span class="truncate flex-1 text-left text-sm font-black text-slate-800"
                               x-text="classes.find(c => c.id === currentClassId)?.name || 'Classe'"></span>
@@ -1290,15 +1291,11 @@
                 </div><!-- /Ligne 1 -->
 
                 <!-- Ligne 2 : Plan -->
-                <div class="px-3 pb-3">
                 <div class="relative" x-data="{ planOpen: false, editingPlanIdx: null, editingName: '' }">
                     <button @click="planOpen = !planOpen" @click.outside="planOpen = false; editingPlanIdx = null"
-                            class="w-full flex items-center gap-2 bg-white hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-300 rounded-2xl px-3 py-2 cursor-pointer outline-none transition">
+                            class="w-full flex items-center gap-2 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl px-3 py-2 cursor-pointer outline-none transition">
                         <span class="w-7 h-7 flex items-center justify-center rounded-xl shrink-0 text-sm"
                               :class="_isAlphaPlan() ? 'bg-violet-50' : 'bg-indigo-50'">📋</span>
-                        <span class="text-xs font-black border rounded-lg px-1.5 py-0.5 shrink-0 font-mono"
-                              :class="_isAlphaPlan() ? 'text-violet-600 bg-violet-50 border-violet-200' : 'text-indigo-500 bg-indigo-50 border-indigo-100'"
-                              x-text="_isAlphaPlan() ? '00' : String(currentPlanIndex + 1).padStart(2, '0')"></span>
                         <span class="truncate flex-1 text-left text-sm font-black text-slate-800"
                               x-text="_isAlphaPlan() ? 'Plan Alphabétique' : (plans[currentPlanIndex]?.name || '—')"></span>
                         <svg class="w-3 h-3 text-slate-400 shrink-0 transition-transform" :class="planOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
@@ -1360,14 +1357,17 @@
                     </div>
                 </div>
                 </div><!-- /Ligne 2 -->
-            </div><!-- /border-b wrapper -->
+                </div><!-- /card -->
+            </div><!-- /wrapper -->
             <div class="px-5 pt-6 pb-5 flex-1 overflow-y-auto flex flex-col">
                 <section x-show="editMode" x-collapse class="mb-6 relative" x-data="{ filename: '' }">
                     <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm overflow-hidden">
-                        <div class="px-4 py-2.5 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+                        <div class="px-4 py-2.5 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between cursor-pointer" @click="importDrawerOpen = !importDrawerOpen; filename = ''">
                             <span class="text-xs font-black text-indigo-700 uppercase tracking-widest" x-text="students.length === 0 ? '📥 Étape 1 — Importer vos élèves' : '📥 Importer vos élèves'"></span>
                             <span x-show="students.length === 0" class="text-base animate-bounce">👇</span>
+                            <svg x-show="students.length > 0" class="w-4 h-4 text-indigo-400 transition-transform" :class="importDrawerOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                         </div>
+                        <div x-show="importDrawerOpen" x-collapse>
 
                         <div class="p-4 space-y-3">
                             <input id="fileImport" type="file" accept=".xls,.xlsx,.csv"
@@ -1394,6 +1394,7 @@
                                 </button>
                             </div>
                         </div>
+                        </div>
                     </div>
                 </section>
                 <div class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-sm p-4 space-y-2">
@@ -1401,16 +1402,18 @@
                         <div class="relative flex-1">
                             <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
                             <input type="text" x-model="searchQuery" placeholder="Rechercher un élève…"
-                                   class="w-full pl-8 pr-3 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
+                                   class="w-full pl-8 pr-8 py-2 text-xs font-medium rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition shadow-sm placeholder-slate-300">
+                            <button x-show="searchQuery || mainProfileFilter.length > 0 || mainGenderFilter !== 'ALL'" @click="searchQuery = ''; mainProfileFilter = []; mainGenderFilter = 'ALL'"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-slate-200 hover:bg-red-200 text-slate-500 hover:text-red-500 transition text-[10px] font-bold" title="Effacer les filtres">✕</button>
                         </div>
-                        <button @click="editMode = !editMode"
+                        <button @click="editMode = !editMode; if(editMode) { importDrawerOpen = students.length === 0; }"
                                 :class="editMode ? 'bg-red-50 text-red-400 border-red-200 hover:bg-red-100' : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'"
                                 class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border-2 transition text-base"
                                 :title="editMode ? 'Verrouiller la liste' : 'Déverrouiller pour éditer'">
                             <span x-text="editMode ? '🔓' : '🔒'"></span>
                         </button>
                     </div>
-                    <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-1.5 flex-wrap">
                         <!-- Filtres genre -->
                         <div class="flex gap-1 text-[10px] font-black">
                             <button @click="mainGenderFilter = 'ALL'"
@@ -1422,6 +1425,66 @@
                             <button @click="mainGenderFilter = 'M'"
                                     class="px-2.5 py-1 rounded-xl border-2 transition"
                                     :class="mainGenderFilter === 'M' ? 'bg-blue-500 border-blue-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500'">M</button>
+                        </div>
+                        <div class="w-px h-5 bg-slate-200 shrink-0"></div>
+                        <!-- Filtres profil (dépliable) -->
+                        <div class="relative" x-data="{ showProfileFilters: false }">
+                            <button @click="showProfileFilters = !showProfileFilters"
+                                    class="flex items-center gap-1 px-2 py-1 rounded-xl border-2 text-[10px] font-black transition"
+                                    :class="mainProfileFilter.length > 0 ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400 hover:border-indigo-300 hover:text-indigo-500'"
+                                    title="Filtrer par critères">
+                                <span x-show="mainProfileFilter.length === 0">+</span>
+                                <span x-show="mainProfileFilter.length > 0" x-text="mainProfileFilter.length"></span>
+                                <span class="text-xs">🔍</span>
+                            </button>
+                            <div x-show="showProfileFilters" x-transition.opacity.duration.150ms
+                                 @click.away="showProfileFilters = false"
+                                 class="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-2xl border border-slate-200 p-2 z-50 w-44 space-y-1">
+                                <button @click="toggleProfileFilter('bavard')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('bavard') ? 'bg-rose-50 text-rose-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    🗣️ Bavard·e
+                                </button>
+                                <button @click="toggleProfileFilter('pap')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('pap') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    📋 PAP / PPRE
+                                </button>
+                                <button @click="toggleProfileFilter('vision')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('vision') ? 'bg-amber-50 text-amber-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    👓 Problème de vue
+                                </button>
+                                <button @click="toggleProfileFilter('aisle')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('aisle') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    🚶 Besoin allée
+                                </button>
+                                <button @click="toggleProfileFilter('petit')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('petit') ? 'bg-cyan-50 text-cyan-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    📏 Petit·e
+                                </button>
+                                <button @click="toggleProfileFilter('avoid')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('avoid') ? 'bg-red-50 text-red-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    🚫 À éviter
+                                </button>
+                                <button @click="toggleProfileFilter('force')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('force') ? 'bg-green-50 text-green-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    🤝 À asseoir ensemble
+                                </button>
+                                <button @click="toggleProfileFilter('unplaced')"
+                                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold transition"
+                                        :class="hasProfileFilter('unplaced') ? 'bg-orange-50 text-orange-700' : 'text-slate-500 hover:bg-slate-50'">
+                                    ❓ Non placé·e
+                                </button>
+                                <button x-show="mainProfileFilter.length > 0" @click="mainProfileFilter = []; showProfileFilters = false"
+                                        class="w-full flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-black text-slate-400 hover:text-red-500 hover:bg-red-50 transition border-t border-slate-100 mt-1 pt-2">
+                                    ✕ Tout effacer
+                                </button>
+                            </div>
                         </div>
                         <!-- Sort toggle -->
                         <button @click="profileSortOrder = profileSortOrder === 'nomPrenom' ? 'prenomNom' : 'nomPrenom'"
@@ -1457,7 +1520,7 @@
                                 <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0" :class="student.gender === 'F' ? 'bg-pink-100 text-pink-600' : (student.gender === 'M' ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400')">
                                     <span x-text="student.gender === 'F' ? 'F' : (student.gender === 'M' ? 'M' : '?')"></span>
                                 </div>
-                                <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="student.name"></p>
+                                <p class="font-bold text-sm truncate" :class="isStudentPlaced(student.id) ? 'text-slate-800' : 'text-amber-700'" x-text="profileSortOrder === 'prenomNom' ? (splitStudentName(student.name).prenom + ' ' + splitStudentName(student.name).nom) : student.name"></p>
                             </div>
                             <span x-show="isStudentPlaced(student.id)" class="text-xs font-black text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 ml-2" x-text="student.gender === 'F' ? 'PLACÉE' : 'PLACÉ'"></span>
                             <span x-show="!isStudentPlaced(student.id)" class="text-xs font-black text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 ml-2">À PLACER</span>
@@ -1481,7 +1544,7 @@
             <div class="relative p-2 lg:p-4 bg-white shadow-xl rounded-2xl border border-slate-200 mt-1 w-full flex flex-col min-h-0 flex-1">
 
                 <!-- Titre classe + plan -->
-                <div class="text-center mb-12 lg:mb-16 pt-10 lg:pt-2">
+                <div class="text-center pt-10 lg:pt-2" :class="showClassConfig ? 'mb-2' : 'mb-12 lg:mb-16'">
                     <h2 class="font-black leading-tight flex items-center justify-center" style="font-size:clamp(11px,1.2vw,14px)">
                         <span class="bg-white text-indigo-600 border border-slate-200 px-3 py-1 rounded-full shadow-md flex items-center gap-2 uppercase tracking-wider">
                             <span x-text="classes.find(c => c.id === currentClassId)?.name || 'Ma Classe'"></span>
@@ -1490,9 +1553,6 @@
                             <span x-show="_isAlphaPlan()">Plan Alphabétique</span>
                         </span>
                     </h2>
-                    <p x-show="_isAlphaPlan()" class="mt-1 text-[10px] text-violet-400 font-medium">
-                        Cliquez sur <strong>Auto</strong> après avoir paramétré votre salle et vos élèves, ou placez les librement en glisser / déposer.
-                    </p>
                 </div>
 
                 <div class="absolute top-4 left-4 flex items-center gap-2">
@@ -1515,7 +1575,7 @@
                     </template>
                     <!-- Bouton config classe -->
                     <button @click="showClassConfig = !showClassConfig; if(showClassConfig) { configHintDismissed = true; localStorage.setItem('cmConfigHintDismissed','true'); }"
-                        class="h-8 flex items-center gap-1.5 px-3 rounded-xl text-xs font-black uppercase transition border"
+                        class="h-8 flex items-center gap-1.5 px-2.5 rounded-xl text-[10px] font-black transition border-2"
                         :class="(students.length > 0 && !configHintDismissed) ? 'bg-amber-400 text-white border-amber-400 hover:bg-amber-500 shadow-md config-pulse' : (showClassConfig ? 'bg-white text-indigo-600 border-indigo-400 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-indigo-400')"
                         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-3.5 h-3.5"><rect x="1" y="2" width="14" height="12" rx="2"/><line x1="1" y1="6" x2="15" y2="6"/><line x1="6" y1="6" x2="6" y2="14"/></svg>
                         <span>Config. classe</span>
@@ -1545,7 +1605,7 @@
 
                 <!-- Tiroir config classe -->
                 <div x-show="showClassConfig" x-transition.opacity.duration.200ms
-                     class="mb-4 bg-white rounded-2xl border-2 border-indigo-200 shadow-xl overflow-hidden max-w-4xl mx-auto">
+                     class="bg-white rounded-2xl border-2 border-indigo-200 shadow-xl overflow-hidden max-w-4xl mx-auto">
                     <!-- En-tête compact -->
                     <div class="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-indigo-50 to-violet-50 border-b border-indigo-100">
                         <h3 class="text-xs font-black text-indigo-700 uppercase tracking-widest">⚙️ Configuration de la salle</h3>
@@ -1620,7 +1680,7 @@
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
                         </div>
                         <div class="flex items-center justify-center py-1">
-                            <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
+                            <span class="text-5xl">👨‍🏫</span>
                         </div>
                     </div>
                 </template>
@@ -1661,7 +1721,7 @@
                                  @dragover="onDragOver($event, cell.r, cell.c)"
                                  @dragleave="onDragLeave($event)"
                                  @drop="onDrop($event, cell.r, cell.c)"
-                                 :class="aisles.includes(cell.c) ? 'bg-transparent border-transparent overflow-visible' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70 overflow-hidden' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300 overflow-hidden'))">
+                                 :class="aisles.includes(cell.c) ? 'bg-transparent border-transparent overflow-visible' : (blockedSeats.includes(cell.r+'-'+cell.c) ? 'blocked-bg border-slate-300 opacity-70 overflow-hidden' : (isSearchHighlight(cell.r, cell.c) ? 'border-yellow-400 bg-yellow-100 shadow-lg shadow-yellow-200/50 cursor-grab active:cursor-grabbing overflow-hidden ring-2 ring-yellow-300' : (getOccupant(cell.r, cell.c) ? (isManual(cell.r, cell.c) ? 'border-amber-400 bg-amber-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden' : 'border-indigo-500 bg-indigo-50 shadow-md cursor-grab active:cursor-grabbing overflow-hidden') : 'bg-white border-dashed border-slate-300 hover:border-indigo-300 overflow-hidden')))">
                                 <template x-if="aisles.includes(cell.c)">
                                     <div class="w-full h-full flex items-center justify-center relative" style="overflow:visible">
                                         <div class="absolute left-0 w-[2px] bg-slate-300" style="top:-12px; bottom:-12px;"></div>
@@ -1704,9 +1764,9 @@
                                                     </div>
                                                 </template>
                                                 <span x-show="!getOccupant(cell.r, cell.c) && !showClassConfig" class="text-xs font-black text-slate-300 select-none text-center w-full">▾ LIBRE</span>
-                                                <span x-show="!getOccupant(cell.r, cell.c) && showClassConfig" class="flex flex-col items-center justify-center gap-0.5 text-slate-400 hover:text-red-500 transition pointer-events-none w-full" :title="'Cliquez pour bloquer cette place'">
-                                                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>
-                                                    <span class="text-[10px] font-black uppercase tracking-widest">Bloquer</span>
+                                                <span x-show="!getOccupant(cell.r, cell.c) && showClassConfig" class="flex flex-col items-center justify-center gap-0.5 text-slate-400 transition pointer-events-none w-full" :title="'Cliquez pour bloquer cette place'">
+                                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>
+                                                    <span class="text-[10px] font-black uppercase tracking-widest">Libre</span>
                                                 </span>
                                                 <!-- Menu personnalisé -->
                                                 <div x-show="openDropdown === `${cell.r}-${cell.c}`"
@@ -1738,7 +1798,7 @@
                 <template x-if="!viewFlipped">
                     <div class="flex flex-col items-center mt-4 gap-1">
                         <div class="flex items-center justify-center gap-2 py-1">
-                            <span class="text-5xl" style="display:inline-block; transform:scaleX(-1)">👨‍🏫</span>
+                            <span class="text-5xl" style="display:inline-block; transform:scaleY(-1)">👨‍🏫</span>
                         </div>
                         <div class="w-72 h-9 bg-white border border-slate-200 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
@@ -1752,7 +1812,13 @@
                 <template x-if="students.length > 0">
                 <div class="mt-6 mb-2 px-2">
                     <div class="bg-white/70 border border-slate-200 rounded-2xl p-4">
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Légende</p>
+                        <div class="flex items-center justify-between mb-3">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Légende</p>
+                            <button @click="showAlgoModal = true" class="flex items-center gap-1 text-[10px] font-black text-indigo-500 hover:text-indigo-700 uppercase tracking-widest transition">
+                                <svg viewBox="0 0 20 20" class="w-3.5 h-3.5" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                                Algorithme
+                            </button>
+                        </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-2">
                             <!-- Cases -->
                             <div class="flex items-center gap-2">
@@ -1817,6 +1883,47 @@
             </div>
         </section>
     </main>
+
+    <!-- Modal Algorithme -->
+    <div x-show="showAlgoModal" x-cloak class="fixed inset-0 z-[150] bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4" @keydown.escape.window="showAlgoModal = false">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden" @click.away="showAlgoModal = false">
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-4 flex items-center justify-between">
+                <h2 class="text-white font-black text-lg flex items-center gap-2">🧠 Comment fonctionne le placement ?</h2>
+                <button @click="showAlgoModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
+            </div>
+            <div class="p-6 space-y-5 text-sm text-slate-700 max-h-[70vh] overflow-y-auto">
+                <div>
+                    <h3 class="font-black text-indigo-700 uppercase text-xs tracking-widest mb-2">Méthode</h3>
+                    <p class="leading-relaxed">L'algorithme utilise un <strong>recuit simulé</strong> : il commence par placer les élèves aléatoirement, puis effectue un nombre de permutations proportionnel à la taille de la classe (<strong>élèves × places × 200</strong>, minimum 50 000) en cherchant à minimiser un score de pénalité. La « température » décroit progressivement pour converger vers une solution optimale.</p>
+                </div>
+                <div>
+                    <h3 class="font-black text-rose-600 uppercase text-xs tracking-widest mb-2">Contraintes prioritaires (pénalité forte)</h3>
+                    <ul class="space-y-1.5 leading-relaxed">
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>PAP / problème de vue</strong> → placement obligatoire dans les 2 premiers rangs</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Besoin d'allée</strong> → doit être adjacent à une allée</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Place vide entre deux élèves</strong> → évitée (sauf si délimitée par une allée ou un bord)</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>« Asseoir ensemble »</strong> → les élèves doivent être côte à côte</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>« Ne pas asseoir ensemble »</strong> → éloignés (pas de voisin direct, diagonal ni de l'autre côté d'une allée)</li>
+                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Bavard·e</strong> → aucun autre bavard à côté, en diagonale, devant/derrière, ni séparé par une allée</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-black text-amber-600 uppercase text-xs tracking-widest mb-2">Contraintes secondaires</h3>
+                    <ul class="space-y-1.5 leading-relaxed">
+                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Historique</strong> → évite de replacer un élève à la même position qu'un plan précédent</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Taille</strong> → un élève petit ne doit pas être derrière un grand</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Places vides</strong> → évite de laisser un trou devant un élève</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Genre</strong> → légère préférence pour mélanger les genres voisins</li>
+                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Rang</strong> → légère préférence pour remplir les rangs avant</li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
+                    <h3 class="font-black text-indigo-700 uppercase text-xs tracking-widest mb-1">Places fixées manuellement</h3>
+                    <p class="leading-relaxed text-xs">Les élèves placés manuellement (clic sur une place) sont verrouillés et ne sont pas déplacés par l'algorithme.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal succès import -->
     <template x-if="importSuccessModal.show">
