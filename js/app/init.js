@@ -41,6 +41,10 @@ export function initModule() {
                 this.appMode    = data.appMode || '';
                 this.teachers   = data.teachers || [];
                 this.classes    = data.classes  || [];
+                // Si mode multi mais aucun profil enseignant, on revient au choix de mode
+                if (this.appMode === 'multi' && this.teachers.length === 0) {
+                    this.appMode = '';
+                }
                 this.currentClassId = data.currentClassId || (this.classes[0]?.id ?? null);
                 const cls = this.classes.find(c => c.id === this.currentClassId);
                 if (cls) { this.loadClassData(cls); } else { this.initEmptyPlans(); }
