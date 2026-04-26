@@ -2022,40 +2022,82 @@
 
     <!-- Modal Algorithme -->
     <div x-show="showAlgoModal" x-cloak class="fixed inset-0 z-[150] bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-4" @keydown.escape.window="showAlgoModal = false">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden" @click.away="showAlgoModal = false">
-            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-4 flex items-center justify-between">
-                <h2 class="text-white font-black text-lg flex items-center gap-2">🧠 Comment fonctionne le placement ?</h2>
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden" @click.away="showAlgoModal = false">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 flex items-center justify-between">
+                <div>
+                    <h2 class="text-white font-black text-lg flex items-center gap-2">🧠 Placement automatique</h2>
+                    <p class="text-indigo-200 text-xs mt-0.5 font-medium">Comment fonctionne l'algorithme ?</p>
+                </div>
                 <button @click="showAlgoModal = false" class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white font-black transition">✕</button>
             </div>
-            <div class="p-6 space-y-5 text-sm text-slate-700 max-h-[70vh] overflow-y-auto">
-                <div>
-                    <h3 class="font-black text-indigo-700 uppercase text-xs tracking-widest mb-2">Méthode</h3>
-                    <p class="leading-relaxed">L'algorithme utilise un <strong>recuit simulé</strong> : il commence par placer les élèves aléatoirement, puis effectue un nombre de permutations proportionnel à la taille de la classe (<strong>élèves × places × 200</strong>, minimum 50 000) en cherchant à minimiser un score de pénalité. La « température » décroit progressivement pour converger vers une solution optimale.</p>
+            <div class="p-5 space-y-4 max-h-[72vh] overflow-y-auto custom-scrollbar">
+
+                <!-- Méthode -->
+                <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4">
+                    <p class="text-[11px] font-black text-indigo-500 uppercase tracking-widest mb-2">⚙️ Méthode</p>
+                    <p class="text-xs text-slate-700 leading-relaxed">Algorithme de <strong class="text-indigo-700">recuit simulé</strong> : placement aléatoire initial, puis <strong class="text-indigo-700">élèves × places × 200</strong> permutations (min. 50 000) pour minimiser un score de pénalité. La température décroît progressivement vers une solution optimale.</p>
                 </div>
+
+                <!-- Contraintes prioritaires -->
                 <div>
-                    <h3 class="font-black text-rose-600 uppercase text-xs tracking-widest mb-2">Contraintes prioritaires (pénalité forte)</h3>
-                    <ul class="space-y-1.5 leading-relaxed">
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>PAP / problème de vue</strong> → placement obligatoire dans les 2 premiers rangs</li>
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Besoin d'allée</strong> → doit être adjacent à une allée</li>
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Place vide entre deux élèves</strong> → évitée (sauf si délimitée par une allée ou un bord)</li>
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>« Asseoir ensemble »</strong> → les élèves doivent être côte à côte</li>
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>« Ne pas asseoir ensemble »</strong> → éloignés (pas de voisin direct, diagonal ni de l'autre côté d'une allée)</li>
-                        <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">●</span> <strong>Bavard·e</strong> → aucun autre bavard à côté, en diagonale, devant/derrière, ni séparé par une allée</li>
-                    </ul>
+                    <p class="text-[11px] font-black text-rose-500 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+                        <span class="w-4 h-4 bg-rose-500 rounded-full flex items-center justify-center text-white text-[9px]">!</span>
+                        Contraintes prioritaires
+                    </p>
+                    <div class="grid grid-cols-1 gap-1.5">
+                        <div class="flex items-start gap-2.5 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
+                            <span class="text-base shrink-0 mt-0.5">📋</span>
+                            <div><p class="text-xs font-black text-slate-800">PAP / Problème de vue</p><p class="text-[10px] text-slate-500">Placés obligatoirement dans les 2 premiers rangs</p></div>
+                        </div>
+                        <div class="flex items-start gap-2.5 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
+                            <span class="text-base shrink-0 mt-0.5">🚶</span>
+                            <div><p class="text-xs font-black text-slate-800">Besoin d'allée</p><p class="text-[10px] text-slate-500">Doit être adjacent à une allée</p></div>
+                        </div>
+                        <div class="flex items-start gap-2.5 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
+                            <span class="text-base shrink-0 mt-0.5">🗣️</span>
+                            <div><p class="text-xs font-black text-slate-800">Bavard·e</p><p class="text-[10px] text-slate-500">Aucun autre bavard à côté, en diagonale, devant/derrière ni de l'autre côté d'une allée</p></div>
+                        </div>
+                        <div class="flex items-start gap-2.5 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
+                            <span class="text-base shrink-0 mt-0.5">🤝</span>
+                            <div><p class="text-xs font-black text-slate-800">Asseoir ensemble</p><p class="text-[10px] text-slate-500">Les deux élèves doivent être côte à côte</p></div>
+                        </div>
+                        <div class="flex items-start gap-2.5 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2">
+                            <span class="text-base shrink-0 mt-0.5">🚫</span>
+                            <div><p class="text-xs font-black text-slate-800">Ne pas asseoir ensemble</p><p class="text-[10px] text-slate-500">Éloignés — pas de voisin direct, diagonal ni de l'autre côté d'une allée</p></div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Contraintes secondaires -->
                 <div>
-                    <h3 class="font-black text-amber-600 uppercase text-xs tracking-widest mb-2">Contraintes secondaires</h3>
-                    <ul class="space-y-1.5 leading-relaxed">
-                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Historique</strong> → évite de replacer un élève à la même position qu'un plan précédent</li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Taille</strong> → un élève petit ne doit pas être derrière un grand</li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Places vides</strong> → évite de laisser un trou devant un élève</li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Genre</strong> → légère préférence pour mélanger les genres voisins</li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">●</span> <strong>Rang</strong> → légère préférence pour remplir les rangs avant</li>
-                    </ul>
+                    <p class="text-[11px] font-black text-amber-500 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+                        <span class="w-4 h-4 bg-amber-400 rounded-full flex items-center justify-center text-white text-[9px]">~</span>
+                        Contraintes secondaires
+                    </p>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+                            <p class="text-xs font-black text-slate-800">📏 Taille</p><p class="text-[10px] text-slate-500">Petit·e pas derrière un·e grand·e</p>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+                            <p class="text-xs font-black text-slate-800">🔄 Historique</p><p class="text-[10px] text-slate-500">Évite la même place qu'un plan précédent</p>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+                            <p class="text-xs font-black text-slate-800">👫 Genre</p><p class="text-[10px] text-slate-500">Préférence pour mélanger les genres voisins</p>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+                            <p class="text-xs font-black text-slate-800">🏫 Rang</p><p class="text-[10px] text-slate-500">Préférence pour remplir les rangs avant</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
-                    <h3 class="font-black text-indigo-700 uppercase text-xs tracking-widest mb-1">Places fixées manuellement</h3>
-                    <p class="leading-relaxed text-xs">Les élèves placés manuellement (clic sur une place) sont verrouillés et ne sont pas déplacés par l'algorithme.</p>
+
+                <!-- Places fixées -->
+                <div class="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
+                    <span class="text-xl shrink-0">🔒</span>
+                    <div>
+                        <p class="text-xs font-black text-slate-800 mb-0.5">Places fixées manuellement</p>
+                        <p class="text-[10px] text-slate-500 leading-relaxed">Les élèves verrouillés (cadenas 🔒) ne sont jamais déplacés par l'algorithme.</p>
+                    </div>
                 </div>
             </div>
         </div>
