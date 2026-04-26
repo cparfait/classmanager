@@ -8,7 +8,9 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
+    "prebuild": "npm run build:css",
     "build": "electron-builder --win",
+    "prebuild-portable": "npm run build:css",
     "build-portable": "electron-builder --win portable",
     "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --watch"
