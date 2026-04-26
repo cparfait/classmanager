@@ -73,8 +73,23 @@ export function persistenceModule() {
             r.readAsText(f);
         },
 
-        importExcel(e) {
+        _ensureXLSX() {
+            if (typeof XLSX !== 'undefined') return Promise.resolve();
+            if (this._xlsxLoading) return this._xlsxLoading;
+            this._xlsxLoading = new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'js/xlsx.full.min.js';
+                s.onload = () => resolve();
+                s.onerror = () => reject(new Error('Impossible de charger xlsx'));
+                document.head.appendChild(s);
+            });
+            return this._xlsxLoading;
+        },
+
+        async importExcel(e) {
             const file = e.target.files[0]; if (!file) return;
+            try { await this._ensureXLSX(); }
+            catch (err) { this.showToast('Erreur de chargement de la librairie Excel.', 'error'); e.target.value = ''; return; }
 
             const NOM_ALIASES    = ['nom', 'name', 'élève', 'eleve', 'nom de l\'élève', 'nom complet', 'étudiant', 'apprenant', 'identité', 'identite'];
             const PRENOM_ALIASES = ['prénom', 'prenom', 'first name', 'firstname', 'first_name'];

@@ -3,7 +3,7 @@ export function state() {
         rows: 5, cols: 9, bulkList: '', students: [], aisles: [], blockedSeats: [], fixedSeats: [],
         manualSeats: [],
         plans: [], currentPlanIndex: 0, editMode: false, selectedStudent: null,
-        searchQuery: '', mainGenderFilter: 'ALL', mainProfileFilter: [], neighborFilter: 'ALL', forceFilter: 'ALL', avoidFilter: 'ALL', profileSortOrder: 'prenomNom',
+        searchQuery: '', mainGenderFilter: 'ALL', mainProfileFilter: [], forceFilter: 'ALL', avoidFilter: 'ALL', profileSortOrder: 'prenomNom',
         _pdfWindow: null, _alphaPdfWindow: null, openDropdown: null, showOnlyUnplaced: false,
         isCalculating: false, calculationProgress: 0, calculationTotal: 0, saveStatus: '',
         showDiagnosticModal: false, showUnplacedModal: false, diagnosticIssues: [],
@@ -20,7 +20,6 @@ export function state() {
             confirmLabel: 'Confirmer', createNewPlan: false,
         },
         toast: { show: false, msg: '', type: 'info', _timer: null },
-        alphaBannerSeen: false,
         importSuccessModal: { show: false, count: 0 },
         darkMode: false,
         sidebarVisible: true,
@@ -28,6 +27,7 @@ export function state() {
         showOnboarding: false, onboardingStep: 0,
         showImportHelpModal: false,
         showPlacementHelpModal: false,
+        showPdfFormatModal: false,
 
         // === v2 : Multi-classes & profils ===
         appMode: '',

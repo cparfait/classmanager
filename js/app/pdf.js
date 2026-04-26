@@ -14,30 +14,31 @@ function splitName(name) {
 
 export function pdfModule() {
     return {
-        exportPDF() {
-            const planName = this.plans[this.currentPlanIndex].name;
+        exportPDF(format = 'both') {
+            const planName = this._isAlphaPlan() ? 'Plan Alphabétique' : (this.plans[this.currentPlanIndex]?.name || 'Plan');
             const studentMap = {};
             this.students.forEach(s => studentMap[s.id] = s);
 
             const nRows = Number(this.rows);
             const nCols = Number(this.cols);
 
-            const placedStudents = this.assignments.map(a => studentMap[a.studentId]).filter(Boolean);
+            const assignments = this._getAssignments();
+            const placedStudents = assignments.map(a => studentMap[a.studentId]).filter(Boolean);
             const hasAnyBavard  = placedStudents.some(s => s.bavard);
             const hasAnyPap     = placedStudents.some(s => s.pap);
             const hasAnyVision  = placedStudents.some(s => s.vision);
             const hasAnyAisle   = placedStudents.some(s => s.aisle);
-            const hasAnyManual  = this.assignments.some(a => this.manualSeats.includes(`${a.row}-${a.col}`));
+            const hasAnyManual  = assignments.some(a => this.manualSeats.includes(`${a.row}-${a.col}`));
             const hasAnyBlocked = this.blockedSeats.length > 0;
             const hasAnyAislCol = this.aisles.length > 0;
-            const totalPlaced   = this.assignments.length;
+            const totalPlaced   = assignments.length;
             const totalStudents = this.students.length;
 
             let gridHTML = `<div class="grid" style="grid-template-columns: repeat(${nCols}, 1fr);">`;
             for (let r = nRows; r >= 1; r--) {
                 for (let c = 1; c <= nCols; c++) {
                     if (this.aisles.includes(c)) {
-                        gridHTML += '<div class="cell aisle"><span class="aisle-label">COULOIR</span></div>';
+                        gridHTML += '<div class="cell aisle"></div>';
                         continue;
                     }
                     if (this.blockedSeats.includes(`${r}-${c}`)) {
@@ -63,7 +64,14 @@ export function pdfModule() {
                         }
                         gridHTML += `<div class="cell occupied${isManualCell ? ' manual' : ''}">`;
                         gridHTML += iconsHTML;
-                        gridHTML += `<span class="name" style="font-size:${nameFontSize}">${escapeHTML(nom)}${prenom ? '<br><span class="prenom">' + escapeHTML(prenom) + '</span>' : ''}</span>`;
+                        let nameMarkup;
+                        if (format === 'nom-prenom') {
+                            nameMarkup = `<span class="name" style="font-size:${nameFontSize}">${escapeHTML(nom)}${prenom ? '<br><span class="secondary">' + escapeHTML(prenom) + '</span>' : ''}</span>`;
+                        } else {
+                            // prenom-nom : prénom en gros gras, nom en petit dessous
+                            nameMarkup = `<span class="name" style="font-size:${nameFontSize}">${prenom ? escapeHTML(prenom) + '<br>' : ''}<span class="secondary">${escapeHTML(nom)}</span></span>`;
+                        }
+                        gridHTML += nameMarkup;
                         gridHTML += '</div>';
                     } else {
                         gridHTML += '<div class="cell empty"></div>';
@@ -71,18 +79,6 @@ export function pdfModule() {
                 }
             }
             gridHTML += '</div>';
-
-            let legendItems = '';
-            if (hasAnyBavard)  legendItems += '<span class="leg-item"><span class="ico ico-bavard">🗣️</span> Bavard(e)</span>';
-            if (hasAnyPap)     legendItems += '<span class="leg-item"><span class="ico ico-pap">📋</span> PAP / PPRE</span>';
-            if (hasAnyVision)  legendItems += '<span class="leg-item"><span class="ico ico-vision">👓</span> Pb de vue</span>';
-            if (hasAnyAisle)   legendItems += '<span class="leg-item"><span class="ico ico-aisle">🚶</span> Besoin allée</span>';
-            if (hasAnyManual)  legendItems += '<span class="leg-item"><span class="swatch manual-sw"></span> Placement fixe</span>';
-            if (hasAnyBlocked) legendItems += '<span class="leg-item"><span class="swatch blocked-sw">✕</span> Place bloquée</span>';
-            if (hasAnyAislCol) legendItems += '<span class="leg-item"><span class="swatch aisle-sw"></span> Couloir</span>';
-            const legendHTML = legendItems
-                ? `<div class="legend"><span class="leg-title">Légende :</span>${legendItems}<span class="leg-stats">${totalPlaced} / ${totalStudents} élève${totalStudents > 1 ? 's' : ''} placé${totalPlaced > 1 ? 's' : ''}</span></div>`
-                : '';
 
             const htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Plan de classe</title>
     <style>
@@ -92,12 +88,12 @@ export function pdfModule() {
         .header { text-align: center; margin-bottom: 8px; }
         .header h1 { font-size: 15px; font-weight: 900; color: #1e293b; margin-bottom: 1px; }
         .header h1 span { color: #10b981; font-style: italic; }
-        .header .sub { font-size: 8px; color: #94a3b8; font-weight: 700; letter-spacing: 0.05em; }
-        .header .date { font-size: 7.5px; color: #94a3b8; font-weight: 600; }
         .grid { display: grid; gap: 3px; max-width: 100%; flex: 1; padding: 6px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
         .cell { border-radius: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 48px; padding: 2px 2px 1px; position: relative; }
-        .cell.aisle { background: #f1f5f9; opacity: 0.5; overflow: hidden; }
-        .aisle-label { font-size: 6px; font-weight: 900; color: #94a3b8; letter-spacing: 0.25em; text-transform: uppercase; writing-mode: vertical-rl; }
+        .cell.aisle { background: transparent; position: relative; }
+        .cell.aisle::before, .cell.aisle::after { content: ''; position: absolute; top: -3px; bottom: -3px; width: 2px; background: #cbd5e1; }
+        .cell.aisle::before { left: 0; }
+        .cell.aisle::after { right: 0; }
         .cell.blocked { background: repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 5px,#e2e8f0 5px,#e2e8f0 10px); border: 1px solid #e2e8f0; color: #94a3b8; font-size: 10px; font-weight: 700; }
         .cell.empty { border: 1.5px dashed #e2e8f0; background: #fafbfc; }
         .cell.occupied { border: 1.5px solid #34d399; background: linear-gradient(145deg,#ecfdf5,#d1fae5); }
@@ -109,40 +105,50 @@ export function pdfModule() {
         .ico-vision { background: #fef3c7; }
         .ico-aisle  { background: #e0e7ff; }
         .name { font-weight: 900; text-align: center; line-height: 1.2; color: #1e293b; }
-        .prenom { font-weight: 600; color: #475569; font-size: 0.85em; }
-        .legend { margin-top: 6px; padding: 5px 10px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .leg-title { font-size: 7.5px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
-        .leg-item { display: inline-flex; align-items: center; gap: 3px; font-size: 7.5px; font-weight: 700; color: #475569; }
-        .leg-item .ico { width: 12px; height: 12px; font-size: 7px; }
-        .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; font-size: 7px; text-align: center; line-height: 12px; font-weight: 700; }
-        .manual-sw { background: linear-gradient(135deg,#fffbeb,#fef3c7); border: 1.5px solid #f59e0b; }
-        .blocked-sw { background: repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 3px,#e2e8f0 3px,#e2e8f0 6px); border: 1px solid #e2e8f0; color: #94a3b8; }
-        .aisle-sw   { background: #f1f5f9; border: 1px solid #e2e8f0; }
-        .leg-stats  { margin-left: auto; font-size: 7.5px; font-weight: 900; color: #10b981; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 1px 7px; }
-    </style></head><body>
+        .secondary { font-weight: 600; color: #475569; font-size: 0.85em; }
+        .teacher-area { display: flex; flex-direction: column; align-items: center; margin-top: 8px; gap: 2px; }
+        .teacher-emoji { font-size: 28px; line-height: 1; transform: scaleY(-1); display: inline-block; }
+        .board { width: 280px; height: 28px; background: white; border: 1px solid #e2e8f0; border-radius: 0 0 10px 10px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(15,23,42,0.06); padding: 0 12px; }
+        .board-label { font-size: 9px; font-weight: 900; color: #4338ca; letter-spacing: 0.18em; text-transform: uppercase; }
+        .board-foot { width: 14px; height: 5px; background: #6366f1; border-radius: 2px; opacity: 0.5; }
+        .preview-toolbar { position: fixed; top: 0; left: 0; right: 0; background: #1e293b; color: white; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; z-index: 9999; box-shadow: 0 2px 12px rgba(0,0,0,0.2); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .preview-toolbar .pt-title { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+        .preview-toolbar .pt-actions { display: flex; gap: 8px; }
+        .preview-toolbar button { font-size: 12px; font-weight: 700; padding: 7px 14px; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+        .pt-print { background: #6366f1; color: white; }
+        .pt-print:hover { background: #4f46e5; }
+        .pt-close { background: rgba(255,255,255,0.15); color: white; }
+        .pt-close:hover { background: rgba(255,255,255,0.25); }
+        body.with-toolbar { padding-top: 56px !important; }
+        @media print { .preview-toolbar { display: none !important; } body.with-toolbar { padding-top: 8px !important; } }
+    </style></head><body class="with-toolbar">
+        <div class="preview-toolbar">
+            <span class="pt-title">📄 Aperçu — ${escapeHTML(planName)}</span>
+            <div class="pt-actions">
+                <button class="pt-print" onclick="window.print()">🖨️ Imprimer / Enregistrer en PDF</button>
+                <button class="pt-close" onclick="window.close()">✕ Fermer</button>
+            </div>
+        </div>
         <div class="header">
             <h1><span>ClassManager</span> — ${escapeHTML(planName)}</h1>
-            <div class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
         </div>
         ${gridHTML}
-        ${legendHTML}
+        <div class="teacher-area">
+            <span class="teacher-emoji">👨‍🏫</span>
+            <div class="board">
+                <span class="board-foot"></span>
+                <span class="board-label">Tableau</span>
+                <span class="board-foot"></span>
+            </div>
+        </div>
     </body></html>`;
-
-            if (this._isElectron && window.electronAPI?.printToPdf) {
-                window.electronAPI.printToPdf(htmlContent).then(result => {
-                    if (result && !result.success && !result.cancelled)
-                        this.showToast('Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'), 'error');
-                });
-                return;
-            }
 
             if (this._pdfWindow && !this._pdfWindow.closed) this._pdfWindow.close();
             const w = window.open('', '_blank');
-            if (!w) { this.showToast("L'ouverture du PDF a été bloquée par votre navigateur.", 'error'); return; }
+            if (!w) { this.showToast("L'ouverture de la fenêtre d'aperçu a été bloquée.", 'error'); return; }
             this._pdfWindow = w;
             w.document.write(htmlContent);
             w.document.close();
-            setTimeout(() => { w.print(); }, 500);
         },
 
         generateAlphaPreview() {
@@ -244,21 +250,12 @@ export function pdfModule() {
         </div>
     </body></html>`;
 
-            if (this._isElectron && window.electronAPI?.printToPdf) {
-                window.electronAPI.printToPdf(htmlContent).then(result => {
-                    if (result && !result.success && !result.cancelled)
-                        this.showToast('Erreur lors de la génération du PDF : ' + (result.error || 'inconnue'), 'error');
-                });
-                return;
-            }
-
             if (this._alphaPdfWindow && !this._alphaPdfWindow.closed) this._alphaPdfWindow.close();
             const w = window.open('', '_blank');
-            if (!w) { this.showToast("L'ouverture du PDF a été bloquée par votre navigateur.", 'error'); return; }
+            if (!w) { this.showToast("L'ouverture de la fenêtre d'aperçu a été bloquée.", 'error'); return; }
             this._alphaPdfWindow = w;
             w.document.write(htmlContent);
             w.document.close();
-            setTimeout(() => { w.print(); }, 500);
         },
     };
 }

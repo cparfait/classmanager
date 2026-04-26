@@ -152,43 +152,6 @@ ipcMain.handle('get-data-path', async () => {
 // Version de l'application
 ipcMain.handle('get-version', () => app.getVersion());
 
-// Générer un vrai PDF via printToPDF (sans dialog d'impression)
-ipcMain.handle('print-to-pdf', async (event, htmlContent) => {
-    const tmpFile = path.join(app.getPath('temp'), 'classmanager-print.html');
-    try {
-        fs.writeFileSync(tmpFile, htmlContent, 'utf-8');
-        const printWin = new BrowserWindow({
-            show: false,
-            webPreferences: { contextIsolation: true, nodeIntegration: false }
-        });
-        await printWin.loadFile(tmpFile);
-        const pdfBuffer = await printWin.webContents.printToPDF({
-            landscape: true,
-            pageSize: 'A4',
-            printBackground: true,
-            margins: { top: 0.5, bottom: 0.5, left: 0.5, right: 0.5 }
-        });
-        printWin.close();
-        fs.unlinkSync(tmpFile);
-
-        const { filePath } = await dialog.showSaveDialog(mainWindow, {
-            title: 'Enregistrer le plan de classe',
-            defaultPath: path.join(app.getPath('documents'), 'plan-de-classe.pdf'),
-            filters: [{ name: 'PDF', extensions: ['pdf'] }]
-        });
-        if (filePath) {
-            fs.writeFileSync(filePath, pdfBuffer);
-            shell.openPath(filePath);
-            return { success: true };
-        }
-        return { success: false, cancelled: true };
-    } catch (err) {
-        console.error('Erreur génération PDF:', err);
-        if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
-        return { success: false, error: err.message };
-    }
-});
-
 // === MISES À JOUR AUTOMATIQUES ===
 
 // Logger minimaliste vers fichier (lisible depuis ⚙️ > Voir les logs)
@@ -218,7 +181,7 @@ function setupAutoUpdater() {
         debug: () => {}
     };
 
-    autoUpdater.autoDownload = true;
+    autoUpdater.autoDownload = false;
     autoUpdater.autoInstallOnAppQuit = true;
 
     setTimeout(() => {
@@ -233,7 +196,24 @@ function setupAutoUpdater() {
     autoUpdater.on('download-progress', p  => log.write(`Téléchargement : ${Math.round(p.percent)}%`));
 
     autoUpdater.on('update-available', (info) => {
-        log.write(`Mise à jour disponible : v${info.version} — téléchargement en cours…`);
+        log.write(`Mise à jour disponible : v${info.version} — proposition à l'utilisateur`);
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Mise à jour disponible',
+            message: `Une nouvelle version de ClassManager Pro est disponible (v${info.version}).`,
+            detail: 'Voulez-vous la télécharger en arrière-plan ? Vous pourrez continuer à utiliser l\'application pendant le téléchargement.',
+            buttons: ['Télécharger', 'Plus tard'],
+            defaultId: 0,
+            cancelId: 1,
+            icon: path.join(__dirname, 'icon.ico')
+        }).then(result => {
+            if (result.response === 0) {
+                log.write('Téléchargement accepté par l\'utilisateur');
+                autoUpdater.downloadUpdate().catch(err => log.write(`downloadUpdate échoué : ${err.message}`));
+            } else {
+                log.write('Téléchargement reporté par l\'utilisateur');
+            }
+        });
     });
 
     autoUpdater.on('update-downloaded', (info) => {

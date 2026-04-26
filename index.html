@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>ClassManager Pro</title>
-	<script src="js/tailwind.min.js"></script>
-    <script>tailwind.config = { darkMode: "class" }</script>
+    <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="css/app.css">
     <script type="module" src="js/app/index.js"></script>
     <script defer src="js/alpine-collapse.min.js"></script>
     <script defer src="js/alpine.min.js"></script>
-    <script src="js/xlsx.full.min.js"></script>
+    <!-- xlsx chargé à la demande lors d'un import Excel via _ensureXLSX() dans persistence.js -->
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans" x-data="classApp" x-init="initApp()">
 
@@ -101,7 +100,7 @@
                                             <span x-show="selectedStudent.force && selectedStudent.force.length > 0" class="bg-emerald-500 text-white text-xs font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.force ? selectedStudent.force.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
-                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (forceFilter === 'ALL' || s.gender === forceFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
+                                            <template x-for="s in relationCandidates(forceFilter)" :key="s.id">
                                                 <button @click="selectedStudent.force = selectedStudent.force || []; selectedStudent.force.includes(s.id) ? (selectedStudent.force = selectedStudent.force.filter(id => id !== s.id)) : selectedStudent.force.push(s.id)"
                                                     :class="selectedStudent.force && selectedStudent.force.includes(s.id) ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-400 hover:text-emerald-700'"
                                                     class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
@@ -117,7 +116,7 @@
                                             <span x-show="selectedStudent.avoid && selectedStudent.avoid.length > 0" class="bg-rose-500 text-white text-xs font-black px-1.5 py-0.5 rounded-full" x-text="selectedStudent.avoid ? selectedStudent.avoid.length : 0"></span>
                                         </div>
                                         <div class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto custom-scrollbar">
-                                            <template x-for="s in students.filter(s => s.id !== selectedStudent.id && (avoidFilter === 'ALL' || s.gender === avoidFilter)).sort((a,b) => profileSortOrder === 'nomPrenom' ? a.name.localeCompare(b.name) : (splitStudentName(a.name).prenom+' '+splitStudentName(a.name).nom).localeCompare(splitStudentName(b.name).prenom+' '+splitStudentName(b.name).nom))" :key="s.id">
+                                            <template x-for="s in relationCandidates(avoidFilter)" :key="s.id">
                                                 <button @click="selectedStudent.avoid = selectedStudent.avoid || []; selectedStudent.avoid.includes(s.id) ? (selectedStudent.avoid = selectedStudent.avoid.filter(id => id !== s.id)) : selectedStudent.avoid.push(s.id)"
                                                     :class="selectedStudent.avoid && selectedStudent.avoid.includes(s.id) ? 'bg-rose-500 text-white border-rose-500 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-rose-400 hover:text-rose-700'"
                                                     class="px-2.5 py-1 rounded-full border text-[10px] font-bold transition-all flex items-center gap-1">
@@ -477,12 +476,15 @@
     </div>
 
     <!-- Modale configuration -->
-    <div x-show="showConfigModal" x-cloak class="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4" @keydown.escape.window="showConfigModal = false">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden relative" @click.away="showConfigModal = false">
-            <button @click="showConfigModal = false" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition font-bold text-lg">✕</button>
-            <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-5">
-                <h2 class="text-white font-black text-lg">⚙️ Configuration</h2>
-                <p class="text-slate-400 text-xs font-medium mt-1">Export / Import des données</p>
+    <div x-show="showConfigModal" x-cloak class="fixed inset-0 z-[9998] flex items-center justify-center p-4" @keydown.escape.window="showConfigModal = false">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden" @click.away="showConfigModal = false">
+            <button @click="showConfigModal = false" class="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 text-white rounded-full flex items-center justify-center transition font-bold text-lg z-10">✕</button>
+            <!-- Header coloré -->
+            <div class="bg-gradient-to-br from-violet-500 to-indigo-600 px-8 py-8 text-center">
+                <div class="text-6xl mb-3">⚙️</div>
+                <h2 class="text-2xl font-black text-white">Configuration</h2>
+                <p class="text-violet-200 text-sm mt-1 font-medium">Export, import et préférences</p>
             </div>
             <div class="p-6 space-y-3">
                 <p class="text-xs text-slate-500 font-medium">Sauvegardez ou restaurez l'intégralité de vos données : élèves, plans de classe et placements.</p>
@@ -782,6 +784,36 @@
                     <button @click="showImportHelpModal = false"
                             class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm">
                         J'ai compris
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- === MODALE FORMAT PDF === -->
+    <template x-if="showPdfFormatModal">
+        <div class="fixed inset-0 z-[9998] flex items-center justify-center p-4" @click.self="showPdfFormatModal = false">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full overflow-hidden">
+                <div class="bg-gradient-to-br from-rose-500 to-orange-500 px-8 py-8 text-center">
+                    <div class="text-6xl mb-3">📄</div>
+                    <h2 class="text-2xl font-black text-white">Export PDF</h2>
+                    <p class="text-rose-100 text-sm mt-1 font-medium">Comment afficher les élèves ?</p>
+                </div>
+                <div class="px-6 py-6 space-y-2">
+                    <button @click="showPdfFormatModal = false; exportPDF('prenom-nom')"
+                            class="w-full py-3 px-4 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-black rounded-xl text-sm transition shadow-sm flex items-center justify-between">
+                        <span>Prénom NOM</span>
+                        <span class="text-[10px] font-medium opacity-70">Marie DUPONT</span>
+                    </button>
+                    <button @click="showPdfFormatModal = false; exportPDF('nom-prenom')"
+                            class="w-full py-3 px-4 bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-black rounded-xl text-sm transition shadow-sm flex items-center justify-between">
+                        <span>NOM Prénom</span>
+                        <span class="text-[10px] font-medium opacity-70">DUPONT Marie</span>
+                    </button>
+                    <button @click="showPdfFormatModal = false"
+                            class="w-full py-2 mt-2 text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+                        Annuler
                     </button>
                 </div>
             </div>
@@ -1254,9 +1286,9 @@
             <span x-show="saveStatus" x-text="saveStatus" class="text-xs text-emerald-600 font-bold w-4"></span>
 
             <!-- Actions plan -->
-            <button @click="generateAutoPlan()" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
-            <button @click="testCurrentPlan()" class="h-8 items-center gap-1.5 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-black text-xs transition hidden md:flex">🔍 TESTER</button>
-            <button @click="exportPDF()" class="h-8 items-center gap-1.5 bg-indigo-50 border-2 border-indigo-300 text-indigo-700 hover:bg-indigo-100 px-3 rounded-xl font-black text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
+            <button @click="generateAutoPlan()" title="Générer automatiquement un plan optimisé selon les profils et contraintes" class="h-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 rounded-xl font-black shadow-md transition-all text-xs flex items-center gap-1.5 hover:scale-105">🤖 AUTO</button>
+            <button @click="testCurrentPlan()" title="Tester la validité du plan courant et lister les contraintes non respectées" class="h-8 items-center gap-1.5 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-100 px-3 rounded-xl font-black text-xs transition hidden md:flex">🔍 TESTER</button>
+            <button @click="showPdfFormatModal = true" class="h-8 items-center gap-1.5 bg-indigo-50 border-2 border-indigo-300 text-indigo-700 hover:bg-indigo-100 px-3 rounded-xl font-black text-xs transition hidden md:flex" title="Exporter en PDF">📄 PDF</button>
 
             <span class="w-px h-6 bg-slate-200 mx-1"></span>
 
@@ -1481,10 +1513,12 @@
                             <div>
                                 <textarea x-model="bulkList" placeholder="Collez la liste des élèves, un par ligne (Nom Prénom ou Prénom Nom)…"
                                           class="w-full h-14 p-2 text-xs font-medium rounded-xl border-2 border-slate-200 bg-white outline-none mb-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition placeholder-slate-300"></textarea>
-                                <button @click="importStudentsText()"
-                                        class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-widest rounded-xl transition shadow-sm">
-                                    Ajouter manuellement
-                                </button>
+                                <div class="flex justify-center">
+                                    <button @click="importStudentsText()"
+                                            class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg transition shadow-sm">
+                                        Ajouter
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         </div>
@@ -1590,7 +1624,7 @@
                 </div>
 
                 <template x-if="students.length > 0 && getUnplacedStudents().length > 0">
-                    <button @click="showOnlyUnplaced = !showOnlyUnplaced" :class="showOnlyUnplaced ? 'bg-orange-100 border-orange-500' : 'bg-orange-50 border-orange-300 hover:bg-orange-100'" class="mb-3 w-full py-2 px-3 border-2 rounded-xl text-xs font-bold text-orange-700 transition-all flex items-center justify-between">
+                    <button @click="showOnlyUnplaced = !showOnlyUnplaced" :title="showOnlyUnplaced ? 'Afficher tous les élèves' : 'Afficher seulement les élèves non placés en haut de la liste'" :class="showOnlyUnplaced ? 'bg-orange-100 border-orange-500' : 'bg-orange-50 border-orange-300 hover:bg-orange-100'" class="mb-3 w-full py-2 px-3 border-2 rounded-xl text-xs font-bold text-orange-700 transition-all flex items-center justify-between">
                         <span>⚠️ <span x-text="getUnplacedStudents().length"></span> élève(s) non placé(s)</span>
                         <span class="text-xs text-white px-2 py-0.5 rounded-full font-black" :class="showOnlyUnplaced ? 'bg-orange-700' : 'bg-orange-500'" x-text="showOnlyUnplaced ? 'TOUT' : 'VOIR'"></span>
                     </button>

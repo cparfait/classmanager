@@ -17,6 +17,17 @@ export function studentsModule() {
             return this.mainProfileFilter.every(f => m[f]);
         },
 
+        relationCandidates(filter) {
+            const sortKey = s => {
+                if (this.profileSortOrder === 'nomPrenom') return s.name;
+                const { prenom, nom } = this.splitStudentName(s.name);
+                return prenom + ' ' + nom;
+            };
+            return this.students
+                .filter(s => s.id !== this.selectedStudent?.id && (filter === 'ALL' || s.gender === filter))
+                .sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+        },
+
         get filteredMainList() {
             const norm = str => (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
             const q = norm(this.searchQuery);
@@ -81,7 +92,6 @@ export function studentsModule() {
 
         openModal(s) {
             this.selectedStudent = s;
-            this.neighborFilter = 'ALL';
             this.forceFilter = 'ALL';
             this.avoidFilter = 'ALL';
         },
