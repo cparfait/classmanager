@@ -38,7 +38,6 @@
       "css/tailwind.css",
       "css/app.css",
       "!css/tailwind-input.css",
-      "!js/app/classes.js",
       "!**/*.map"
     ],
     "win": {
