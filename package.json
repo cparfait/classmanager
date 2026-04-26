@@ -34,7 +34,11 @@
       "icon.ico",
       "cris.jpg",
       "js/**/*",
-      "css/**/*"
+      "css/tailwind.css",
+      "css/app.css",
+      "!css/tailwind-input.css",
+      "!js/app/classes.js",
+      "!**/*.map"
     ],
     "win": {
       "target": [
@@ -43,6 +47,7 @@
       ],
       "icon": "icon.ico"
     },
+    "electronLanguages": ["fr", "en-US"],
     "nsis": {
       "oneClick": false,
       "perMachine": false,

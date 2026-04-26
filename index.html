@@ -1844,10 +1844,10 @@
                     </div>
                 </template>
 
-                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full mx-auto"
-                     :style="`grid-template-columns: repeat(${cols}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
+                <div class="grid gap-1 sm:gap-1.5 lg:gap-2 w-full mx-auto flex-1 min-h-0"
+                     :style="`grid-template-columns: repeat(${cols}, 1fr); grid-template-rows: repeat(${rows}, 1fr); ${viewFlipped ? 'transform: rotate(180deg);' : ''}`">
                     <template x-for="cell in gridCells" :key="cell.key">
-                            <div class="aspect-[8/5] min-h-[36px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all group"
+                            <div class="min-h-[36px] border-2 rounded-xl lg:rounded-2xl flex flex-col items-center justify-center p-1 relative transition-all group"
                                  :style="'container-type:inline-size;' + (viewFlipped ? 'transform:rotate(180deg);' : '')"
                                  :draggable="!!getOccupant(cell.r, cell.c) && !aisles.includes(cell.c)"
                                  @dragstart="onDragStartCell($event, cell.r, cell.c)"
