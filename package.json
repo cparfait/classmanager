@@ -1,6 +1,6 @@
 {
   "name": "classmanager-pro",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "ClassManager Pro - Gestion de placement d'élèves en classe",
   "main": "main.js",
   "author": "Cris Tof",
@@ -8,9 +8,10 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "prebuild": "npm run build:css",
+    "clean": "if exist dist (rmdir /s /q dist)",
+    "prebuild": "npm run clean && npm run build:css",
     "build": "electron-builder --win",
-    "prebuild-portable": "npm run build:css",
+    "prebuild-portable": "npm run clean && npm run build:css",
     "build-portable": "electron-builder --win portable",
     "build:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --watch"
