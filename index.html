@@ -611,7 +611,7 @@
             <!-- Progress bar -->
             <div class="h-1.5 bg-slate-100 w-full">
                 <div class="h-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-500 rounded-full"
-                     :style="`width: ${((onboardingStep + 1) / 4) * 100}%`"></div>
+                     :style="`width: ${((onboardingStep + 1) / 5) * 100}%`"></div>
             </div>
 
             <!-- Step 1 : Bienvenue -->
@@ -625,6 +625,7 @@
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                     </div>
                 </div>
             </template>
@@ -634,6 +635,7 @@
                 <div class="p-8 flex flex-col items-center gap-4 text-center">
                     <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl">📥</div>
                     <h2 class="text-xl font-black text-slate-800">Étape 1 — Importer vos élèves</h2>
+                    <p class="text-xs text-slate-500 leading-relaxed max-w-sm">Cliquez sur le bandeau <strong class="text-amber-600">« Importer vos élèves »</strong> dans la barre latérale, puis choisissez :</p>
                     <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
                         <p class="text-xs font-black text-slate-500 uppercase tracking-widest">3 façons d'ajouter vos élèves :</p>
                         <div class="flex items-start gap-3">
@@ -642,16 +644,17 @@
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">✏️</span>
-                            <div><p class="text-sm font-bold text-slate-700">Saisie manuelle</p><p class="text-xs text-slate-400">Collez une liste de noms, un par ligne, dans la zone de texte.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Saisie manuelle</p><p class="text-xs text-slate-400">Collez ou tapez les noms un par ligne. Les informations de chaque élève pourront être ajustées ensuite.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">📋</span>
-                            <div><p class="text-sm font-bold text-slate-700">Import JSON</p><p class="text-xs text-slate-400">Rechargez une sauvegarde complète via le menu ⚙️.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Import JSON</p><p class="text-xs text-slate-400">Rechargez une sauvegarde complète via le menu ⚙️ Configuration.</p></div>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                     </div>
@@ -666,22 +669,53 @@
                     <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
                         <div class="flex items-start gap-3">
                             <span class="text-lg">📐</span>
-                            <div><p class="text-sm font-bold text-slate-700">Rangs &amp; Colonnes</p><p class="text-xs text-slate-400">Ajustez en haut à droite du plan pour correspondre à votre salle.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Rangs & Colonnes</p><p class="text-xs text-slate-400">Ajustez les dimensions en haut du plan pour correspondre à votre salle réelle.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🚶</span>
-                            <div><p class="text-sm font-bold text-slate-700">Allées</p><p class="text-xs text-slate-400">Cliquez sur un bouton "Allée N" au-dessus de la grille pour marquer un couloir.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Allées</p><p class="text-xs text-slate-400">Cliquez sur un bouton « Allée » au-dessus de la grille pour marquer un couloir vertical.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🚫</span>
-                            <div><p class="text-sm font-bold text-slate-700">Places bloquées</p><p class="text-xs text-slate-400">Cliquez sur le 🚫 en haut à droite d'une case pour la désactiver.</p></div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-lg">🔒</span>
-                            <div><p class="text-sm font-bold text-slate-700">Profils élèves</p><p class="text-xs text-slate-400">Cliquez sur un élève pour définir : bavard, PAP, vue, besoin allée, séparations…</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Places bloquées</p><p class="text-xs text-slate-400">Cliquez sur le 🚫 en haut à droite d'une case pour la désactiver (table du professeur, pilier…).</p></div>
                         </div>
                     </div>
                     <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step 4 : Configurer les élèves -->
+            <template x-if="onboardingStep === 3">
+                <div class="p-8 flex flex-col items-center gap-4 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center text-3xl">👤</div>
+                    <h2 class="text-xl font-black text-slate-800">Étape 3 — Configurer les élèves</h2>
+                    <p class="text-xs text-slate-500 leading-relaxed max-w-sm">Personnalisez chaque élève pour que l'algorithme respecte tous les profils et contraintes.</p>
+                    <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🗣️</span>
+                            <div><p class="text-sm font-bold text-slate-700">Profils</p><p class="text-xs text-slate-400">Cliquez sur un élève pour définir : bavard·e, PAP/PPRE, problème de vue, besoin d'allée, stature…</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">✅</span>
+                            <div><p class="text-sm font-bold text-slate-700">Placer à côté de</p><p class="text-xs text-slate-400">Force le voisinage entre deux élèves (binômes, camarades qui s'entendent bien…).</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🚫</span>
+                            <div><p class="text-sm font-bold text-slate-700">Ne pas placer à côté de</p><p class="text-xs text-slate-400">Sépare deux élèves qui ne doivent pas être voisins·e·s.</p></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-lg">🔒</span>
+                            <div><p class="text-sm font-bold text-slate-700">Verrouiller une place</p><p class="text-xs text-slate-400">Verrouillez avec 🔒 la place d'un élève qui ne doit pas bouger lors du prochain placement automatique.</p></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
@@ -690,30 +724,31 @@
                 </div>
             </template>
 
-            <!-- Step 4 : Générer & imprimer -->
-            <template x-if="onboardingStep === 3">
+            <!-- Step 5 : Générer & imprimer -->
+            <template x-if="onboardingStep === 4">
                 <div class="p-8 flex flex-col items-center gap-4 text-center">
                     <div class="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-3xl">🤖</div>
-                    <h2 class="text-xl font-black text-slate-800">Étape 3 — Générer &amp; Imprimer</h2>
+                    <h2 class="text-xl font-black text-slate-800">Étape 4 — Générer & Imprimer</h2>
                     <div class="bg-slate-50 rounded-2xl p-4 text-left space-y-2 w-full border border-slate-200">
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🤖</span>
-                            <div><p class="text-sm font-bold text-slate-700">Bouton AUTO</p><p class="text-xs text-slate-400">Lance un recuit simulé pour trouver le plan optimal selon tous les profils.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Bouton AUTO</p><p class="text-xs text-slate-400">Lance un recuit simulé pour trouver le plan optimal selon tous les profils et contraintes définis.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">🖱️</span>
-                            <div><p class="text-sm font-bold text-slate-700">Placement manuel</p><p class="text-xs text-slate-400">Glissez-déposez les élèves depuis la liste ou les cases. Verrouillez avec 🔒.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Placement manuel</p><p class="text-xs text-slate-400">Glissez-déposez un élève depuis la liste vers une place, ou réorganisez les places entre elles.</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">📄</span>
-                            <div><p class="text-sm font-bold text-slate-700">Export PDF</p><p class="text-xs text-slate-400">Imprimez le plan ou la liste alphabétique de rentrée (A &gt; Z).</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Export PDF</p><p class="text-xs text-slate-400">Imprimez le plan ou la liste alphabétique de rentrée (A > Z).</p></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-lg">📅</span>
-                            <div><p class="text-sm font-bold text-slate-700">Plusieurs plans</p><p class="text-xs text-slate-400">Utilisez les 10 plans disponibles pour gérer la rotation des placements sur l'année.</p></div>
+                            <div><p class="text-sm font-bold text-slate-700">Plusieurs plans</p><p class="text-xs text-slate-400">Créez plusieurs plans pour gérer la rotation des placements sur l'année. L'algorithme évite de replacer un élève à une position déjà occupée dans un plan précédent.</p></div>
                         </div>
                     </div>
                     <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                         <div class="w-2 h-2 rounded-full bg-slate-200"></div>
@@ -724,7 +759,7 @@
 
             <!-- Navigation -->
             <div class="px-8 pb-8 flex items-center justify-between gap-3">
-                <button @click="showOnboarding = false; localStorage.setItem('cmOnboardingDone', '1')"
+                <button @click="finishOnboarding()"
                         class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 rounded-xl font-black text-sm transition">
                     Passer le guide
                 </button>
@@ -734,13 +769,13 @@
                             class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">
                         ← Retour
                     </button>
-                    <button x-show="onboardingStep < 3"
+                    <button x-show="onboardingStep < 4"
                             @click="onboardingStep++"
                             class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl font-black text-sm transition shadow-md">
                         Suivant →
                     </button>
-                    <button x-show="onboardingStep === 3"
-                            @click="showOnboarding = false; localStorage.setItem('cmOnboardingDone', '1')"
+                    <button x-show="onboardingStep === 4"
+                            @click="finishOnboarding()"
                             class="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl font-black text-sm transition shadow-md">
                         ✓ Démarrer !
                     </button>
@@ -785,6 +820,47 @@
                             class="w-full py-3 px-6 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-black rounded-2xl shadow-lg transition-all hover:scale-[1.02] text-sm">
                         J'ai compris
                     </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- === MODALE RESET COMPLET (mode multi : confirmation par saisie) === -->
+    <template x-if="showHardResetModal">
+        <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+             @keydown.escape.window="showHardResetModal = false; hardResetInput = ''">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showHardResetModal = false; hardResetInput = ''"></div>
+            <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+                <div class="bg-gradient-to-br from-red-500 to-rose-600 px-8 py-7 text-center">
+                    <div class="text-6xl mb-3">⚠️</div>
+                    <h2 class="text-2xl font-black text-white">Tout effacer ?</h2>
+                    <p class="text-rose-100 text-xs mt-2 font-medium leading-relaxed">
+                        <span x-show="appMode === 'multi'">Tous les profils enseignants, classes, élèves et plans seront <strong>définitivement supprimés</strong>.</span>
+                        <span x-show="appMode !== 'multi'">Toutes les classes, élèves et plans seront <strong>définitivement supprimés</strong>.</span>
+                    </p>
+                </div>
+                <div class="px-6 py-6 space-y-4">
+                    <p class="text-sm text-slate-600 font-medium text-center">
+                        Pour confirmer, tapez <span class="font-black text-red-600 bg-red-50 px-2 py-0.5 rounded">SUPPRIMER</span> ci-dessous :
+                    </p>
+                    <input type="text" x-model="hardResetInput"
+                           x-effect="if (showHardResetModal) $nextTick(() => $el.focus())"
+                           @keydown.enter="confirmHardReset()"
+                           placeholder="SUPPRIMER"
+                           autocomplete="off" spellcheck="false"
+                           class="w-full px-4 py-3 text-center text-lg font-black tracking-widest rounded-xl border-2 border-slate-200 bg-white outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition placeholder-slate-300 text-slate-800">
+                    <div class="flex gap-2 pt-2">
+                        <button @click="showHardResetModal = false; hardResetInput = ''"
+                                class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">
+                            Annuler
+                        </button>
+                        <button @click="confirmHardReset()"
+                                :disabled="hardResetInput.trim().toUpperCase() !== 'SUPPRIMER'"
+                                :class="hardResetInput.trim().toUpperCase() === 'SUPPRIMER' ? 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-md' : 'bg-slate-100 text-slate-300 cursor-not-allowed'"
+                                class="flex-1 py-3 rounded-xl font-black text-sm transition">
+                            🗑️ Tout supprimer
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
