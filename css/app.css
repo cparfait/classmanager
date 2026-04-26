@@ -1,4 +1,5 @@
 [x-cloak] { display: none !important; }
+@media (max-height: 540px) { .teacher-emoji-wrap { display: none !important; } }
 .aisle-bg { background-color: #f1f5f9; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 10px 10px; }
 .blocked-bg { background-color: #e2e8f0; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #cbd5e1 10px, #cbd5e1 20px); }
 .custom-scrollbar::-webkit-scrollbar { width: 6px; }

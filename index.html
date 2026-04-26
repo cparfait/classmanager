@@ -975,24 +975,24 @@
                     </div>
                     <!-- Corps -->
                     <div class="p-6 flex flex-col items-center gap-4">
-                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Entrez votre PIN (4 chiffres)</p>
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Entrez votre PIN (6 chiffres)</p>
 
-                        <!-- 4 points visuels -->
+                        <!-- 6 points visuels -->
                         <div class="flex gap-3">
-                            <template x-for="i in [0,1,2,3]" :key="i">
+                            <template x-for="i in [0,1,2,3,4,5]" :key="i">
                                 <div class="w-4 h-4 rounded-full border-2 transition-all"
                                      :class="pinInput.length > i ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300'"></div>
                             </template>
                         </div>
 
                         <!-- Input caché (focus pour taper) -->
-                        <input type="password" inputmode="numeric" maxlength="4"
+                        <input type="password" inputmode="numeric" maxlength="6"
                                x-model="pinInput"
                                x-effect="if (showPinModal) $nextTick(() => $el.focus())"
                                @keydown.enter="submitPin()"
-                               @input="pinError = ''; if (pinInput.length === 4) $nextTick(() => submitPin())"
+                               @input="pinError = ''; if (pinInput.length === 6) $nextTick(() => submitPin())"
                                class="w-full text-center text-2xl font-black tracking-[0.5em] border-2 rounded-xl py-3 outline-none focus:ring-2 focus:ring-indigo-400 border-slate-200"
-                               placeholder="••••">
+                               placeholder="••••••">
 
                         <p x-show="pinError" class="text-red-500 text-sm font-bold" x-text="pinError"></p>
 
@@ -1001,7 +1001,7 @@
                                     class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">
                                 Annuler
                             </button>
-                            <button @click="submitPin()" :disabled="pinInput.length !== 4"
+                            <button @click="submitPin()" :disabled="pinInput.length !== 6"
                                     class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
                                 Valider →
                             </button>
@@ -1047,12 +1047,12 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">PIN *</label>
-                        <input x-model="newTeacherForm.pin" type="password" inputmode="numeric" maxlength="4" placeholder="4 chiffres"
+                        <input x-model="newTeacherForm.pin" type="password" inputmode="numeric" maxlength="6" placeholder="6 chiffres"
                                class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-indigo-400 text-center">
                     </div>
                     <div>
                         <label class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1.5 block">Confirmer</label>
-                        <input x-model="newTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="4" placeholder="••••"
+                        <input x-model="newTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"
                                @keydown.enter="createTeacher()"
                                class="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold tracking-widest outline-none focus:ring-2 focus:ring-indigo-400 text-center"
                                :class="newTeacherForm.pinConfirm && newTeacherForm.pin !== newTeacherForm.pinConfirm ? 'border-red-400 bg-red-50' : ''">
@@ -1064,7 +1064,7 @@
             <div class="px-6 pb-6 flex gap-3">
                 <button @click="showCreateTeacherModal = false" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-black text-sm transition">Annuler</button>
                 <button @click="createTeacher()"
-                        :disabled="!newTeacherForm.name.trim() || newTeacherForm.pin.length !== 4 || newTeacherForm.pin !== newTeacherForm.pinConfirm"
+                        :disabled="!newTeacherForm.name.trim() || newTeacherForm.pin.length !== 6 || newTeacherForm.pin !== newTeacherForm.pinConfirm"
                         class="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-40 text-white rounded-xl font-black text-sm transition">
                     Créer mon profil
                 </button>
@@ -1103,14 +1103,14 @@
                 <div class="border-t border-slate-100 pt-3">
                     <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Changer le PIN (optionnel)</p>
                     <div class="space-y-2">
-                        <input x-model="editTeacherForm.pinOld" type="password" inputmode="numeric" maxlength="4" placeholder="PIN actuel"
+                        <input x-model="editTeacherForm.pinOld" type="password" inputmode="numeric" maxlength="6" placeholder="PIN actuel"
                                class="w-full border rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400"
                                :class="editTeacherForm.pinOldError ? 'border-red-400 bg-red-50' : 'border-slate-200'">
                         <p x-show="editTeacherForm.pinOldError" class="text-red-500 text-xs font-bold" x-text="editTeacherForm.pinOldError"></p>
                         <div class="grid grid-cols-2 gap-2">
-                            <input x-model="editTeacherForm.pinNew" type="password" inputmode="numeric" maxlength="4" placeholder="Nouveau PIN"
+                            <input x-model="editTeacherForm.pinNew" type="password" inputmode="numeric" maxlength="6" placeholder="Nouveau PIN"
                                    class="border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400">
-                            <input x-model="editTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="4" placeholder="Confirmer"
+                            <input x-model="editTeacherForm.pinConfirm" type="password" inputmode="numeric" maxlength="6" placeholder="Confirmer"
                                    class="border rounded-xl px-3 py-2 text-sm font-bold text-center outline-none focus:ring-2 focus:ring-indigo-400"
                                    :class="editTeacherForm.pinNew && editTeacherForm.pinConfirm && editTeacherForm.pinNew !== editTeacherForm.pinConfirm ? 'border-red-400 bg-red-50' : 'border-slate-200'">
                         </div>
@@ -1496,7 +1496,7 @@
                                    class="hidden">
                             <div class="relative">
                                 <button @click="document.getElementById('fileImport').click()"
-                                        class="w-full flex flex-col items-center gap-1 py-3 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 hover:bg-indigo-50 hover:border-indigo-400 transition cursor-pointer">
+                                        class="w-full flex flex-col items-center gap-1 py-3 rounded-xl border-2 border-dashed border-indigo-400 bg-indigo-50 hover:bg-indigo-100 hover:border-indigo-500 transition cursor-pointer">
                                     <span class="text-3xl">📂</span>
                                     <span class="text-xs font-bold text-indigo-600" x-text="filename || 'Importer un fichier Excel / CSV'"></span>
                                 </button>
@@ -1511,8 +1511,9 @@
                             </div>
 
                             <div>
-                                <textarea x-model="bulkList" placeholder="Collez la liste des élèves, un par ligne (Nom Prénom ou Prénom Nom)…"
-                                          class="w-full h-14 p-2 text-xs font-medium rounded-xl border-2 border-slate-200 bg-white outline-none mb-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition placeholder-slate-300"></textarea>
+                                <p class="text-[10px] text-slate-500 mb-1 px-1">Un élève par ligne — <span class="font-bold">NOM Prénom</span> ou <span class="font-bold">Prénom NOM</span> (NOM en majuscules).</p>
+                                <textarea x-model="bulkList" placeholder="ex :&#10;DUPONT Jean&#10;Marie MARTIN&#10;GARCIA Lucas"
+                                          class="w-full h-24 p-2 text-xs font-medium rounded-xl border-2 border-slate-200 bg-white outline-none mb-2 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition placeholder-slate-300 resize-none"></textarea>
                                 <div class="flex justify-center">
                                     <button @click="importStudentsText()"
                                             class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg transition shadow-sm">
@@ -1821,7 +1822,7 @@
 
 
                 <!-- Zone grille flexible -->
-                <div class="flex-1 min-h-0 flex flex-col">
+                <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
 
                 <!-- Boutons allée par colonne — visibles uniquement en mode config -->
                 <template x-if="showClassConfig && !viewFlipped">
@@ -1928,13 +1929,14 @@
                             </div>
                     </template>
                 </div>
-                
+                </div><!-- /zone grille flex-1 -->
+
                 <template x-if="!viewFlipped">
-                    <div class="flex flex-col items-center mt-4 gap-1">
-                        <div class="flex items-center justify-center gap-2 py-1">
-                            <span class="text-5xl" style="display:inline-block; transform:scaleY(-1)">👨‍🏫</span>
+                    <div class="shrink-0 flex flex-col items-center mt-1 gap-0">
+                        <div class="teacher-emoji-wrap h-10 overflow-hidden flex items-end justify-center w-full">
+                            <span class="text-4xl leading-none" style="display:inline-block; transform:scaleY(-1); transform-origin:center bottom">👨‍🏫</span>
                         </div>
-                        <div class="w-72 h-9 bg-white border border-slate-200 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
+                        <div class="w-72 h-8 bg-white border border-slate-200 rounded-b-xl flex items-center justify-between px-3 shadow-lg">
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="1" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
                             <span class="text-xs text-indigo-700 font-black tracking-widest uppercase">TABLEAU</span>
                             <svg viewBox="0 0 20 8" class="w-6 h-3 text-indigo-400" fill="currentColor"><rect x="0" y="1" width="20" height="6" rx="2"/><rect x="15" y="0" width="4" height="2" rx="1" fill="#fff" opacity="0.7"/></svg>
@@ -1944,7 +1946,7 @@
 
                 <!-- Légende -->
                 <template x-if="students.length > 0 && !showClassConfig">
-                <div class="mt-6 mb-2 px-2">
+                <div class="shrink-0 mt-2 mb-2 px-2">
                     <div class="bg-white/70 border border-slate-200 rounded-2xl p-4">
                         <div class="flex items-center justify-between mb-3">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Légende</p>

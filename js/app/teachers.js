@@ -75,7 +75,7 @@ export function teachersModule() {
         createTeacher() {
             const f = this.newTeacherForm;
             if (!f.name.trim()) return;
-            if (!/^\d{4}$/.test(f.pin)) return;
+            if (!/^\d{6}$/.test(f.pin)) return;
             if (f.pin !== f.pinConfirm) return;
             const teacher = { id: 't_' + Date.now(), name: f.name.trim(), pin: f.pin, color: f.color };
             this.teachers.push(teacher);
@@ -116,7 +116,7 @@ export function teachersModule() {
             f.pinOldError = ''; f.pinNewError = '';
             if (f.pinNew) {
                 if (f.pinOld !== t.pin) { f.pinOldError = 'PIN actuel incorrect'; return; }
-                if (!/^\d{4}$/.test(f.pinNew)) { f.pinNewError = 'PIN : 4 chiffres'; return; }
+                if (!/^\d{6}$/.test(f.pinNew)) { f.pinNewError = 'PIN : 6 chiffres requis'; return; }
                 if (f.pinNew !== f.pinConfirm)  { f.pinNewError = 'Les PINs ne correspondent pas'; return; }
                 t.pin = f.pinNew;
             }
