@@ -4,14 +4,14 @@ export function classesModule() {
             if (!this.newClassForm.name.trim()) return;
             this.syncClassData();
             const cls = {
-                id: 'c_' + Date.now(),
+                id: 'c_' + crypto.randomUUID(),
                 teacherId: this.appMode === 'multi' ? this.currentTeacherId : null,
                 name: this.newClassForm.name.trim(),
                 level: this.newClassForm.level.trim(),
                 year: this.newClassForm.year.trim() || this._currentSchoolYear(),
                 rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [],
                 fixedSeats: [], manualSeats: [],
-                plans: [{ id: Date.now(), name: 'Plan 01', assignments: [] }],
+                plans: [{ id: crypto.randomUUID(), name: 'Plan 01', assignments: [] }],
                 currentPlanIndex: 0,
             };
             this.classes.push(cls);

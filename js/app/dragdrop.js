@@ -66,10 +66,14 @@ export function dragdropModule() {
                 arr.push({ studentId, row: toRow, col: toCol });
                 this._setAssignments(arr);
             }
+
             this.dragState = { studentId: null, fromRow: null, fromCol: null, fromList: false };
             this._alertNewIssues(prevIssues);
-            // Defer save so Alpine re-renders before the synchronous JSON serialisation
-            setTimeout(() => this.saveLocal(), 0);
+
+            // Différer la sauvegarde après le re-render Alpine, avec debounce
+            // pour absorber d'éventuels drops rapides consécutifs
+            clearTimeout(this._dropSaveTimer);
+            this._dropSaveTimer = setTimeout(() => this.saveLocal(), 150);
         },
     };
 }

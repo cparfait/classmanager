@@ -4,7 +4,9 @@ export function initModule() {
             this._isElectron = !!window.electronAPI;
 
             if (window.electronAPI?.getVersion) {
-                window.electronAPI.getVersion().then(v => this.appVersion = v);
+                window.electronAPI.getVersion()
+                    .then(v => { this.appVersion = v; })
+                    .catch(() => { /* version non critique */ });
             }
 
             this.darkMode = localStorage.getItem('cmDarkMode') === 'true';
@@ -13,6 +15,7 @@ export function initModule() {
             this.sidebarVisible = localStorage.getItem('cmSidebarVisible') !== 'false';
             this.configHintDismissed = localStorage.getItem('cmConfigHintDismissed') === 'true';
 
+            // Listeners auto-lock (durée de vie = durée de l'app, pas de cleanup nécessaire)
             const _resetLock = () => this._resetAutoLock();
             document.addEventListener('mousemove', _resetLock, { passive: true });
             document.addEventListener('keydown',   _resetLock, { passive: true });
@@ -22,16 +25,21 @@ export function initModule() {
                 if (this.students.length === 0) {
                     this.editMode = true;
                     this.importDrawerOpen = true;
-                    if (!this.showModeSelection && !localStorage.getItem('cmOnboardingDone')) {
-                        this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
-                    } else if (this.appMode === 'solo' && !this.showModeSelection) {
-                        this.$nextTick(() => { this.showImportHelpModal = true; });
+                    if (!this.showModeSelection && this.appMode === 'solo') {
+                        this._startWelcomeFlow();
                     }
                 }
             };
 
             const _newEmptyClass = () => {
-                const cls = { id: 'c_' + Date.now(), teacherId: null, name: 'Ma Classe', level: '', year: this._currentSchoolYear(), rows: 5, cols: 9, students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [], plans: [], currentPlanIndex: 0 };
+                const cls = {
+                    id: 'c_' + crypto.randomUUID(),
+                    teacherId: null, name: 'Ma Classe', level: '',
+                    year: this._currentSchoolYear(),
+                    rows: 5, cols: 9,
+                    students: [], aisles: [], blockedSeats: [], fixedSeats: [], manualSeats: [],
+                    plans: [], currentPlanIndex: 0,
+                };
                 this.initEmptyPlans();
                 cls.plans = this.plans;
                 return cls;
@@ -52,28 +60,50 @@ export function initModule() {
             };
 
             if (this._isElectron) {
-                window.electronAPI.loadData().then(data => {
-                    if (data) {
+                window.electronAPI.loadData()
+                    .then(data => {
+                        if (data) {
+                            if (data.version === 2) { _loadV2(data); }
+                            else { this._migrateFromV1(data); }
+                        } else {
+                            const cls = _newEmptyClass();
+                            this.classes = [cls];
+                            this.currentClassId = cls.id;
+                            this.showModeSelection = true;
+                        }
+                        _afterLoad();
+                    })
+                    .catch(err => {
+                        console.error('Erreur de chargement des données:', err);
+                        this.showToast('Erreur lors du chargement des données. Démarrage à vide.', 'error');
+                        const cls = _newEmptyClass();
+                        this.classes = [cls];
+                        this.currentClassId = cls.id;
+                        this.showModeSelection = true;
+                        _afterLoad();
+                    });
+            } else {
+                // Migration automatique des clés localStorage obsolètes
+                if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9'))
+                    localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v9'));
+                if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8'))
+                    localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v8'));
+
+                const saved = localStorage.getItem('classManagerData_v10');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        if (!data || typeof data !== 'object') throw new Error('Structure invalide');
                         if (data.version === 2) { _loadV2(data); }
                         else { this._migrateFromV1(data); }
-                    } else {
+                    } catch (err) {
+                        console.error('Données locales corrompues, réinitialisation.', err);
+                        this.showToast('Données corrompues détectées. Démarrage à vide.', 'error');
                         const cls = _newEmptyClass();
                         this.classes = [cls];
                         this.currentClassId = cls.id;
                         this.showModeSelection = true;
                     }
-                    _afterLoad();
-                });
-            } else {
-                if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v9'))
-                    localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v9'));
-                if (!localStorage.getItem('classManagerData_v10') && localStorage.getItem('classManagerData_v8'))
-                    localStorage.setItem('classManagerData_v10', localStorage.getItem('classManagerData_v8'));
-                const saved = localStorage.getItem('classManagerData_v10');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.version === 2) { _loadV2(data); }
-                    else { this._migrateFromV1(data); }
                 } else {
                     const cls = _newEmptyClass();
                     this.classes = [cls];
@@ -85,7 +115,23 @@ export function initModule() {
         },
 
         initEmptyPlans() {
-            this.plans = [{ id: Date.now(), name: 'Plan 01', assignments: [] }];
+            this.plans = [{ id: crypto.randomUUID(), name: 'Plan 01', assignments: [] }];
+        },
+
+        _startWelcomeFlow() {
+            if (!localStorage.getItem('cmOnboardingDone')) {
+                this.$nextTick(() => { this.showOnboarding = true; this.onboardingStep = 0; });
+            } else if (this.students.length === 0) {
+                this.$nextTick(() => { this.showImportHelpModal = true; });
+            }
+        },
+
+        finishOnboarding() {
+            this.showOnboarding = false;
+            localStorage.setItem('cmOnboardingDone', '1');
+            if (this.students.length === 0) {
+                this.$nextTick(() => { this.showImportHelpModal = true; });
+            }
         },
 
         _currentSchoolYear() {
@@ -117,7 +163,6 @@ export function initModule() {
             this.manualSeats = cls.manualSeats || [];
             if (cls.plans?.length) {
                 this.plans = cls.plans;
-                // Start on the last numbered plan if plans exist
                 this.currentPlanIndex = cls.plans.length - 1;
             } else {
                 this.initEmptyPlans();

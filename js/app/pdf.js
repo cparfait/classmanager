@@ -12,6 +12,22 @@ function splitName(name) {
     return { nom: parts.slice(1).join(' ') || parts[0], prenom: parts.length > 1 ? parts[0] : '' };
 }
 
+/** Ouvre une nouvelle fenêtre avec le contenu HTML via Blob (remplace document.write déprécié) */
+function openHtmlWindow(htmlContent) {
+    const blob   = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const blobUrl = URL.createObjectURL(blob);
+    const w = window.open(blobUrl, '_blank');
+    if (w) {
+        // Libère la mémoire blob dès que la fenêtre a chargé son contenu
+        w.addEventListener('load', () => URL.revokeObjectURL(blobUrl), { once: true });
+        // Fallback si l'événement load ne se déclenche pas (fenêtre bloquée)
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+    } else {
+        URL.revokeObjectURL(blobUrl);
+    }
+    return w;
+}
+
 export function pdfModule() {
     return {
         exportPDF(format = 'both') {
@@ -68,7 +84,6 @@ export function pdfModule() {
                         if (format === 'nom-prenom') {
                             nameMarkup = `<span class="name" style="font-size:${nameFontSize}">${escapeHTML(nom)}${prenom ? '<br><span class="secondary">' + escapeHTML(prenom) + '</span>' : ''}</span>`;
                         } else {
-                            // prenom-nom : prénom en gros gras, nom en petit dessous
                             nameMarkup = `<span class="name" style="font-size:${nameFontSize}">${prenom ? escapeHTML(prenom) + '<br>' : ''}<span class="secondary">${escapeHTML(nom)}</span></span>`;
                         }
                         gridHTML += nameMarkup;
@@ -144,11 +159,9 @@ export function pdfModule() {
     </body></html>`;
 
             if (this._pdfWindow && !this._pdfWindow.closed) this._pdfWindow.close();
-            const w = window.open('', '_blank');
+            const w = openHtmlWindow(htmlContent);
             if (!w) { this.showToast("L'ouverture de la fenêtre d'aperçu a été bloquée.", 'error'); return; }
             this._pdfWindow = w;
-            w.document.write(htmlContent);
-            w.document.close();
         },
 
         generateAlphaPreview() {
@@ -251,11 +264,9 @@ export function pdfModule() {
     </body></html>`;
 
             if (this._alphaPdfWindow && !this._alphaPdfWindow.closed) this._alphaPdfWindow.close();
-            const w = window.open('', '_blank');
+            const w = openHtmlWindow(htmlContent);
             if (!w) { this.showToast("L'ouverture de la fenêtre d'aperçu a été bloquée.", 'error'); return; }
             this._alphaPdfWindow = w;
-            w.document.write(htmlContent);
-            w.document.close();
         },
     };
 }

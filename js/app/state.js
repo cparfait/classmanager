@@ -28,6 +28,8 @@ export function state() {
         showImportHelpModal: false,
         showPlacementHelpModal: false,
         showPdfFormatModal: false,
+        showHardResetModal: false,
+        hardResetInput: '',
 
         // === v2 : Multi-classes & profils ===
         appMode: '',

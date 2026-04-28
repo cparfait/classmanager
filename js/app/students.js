@@ -172,6 +172,7 @@ export function studentsModule() {
 
         removeStudent(id) {
             this.plans.forEach(p => {
+                if (!Array.isArray(p.assignments)) p.assignments = [];
                 const seat = p.assignments.find(a => a.studentId === id);
                 if (seat) {
                     const key = `${seat.row}-${seat.col}`;
@@ -181,6 +182,13 @@ export function studentsModule() {
             });
             this.students = this.students.filter(s => s.id !== id);
             this.plans.forEach(p => p.assignments = p.assignments.filter(a => a.studentId !== id));
+            this.students.forEach(s => {
+                if (Array.isArray(s.force)) s.force = s.force.filter(fid => fid !== id);
+                if (Array.isArray(s.avoid)) s.avoid = s.avoid.filter(aid => aid !== id);
+            });
+            if (this.selectedStudent && this.selectedStudent.id === id) {
+                this.selectedStudent = null;
+            }
             this.saveLocal();
         },
     };

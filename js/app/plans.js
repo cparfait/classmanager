@@ -33,7 +33,7 @@ export function plansModule() {
 
         addPlan() {
             const newIndex = this.plans.length;
-            this.plans.push({ id: Date.now(), name: `Plan ${String(newIndex + 1).padStart(2, '0')}`, assignments: [] });
+            this.plans.push({ id: crypto.randomUUID(), name: `Plan ${String(newIndex + 1).padStart(2, '0')}`, assignments: [] });
             this.currentPlanIndex = newIndex;
             this.saveLocal();
         },
